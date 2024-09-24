@@ -1,7 +1,7 @@
 #ifndef K_H
 #define K_H
 
-#include "k.edu/_.h"
+#include "k/_.h"
 #include <limits.h>
 
 extern V _V[];extern U _j[];extern i0 _J[];extern U k(i2,U),K(i2,U,U);
