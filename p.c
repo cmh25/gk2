@@ -15,6 +15,8 @@ ez > | V e
 char *_P=":+-*%&|<>=~.!@?#_^,$";
 Z2 b[]={6,0,3,5,5,0,0,6};
 
+_F(mz,a<<32|x)
+
 /* added for vectors */
 _g(tn,n3(x<<b[i]))
 _f(lu,x?64-bu(clzl)(x):0)
@@ -266,6 +268,7 @@ static int lex(pgs *pgs) {
   while(1) {
     s=isblank(*p);
     while(isblank(*p)) ++p;
+    if((s||f)&&*p=='/') { while(*++p!='\n'){}; continue; }
     if(!*p) break;
     else if(*p=='-') {
       if(!(s|f)&&(pgs->lt==T004||pgs->lt==T006)) { ++p; push(pgs,T007,'-'); }

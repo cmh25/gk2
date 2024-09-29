@@ -3,7 +3,7 @@
 ec=0
 for t in `cat tests`; do
   echo -n "test$t: "
-  ../a test$t > $t 2>/dev/null
+  ../gk test$t > $t 2>/dev/null
   diff -u res$t $t &> diff$t
   if [ $? -ne 0 ]; then
     ec=$((ec+1))
