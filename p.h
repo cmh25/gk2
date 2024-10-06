@@ -6,14 +6,24 @@
 extern unsigned int TIMES;
 
 #define T000   0 /* $a */
-#define T001   1 /* e */
-#define T002   2 /* o */
-#define T003   3 /* ez */
-#define T004   4 /* N */
-#define T005   5 /* '(' */
-#define T006   6 /* ')' */
-#define T007   7 /* V */
-#define T008   8 /* $e */
+#define T001   1 /* s */
+#define T002   2 /* e */
+#define T003   3 /* se */
+#define T004   4 /* o */
+#define T005   5 /* ez */
+#define T006   6 /* klist */
+#define T007   7 /* plist */
+#define T008   8 /* elist */
+#define T009   9 /* elistz */
+#define T010  10 /* ';' */
+#define T011  11 /* '\n' */
+#define T012  12 /* N */
+#define T013  13 /* V */
+#define T014  14 /* '(' */
+#define T015  15 /* ')' */
+#define T016  16 /* '[' */
+#define T017  17 /* ']' */
+#define T018  18 /* $e */
 
 typedef struct { char v; U n; } pn;
 typedef struct {

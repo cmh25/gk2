@@ -7,9 +7,15 @@
 #include "x.h"
 
 /*
-e > o ez | ez      # dyad | monad
-o > N | '(' e ')'
-ez > | V e
+s > e se
+e > o ez | ez
+se > ';' | '\n'
+o > N | klist
+ez > | V e | plist
+klist > '(' elist ')'
+plist > '[' elist ']'
+elist > e elistz
+elistz > | se e elistz
 */
 
 char *_P=":+-*%&|<>=~.!@?#_^,$";
@@ -23,26 +29,41 @@ _f(lu,x?64-bu(clzl)(x):0)
 _f(iu,x?bu(ctzl)(x):64)
 G(M,ij=m(6,lu(tn(i,x)))-6;ik=iu(~_j[j]);_j[j]^=1L<<k;mz(8+i<<28|j<<24|k<<18|a,x))
 
-#define LI 4
-#define LJ 9
-static int LL[4][9]={
-{-1,-1,-1,-1,0,0,-1,0,-1},
-{-1,-1,-1,-1,1,1,2,2,2},
-{-1,-1,-1,-1,3,4,-1,-1,-1},
-{-1,-1,-1,-1,-1,-1,5,6,5}
+#define LI 10
+#define LJ 19
+static int LL[10][19]={
+{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,-1,0,-1,-1},
+{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,-1,1,-1,1},
+{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,3,3,2,3,2,3,3,3,-1},
+{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,4,5,-1,-1,-1,-1,-1,-1,-1},
+{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,6,-1,7,-1,-1,-1,-1},
+{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,8,8,-1,9,-1,8,10,8,-1},
+{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,11,-1,-1,-1,-1},
+{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,12,-1,-1},
+{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,13,13,13,13,13,13,13,13,-1},
+{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,15,15,-1,-1,-1,14,-1,14,-1}
 };
 
-static int RT[7][3]={
+static int RT[16][3]={
 {T001},
 {T002,T003},
-{T003},
-{T004},
-{T005,T001,T006},
+{T004,T005},
+{T005},
+{T010},
+{T011},
+{T012},
+{T006},
 {-1},
-{T007,T001}
+{T013,T002},
+{T007},
+{T014,T008,T015},
+{T016,T008,T017},
+{T002,T009},
+{-1},
+{T003,T002,T009}
 };
 
-static int RC[7]={1,2,1,1,3,0,2};
+static int RC[16]={1,2,2,1,1,1,1,1,0,2,1,3,3,2,0,3};
 
 #define Vvi s->V[s->vi]
 
@@ -69,39 +90,58 @@ U pgreduce(pgs *s) {
   return *--pA;
 }
 
-static void r000(pgs *s) { /* $a > e */
+static void r000(pgs *s) { /* $a > s */
 }
-static void r001(pgs *s) { /* e > o ez */
+static void r001(pgs *s) { /* s > e se */
+  s->vi--;
+}
+static void r002(pgs *s) { /* e > o ez */
   pn b=s->V[s->vi--];
   char *a;
   if(b.n) if((a=strchr(_P,b.v))) s->pbc[s->pbci++]=64+a-_P;
 }
-static void r002(pgs *s) { /* e > ez */
+static void r003(pgs *s) { /* e > ez */
   pn b=Vvi;
   char *a;
   if((a=strchr(_P,b.v))) s->pbc[s->pbci++]=32+a-_P;
 }
-static void r003(pgs *s) { /* o > N */
+static void r004(pgs *s) { /* se > ';' */
+}
+static void r005(pgs *s) { /* se > '\n' */
+}
+static void r006(pgs *s) { /* o > N */
   s->values[s->valuei]=Vvi.n;
   Vvi.n=s->valuei++;
   s->pbc[s->pbci++]=Vvi.n;
 }
-static void r004(pgs *s) { /* o > '(' e ')' */
-  s->vi-=2;
-  s->V[s->vi]=s->V[s->vi+1];
+static void r007(pgs *s) { /* o > klist */
 }
-static void r005(pgs *s) { /* ez > */
+static void r008(pgs *s) { /* ez > */
    s->V[++s->vi].v=0;
    s->V[s->vi].n=0;
 }
-static void r006(pgs *s) { /* ez > V e */
+static void r009(pgs *s) { /* ez > V e */
   pn b;
   b=s->V[s->vi--];
   Vvi.v=Vvi.n;
   Vvi.n=b.n;
 }
+static void r010(pgs *s) { /* ez > plist */
+}
+static void r011(pgs *s) { /* klist > '(' elist ')' */
+  s->vi-=2;
+  s->V[s->vi]=s->V[s->vi+1];
+}
+static void r012(pgs *s) { /* plist > '[' elist ']' */
+}
+static void r013(pgs *s) { /* elist > e elistz */
+}
+static void r014(pgs *s) { /* elistz > */
+}
+static void r015(pgs *s) { /* elistz > se e elistz */
+}
 
-static void (*F[7])(pgs *s)={r000,r001,r002,r003,r004,r005,r006};
+static void (*F[16])(pgs *s)={r000,r001,r002,r003,r004,r005,r006,r007,r008,r009,r010,r011,r012,r013,r014,r015};
 
 static void push(pgs *s, int tt, U tv) {
   s->t[s->tc]=tt;
@@ -233,16 +273,16 @@ static int gn(pgs *pgs) {
     U x=M(3,0,ic);
     int *pi=sx;
     i(ic,pi[i]=iv[i])
-    push(pgs,T004,x);
+    push(pgs,T012,x);
   }
   else if(fc) {
     U x=M(4,0,fc);
     float *pf=sx;
     i(fc,pf[i]=fv[i])
-    push(pgs,T004,x);
+    push(pgs,T012,x);
   }
-  else if(r==1) push(pgs,T004,iii&0xffffffff|3L<<60);
-  else if(r==2) push(pgs,T004,*((int*)&fff)&0xffffffff|4L<<60);
+  else if(r==1) push(pgs,T012,iii&0xffffffff|3L<<60);
+  else if(r==2) push(pgs,T012,*((int*)&fff)&0xffffffff|4L<<60);
   if(iv) xfree(iv);
   if(fv) xfree(fv);
   return r;
@@ -271,18 +311,19 @@ static int lex(pgs *pgs) {
     if((s||f)&&*p=='/') { while(*++p!='\n'){}; continue; }
     if(!*p) break;
     else if(*p=='-') {
-      if(!(s|f)&&(pgs->lt==T004||pgs->lt==T006)) { ++p; push(pgs,T007,'-'); }
+      if(!(s|f)&&(pgs->lt==T012||pgs->lt==T015)) { ++p; push(pgs,T013,'-'); }
       else if(isdigit(p[1])||(p[1]=='.'&&isdigit(p[2]))) gn(pgs);
-      else { ++p; push(pgs,T007,'-'); }
+      else { ++p; push(pgs,T013,'-'); }
     }
     else if(isdigit(*p)||(*p=='.'&&isdigit(p[1]))) gn(pgs);
-    else if(strchr(":+-*%&|<>=~.!@?#_^,$",*p)) { push(pgs,T007,*p); ++p; }
-    else if(*p=='(') { ++p; push(pgs,T005,0); }
-    else if(*p==')') { ++p; push(pgs,T006,0); }
-    else if(*p=='\n') { if(f) return 0; else push(pgs,T008,0); break; }
+    else if(strchr(":+-*%&|<>=~.!@?#_^,$",*p)) { push(pgs,T013,*p); ++p; }
+    else if(*p=='(') { ++p; push(pgs,T014,0); }
+    else if(*p==')') { ++p; push(pgs,T015,0); }
+    else if(*p=='\n') { if(f) return 0; else push(pgs,T011,0); break; }
     else if(*p=='\\'&&*(p+1)=='\\') exit(0);
     else if(*p=='\\'&&*(p+1)=='\n') { help(); return 0; }
     else if(*p=='\\'&&*(p+1)=='t') { p+=2; if(!(TIMES=atoi(p)))TIMES=1; while(isdigit(*p))++p; }
+    else if(!*p) { push(pgs,T018,0); break; }
     else { printf("lex\n"); return 0; }
     f=0;
   }
