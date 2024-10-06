@@ -67,14 +67,14 @@ static int RC[16]={1,2,2,1,1,1,1,1,0,2,1,3,3,2,0,3};
 
 #define Vvi s->V[s->vi]
 
-U pgreduce(pgs *s) {
+U pgreduce(pr *r) {
   int i;
   char c,q;
   U A[256],*pA=A,a,b;
-  for(i=0;i<s->pbci;i++) {
-    c=s->pbc[i];
+  for(i=0;i<r->n;i++) {
+    c=r->bc[i];
     q=c>>5;
-    if(!q) *pA++=s->values[c];
+    if(!q) *pA++=r->values[c];
     else if(q==1) { /* 32 33 34 ... */
       a=*--pA;
       *pA++=k(c-32-1,a);
@@ -334,11 +334,16 @@ static int lex(pgs *pgs) {
 
 pgs* pgnew() { pgs *s=xcalloc(1,sizeof(pgs)); s->valuei=1; return s; }
 void pgfree(pgs *s) { xfree(s); }
-void pgparse(pgs *s) {
+pr* pgparse(char *q) {
   int i,j,r;
+  pr *z=xmalloc(sizeof(pr));
+  pgs *s=pgnew();
+  s->p=q;
+  s->pbc=z->bc;
+  s->values=z->values;
   s->ti=0;s->tc=0;s->si=-1;s->ri=-1;s->vi=-1;
   memset(s->V,0,sizeof(s->V));
-  if(!lex(s)||s->tc<1) return;
+  if(!lex(s)||s->tc<1) { pgfree(s); return 0; }
   s->S[++s->si]=T000; /* $a */
   for(i=0;;i++) {
     if(s->S[s->si]==s->t[s->ti]) {
@@ -346,10 +351,10 @@ void pgparse(pgs *s) {
       --s->si;
     }
     else {
-      if(s->S[s->si]>=LI) { printf("parse\n"); break; }
-      if(s->t[s->ti]>=LJ) { printf("parse\n"); break; }
+      if(s->S[s->si]>=LI) { fprintf(stderr,"parse\n"); break; }
+      if(s->t[s->ti]>=LJ) { fprintf(stderr,"parse\n"); break; }
       r=LL[s->S[s->si--]][s->t[s->ti]];
-      if(r==-1) { printf("parse\n"); break; }
+      if(r==-1) { fprintf(stderr,"parse\n"); break; }
       s->R[++s->ri]=r;
       s->S[++s->si]=-2; /* reduction marker */
       for(j=RC[r]-1;j>=0;j--) s->S[++s->si]=RT[r][j];
@@ -357,4 +362,7 @@ void pgparse(pgs *s) {
     while(s->si>=0&&s->S[s->si]==-2) { (*F[s->R[s->ri--]])(s); --s->si; }
     if(s->si<0) { --s->vi; break; }
   }
+  z->n=s->pbci;
+  pgfree(s);
+  return z;
 }

@@ -25,6 +25,7 @@ extern unsigned int TIMES;
 #define T017  17 /* ']' */
 #define T018  18 /* $e */
 
+typedef struct { char bc[256]; int n; U values[256]; } pr;
 typedef struct { char v; U n; } pn;
 typedef struct {
   char *p;       /* buffer */
@@ -36,15 +37,15 @@ typedef struct {
   int ti,tc;     /* tokens index,count */
   U v[1024];     /* token values */
   int lt;        /* last token */
-  U values[256];
+  U *values;
   int valuei;
-  char pbc[256];
+  char *pbc;
   int pbci;
 } pgs;
 
 pgs* pgnew(void);   
 void pgfree(pgs *s);
-void pgparse(pgs *s);
-U pgreduce(pgs *s);
+pr* pgparse(char *q);
+U pgreduce(pr *r);
 
 #endif /* P_H */
