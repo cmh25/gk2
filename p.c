@@ -309,8 +309,7 @@ static int lex(pgs *pgs) {
     s=isblank(*p);
     while(isblank(*p)) ++p;
     if((s||f)&&*p=='/') { while(*++p!='\n'){}; continue; }
-    if(!*p) break;
-    else if(*p=='-') {
+    if(*p=='-') {
       if(!(s|f)&&(pgs->lt==T012||pgs->lt==T015)) { ++p; push(pgs,T013,'-'); }
       else if(isdigit(p[1])||(p[1]=='.'&&isdigit(p[2]))) gn(pgs);
       else { ++p; push(pgs,T013,'-'); }
@@ -319,6 +318,9 @@ static int lex(pgs *pgs) {
     else if(strchr(":+-*%&|<>=~.!@?#_^,$",*p)) { push(pgs,T013,*p); ++p; }
     else if(*p=='(') { ++p; push(pgs,T014,0); }
     else if(*p==')') { ++p; push(pgs,T015,0); }
+    else if(*p=='[') { ++p; push(pgs,T016,0); }
+    else if(*p==']') { ++p; push(pgs,T017,0); }
+    else if(*p==';') { if(f) return 0; else push(pgs,T010,0); break; }
     else if(*p=='\n') { if(f) return 0; else push(pgs,T011,0); break; }
     else if(*p=='\\'&&*(p+1)=='\\') exit(0);
     else if(*p=='\\'&&*(p+1)=='\n') { help(); return 0; }
