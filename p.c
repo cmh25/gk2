@@ -68,26 +68,36 @@ static int RC[16]={1,2,2,1,1,1,1,1,0,2,1,3,3,2,0,3};
 #define Vvi s->V[s->vi]
 
 U pgreduce(pr *r) {
-  int i;
+  int i,j;
   char c,q;
   U A[256],*pA=A,a,b;
   for(i=0;i<r->n;i++) {
-    c=r->bc[i];
-    q=c>>5;
-    if(!q) *pA++=r->values[c];
-    else if(q==1) { /* 32 33 34 ... */
-      a=*--pA;
-      *pA++=k(c-32-1,a);
+    int n=r->bcn[i];
+    char *bc=r->bc[i];
+    U *values=r->values[i];
+    pA=A;
+    for(j=0;j<n;j++) {
+      c=bc[j];
+      q=c>>5;
+      if(!q) *pA++=values[c];
+      else if(q==1) { /* 32 33 34 ... */
+        a=*--pA;
+        *pA++=k(c-32-1,a);
+      }
+      else if(q==2) { /* 64 65 66 ... */
+        b=*--pA;
+        a=*--pA;
+        *pA++=K(c-64-1,a,b);
+      }
+      else if(q==3) { /* 96 97 98 ... sys monadic (exit) */
+        if(c==96) exit(0);
+      }
+      //suspend console, invoke repl
+      //if(pA[-1]==255) printf("!error\n");
     }
-    else if(q==2) { /* 64 65 66 ... */
-      b=*--pA;
-      a=*--pA;
-      *pA++=K(c-64-1,a,b);
-    }
-    //suspend console, invoke repl
-    //if(pA[-1]==255) printf("!error\n");
+    kprint(*--pA);
   }
-  return *--pA;
+  return *pA;
 }
 
 static void r000(pgs *s) { /* $a > s */
@@ -104,6 +114,7 @@ static void r003(pgs *s) { /* e > ez */
   pn b=Vvi;
   char *a;
   if((a=strchr(_P,b.v))) s->pbc[s->pbci++]=32+a-_P;
+  else s->pbc[s->pbci++]=b.v; /* sys exit 96 */
 }
 static void r004(pgs *s) { /* se > ';' */
 }
@@ -315,14 +326,21 @@ static int lex(pgs *pgs) {
       else { ++p; push(pgs,T013,'-'); }
     }
     else if(isdigit(*p)||(*p=='.'&&isdigit(p[1]))) gn(pgs);
-    else if(strchr(":+-*%&|<>=~.!@?#_^,$",*p)) { push(pgs,T013,*p); ++p; }
+    else if(*p&&strchr(":+-*%&|<>=~.!@?#_^,$",*p)) { push(pgs,T013,*p); ++p; }
     else if(*p=='(') { ++p; push(pgs,T014,0); }
     else if(*p==')') { ++p; push(pgs,T015,0); }
     else if(*p=='[') { ++p; push(pgs,T016,0); }
     else if(*p==']') { ++p; push(pgs,T017,0); }
-    else if(*p==';') { if(f) return 0; else push(pgs,T010,0); break; }
-    else if(*p=='\n') { if(f) return 0; else push(pgs,T011,0); break; }
-    else if(*p=='\\'&&*(p+1)=='\\') exit(0);
+    //else if(*p==';') { if(f) return 0; else push(pgs,T010,0); break; }
+    //else if(*p=='\n') { if(f) return 0; else push(pgs,T011,0); break; }
+    else if(*p==';') { ++p; push(pgs,T010,0); }
+    else if(*p=='\n') { ++p; push(pgs,T011,0); }
+    //else if(*p=='\\'&&*(p+1)=='\\') exit(0);
+    else if(*p=='\\'&&*(p+1)=='\\') {
+      p+=2;
+      push(pgs,T013,96);
+      push(pgs,T012,3L<<60); /* zero */
+    }
     else if(*p=='\\'&&*(p+1)=='\n') { help(); return 0; }
     else if(*p=='\\'&&*(p+1)=='t') { p+=2; if(!(TIMES=atoi(p)))TIMES=1; while(isdigit(*p))++p; }
     else if(!*p) { push(pgs,T018,0); break; }
@@ -336,33 +354,50 @@ pgs* pgnew() { pgs *s=xcalloc(1,sizeof(pgs)); s->valuei=1; return s; }
 void pgfree(pgs *s) { xfree(s); }
 pr* pgparse(char *q) {
   int i,j,r;
-  pr *z=xmalloc(sizeof(pr));
+
+  pr *z=xcalloc(1,sizeof(pr));
+  z->bc=xcalloc(256,sizeof(char*));
+  z->bcn=xcalloc(256,sizeof(int));
+  z->values=xcalloc(256,sizeof(U*));
+
   pgs *s=pgnew();
   s->p=q;
-  s->pbc=z->bc;
-  s->values=z->values;
+
   s->ti=0;s->tc=0;s->si=-1;s->ri=-1;s->vi=-1;
   memset(s->V,0,sizeof(s->V));
   if(!lex(s)||s->tc<1) { pgfree(s); return 0; }
-  s->S[++s->si]=T000; /* $a */
-  for(i=0;;i++) {
-    if(s->S[s->si]==s->t[s->ti]) {
-      s->V[++s->vi].n=s->v[s->ti++];
-      --s->si;
+
+  while(1+s->ti<s->tc) {
+    s->si=-1;s->ri=-1;s->vi=-1;
+    z->bc[z->n]=xcalloc(1,256);
+    z->values[z->n]=xcalloc(1,256*sizeof(U));
+    s->pbc=z->bc[z->n];
+    s->pbci=z->bcn[z->n];
+    s->values=z->values[z->n];
+    s->valuei=0;
+
+    s->S[++s->si]=T000; /* $a */
+    for(i=0;;i++) {
+      if(s->S[s->si]==s->t[s->ti]) {
+        s->V[++s->vi].n=s->v[s->ti++];
+        --s->si;
+      }
+      else {
+        if(s->S[s->si]>=LI) { fprintf(stderr,"parse\n"); break; }
+        if(s->t[s->ti]>=LJ) { fprintf(stderr,"parse\n"); break; }
+        r=LL[s->S[s->si--]][s->t[s->ti]];
+        if(r==-1) { fprintf(stderr,"parse\n"); break; }
+        s->R[++s->ri]=r;
+        s->S[++s->si]=-2; /* reduction marker */
+        for(j=RC[r]-1;j>=0;j--) s->S[++s->si]=RT[r][j];
+      }
+      while(s->si>=0&&s->S[s->si]==-2) { (*F[s->R[s->ri--]])(s); --s->si; }
+      if(s->si<0) { --s->vi; break; }
     }
-    else {
-      if(s->S[s->si]>=LI) { fprintf(stderr,"parse\n"); break; }
-      if(s->t[s->ti]>=LJ) { fprintf(stderr,"parse\n"); break; }
-      r=LL[s->S[s->si--]][s->t[s->ti]];
-      if(r==-1) { fprintf(stderr,"parse\n"); break; }
-      s->R[++s->ri]=r;
-      s->S[++s->si]=-2; /* reduction marker */
-      for(j=RC[r]-1;j>=0;j--) s->S[++s->si]=RT[r][j];
-    }
-    while(s->si>=0&&s->S[s->si]==-2) { (*F[s->R[s->ri--]])(s); --s->si; }
-    if(s->si<0) { --s->vi; break; }
+    z->bcn[z->n]=s->pbci;
+    ++z->n;
   }
-  z->n=s->pbci;
+
   pgfree(s);
   return z;
 }

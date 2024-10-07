@@ -3,42 +3,31 @@
 #include <string.h>
 #include <errno.h>
 #include <math.h>
+#include <sys/stat.h>
 #include "timer.h"
 #include "k.h"
 #include "x.h"
 #include "repl.h"
 
 void load(char *fn) {
-  FILE *fp=0;
-  int i,j=0,c,f,m=256;
-  U x;
-  char *p=xmalloc(m+2);
-  pr *r;
+  FILE *fp=0; U x; pr *r; struct stat t; char *p;
+  if(-1==stat(fn,&t)) { fprintf(stderr,"%s: %s\n",fn,strerror(errno)); return; }
   fp=fopen(fn,"r");
   if(!fp) { fprintf(stderr,"%s: %s\n",fn,strerror(errno)); return; }
-  while(1) {
-    f=1; i=0;
-    p=xmalloc(m+2);
-    while((c=fgetc(fp))!=EOF) {
-      p[i++]=c;
-      if(i==m) { m<<=1; p=xrealloc(p,m+2); }
-      if(f==1&&c=='\\') { j=i-1; ++f; }
-      else if(f==2&&c=='\\') f=0;
-      else if(f==2&&c=='\n') { p[j]=0; break; }
-      if(!isblank(c)&&c!='\\') f=0;
-      if(!f&&c=='\n') { break; }
-    }
-    if(p[i-1]!='\n') p[i++]='\n';
-    p[i]=0;
-    r=pgparse(p);
+  p=xmalloc(1+t.st_size);
+  if(t.st_size!=fread(p,1,t.st_size,fp)) {
+    fprintf(stderr,"%s: error reading file\n",fn);
     xfree(p);
-    x=pgreduce(r);
-    xfree(r);
-    kprint(x);
-    kfree(x);
-    if(f==2) break;
+    return;
   }
+  p[t.st_size]=0;
   fclose(fp);
+  r=pgparse(p);
+  x=pgreduce(r);
+  //kprint(x);
+  xfree(p);
+  xfree(r);
+  kfree(x);
 }
 
 void repl() {
@@ -62,7 +51,7 @@ void repl() {
     else {
       x=pgreduce(r);
       xfree(r);
-      kprint(x);
+      //kprint(x);
       kfree(x);
     }
     xfree(p);

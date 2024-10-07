@@ -25,7 +25,8 @@ extern unsigned int TIMES;
 #define T017  17 /* ']' */
 #define T018  18 /* $e */
 
-typedef struct { char bc[256]; int n; U values[256]; } pr;
+//typedef struct { char bc[256]; int n; U values[256]; } pr;
+typedef struct { char **bc; int *bcn; int n; U **values; } pr;
 typedef struct { char v; U n; } pn;
 typedef struct {
   char *p;       /* buffer */

@@ -1,1 +1,6 @@
 gk
+*.o
+*~
+*.swp
+*.swo
+k/k.zip
