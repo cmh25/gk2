@@ -48,5 +48,7 @@ pgs* pgnew(void);
 void pgfree(pgs *s);
 pr* pgparse(char *q);
 U pgreduce(pr *r);
+pr* prnew();
+void prfree(pr *r);
 
 #endif /* P_H */

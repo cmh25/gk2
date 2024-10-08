@@ -5,6 +5,7 @@
 #include "timer.h"
 #include "k.h"
 #include "x.h"
+#include "sym.h"
 
 /*
 s > e se
@@ -67,10 +68,20 @@ static int RC[16]={1,2,2,1,1,1,1,1,0,2,1,3,3,2,0,3};
 
 #define Vvi s->V[s->vi]
 
+static char *VNAMES[256];
+static U *VVALUES[256];
+static VI=0;
+U vlookup(char *v) {
+  int i;
+  U r=0;
+  char *s=(char*)((U)v^15L<<60);
+  for(i=0;i<VI;i++) if(s==VNAMES[i]) return VVALUES[i];
+  return r;
+}
 U pgreduce(pr *r) {
   int i,j;
   char c,q;
-  U A[256],*pA=A,a,b;
+  U A[256],*pA=A,a,b,v;
   for(i=0;i<r->n;i++) {
     int n=r->bcn[i];
     char *bc=r->bc[i];
@@ -82,12 +93,22 @@ U pgreduce(pr *r) {
       if(!q) *pA++=values[c];
       else if(q==1) { /* 32 33 34 ... */
         a=*--pA;
+        if(15==a>>60) a=vlookup(a);
         *pA++=k(c-32-1,a);
       }
       else if(q==2) { /* 64 65 66 ... */
         b=*--pA;
         a=*--pA;
-        *pA++=K(c-64-1,a,b);
+        if(c==64&&15==a>>60) { /* a:1 */
+          if(15==b>>60) b=vlookup(b);
+          VNAMES[VI]=sp(((U)a^15L<<60));
+          VVALUES[VI++]=b;
+        }
+        else {
+          if(15==a>>60) a=vlookup(a);
+          if(15==b>>60) b=vlookup(b);
+          *pA++=K(c-64-1,a,b);
+        }
       }
       else if(q==3) { /* 96 97 98 ... sys monadic (exit) */
         if(c==96) exit(0);
@@ -95,7 +116,9 @@ U pgreduce(pr *r) {
       //suspend console, invoke repl
       //if(pA[-1]==255) printf("!error\n");
     }
-    kprint(*--pA);
+    v=*--pA;
+    if(15==v>>60) v=vlookup(v);
+    kprint(v);
   }
   return *pA;
 }
@@ -299,6 +322,21 @@ static int gn(pgs *pgs) {
   return r;
 }
 
+static int gname(pgs *pgs) {
+  char c,*q=p;
+  int s=*p=='.';
+  char *z;
+  while(1) {
+    if(!s) { if(isalpha(*p)) { ++p; s=1; } else break; }
+    else { if(isalnum(*p)) ++p; else if(*p=='.') { ++p; s=0; } else break; }
+  }
+  c=*p; *p=0;
+  z=sp(q);
+  push(pgs,T012,(U)z|0xfL<<60);
+  *p=c;
+  return 1;
+}
+
 static void help() {
   printf(""
   "Verb    (monad)"
@@ -331,11 +369,9 @@ static int lex(pgs *pgs) {
     else if(*p==')') { ++p; push(pgs,T015,0); }
     else if(*p=='[') { ++p; push(pgs,T016,0); }
     else if(*p==']') { ++p; push(pgs,T017,0); }
-    //else if(*p==';') { if(f) return 0; else push(pgs,T010,0); break; }
-    //else if(*p=='\n') { if(f) return 0; else push(pgs,T011,0); break; }
     else if(*p==';') { ++p; push(pgs,T010,0); }
     else if(*p=='\n') { ++p; push(pgs,T011,0); }
-    //else if(*p=='\\'&&*(p+1)=='\\') exit(0);
+    else if(isalpha(*p)) gname(pgs);
     else if(*p=='\\'&&*(p+1)=='\\') {
       p+=2;
       push(pgs,T013,96);
@@ -352,17 +388,28 @@ static int lex(pgs *pgs) {
 
 pgs* pgnew() { pgs *s=xcalloc(1,sizeof(pgs)); s->valuei=1; return s; }
 void pgfree(pgs *s) { xfree(s); }
-pr* pgparse(char *q) {
-  int i,j,r;
-
+pr* prnew() {
   pr *z=xcalloc(1,sizeof(pr));
   z->bc=xcalloc(256,sizeof(char*));
   z->bcn=xcalloc(256,sizeof(int));
   z->values=xcalloc(256,sizeof(U*));
-
+  return z;
+}
+void prfree(pr *r) {
+  int i;
+  for(i=0;i<r->n;i++) {
+    xfree(r->bc[i]);
+    xfree(r->values[i]);
+  }
+  xfree(r->bc);
+  xfree(r->bcn);
+  xfree(r->values);
+}
+pr* pgparse(char *q) {
+  int i,j,r;
+  pr *z=prnew();
   pgs *s=pgnew();
   s->p=q;
-
   s->ti=0;s->tc=0;s->si=-1;s->ri=-1;s->vi=-1;
   memset(s->V,0,sizeof(s->V));
   if(!lex(s)||s->tc<1) { pgfree(s); return 0; }

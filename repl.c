@@ -24,9 +24,8 @@ void load(char *fn) {
   fclose(fp);
   r=pgparse(p);
   x=pgreduce(r);
-  //kprint(x);
   xfree(p);
-  xfree(r);
+  prfree(r);
   kfree(x);
 }
 
@@ -51,7 +50,6 @@ void repl() {
     else {
       x=pgreduce(r);
       xfree(r);
-      //kprint(x);
       kfree(x);
     }
     xfree(p);
