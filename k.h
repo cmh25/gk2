@@ -23,5 +23,6 @@ extern V _V[];extern U _j[];extern i0 _J[];extern U k(i2,U),K(i2,U,U);
 
 void kprint(U x);
 void kfree(U x);
+U kref(U x);
 
 #endif /* K_H */

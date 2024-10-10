@@ -102,7 +102,7 @@ U pgreduce(pr *r) {
         if(c==64&&15==a>>60) { /* a:1 */
           if(15==b>>60) b=vlookup(b);
           VNAMES[VI]=sp(((U)a^15L<<60));
-          VVALUES[VI++]=b;
+          VVALUES[VI++]=kref(b);
         }
         else {
           if(15==a>>60) a=vlookup(a);

@@ -6,6 +6,7 @@
 f(r_,if(!ax)++rx;x)
 f(_r,if(!ax)$(rx,--rx)if(_j[jx]^=1L<<kx,!tx)N(_r(x))x)
 void kfree(U x){_r(x);}
+U kref(U x){return r_(x);}
 
 static void pi(int i, char *c) {
   if(i==INT_MAX) printf("0I%s",c);
