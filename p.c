@@ -20,15 +20,6 @@ elistz > | se e elistz
 */
 
 char *_P=":+-*%&|<>=~.!@?#_^,$";
-Z2 b[]={6,0,3,5,5,0,0,6};
-
-_F(mz,a<<32|x)
-
-/* added for vectors */
-_g(tn,n3(x<<b[i]))
-_f(lu,x?64-bu(clzl)(x):0)
-_f(iu,x?bu(ctzl)(x):64)
-G(M,ij=m(6,lu(tn(i,x)))-6;ik=iu(~_j[j]);_j[j]^=1L<<k;mz(8+i<<28|j<<24|k<<18|a,x))
 
 #define LI 10
 #define LJ 19
@@ -94,7 +85,7 @@ U pgreduce(pr *r) {
       else if(q==1) { /* 32 33 34 ... */
         a=*--pA;
         if(15==a>>60) a=vlookup(a);
-        *pA++=k(c-32-1,a);
+        *pA++=k(c,a,0);
       }
       else if(q==2) { /* 64 65 66 ... */
         b=*--pA;
@@ -107,7 +98,7 @@ U pgreduce(pr *r) {
         else {
           if(15==a>>60) a=vlookup(a);
           if(15==b>>60) b=vlookup(b);
-          *pA++=K(c-64-1,a,b);
+          *pA++=k(c,a,b);
         }
       }
       else if(q==3) { /* 96 97 98 ... sys monadic (exit) */
@@ -304,13 +295,13 @@ static int gn(pgs *pgs) {
     }
   }
   if(ic) {
-    U x=M(3,0,ic);
+    U x=tn(3,ic);
     int *pi=sx;
     i(ic,pi[i]=iv[i])
     push(pgs,T012,x);
   }
   else if(fc) {
-    U x=M(4,0,fc);
+    U x=tn(4,fc);
     float *pf=sx;
     i(fc,pf[i]=fv[i])
     push(pgs,T012,x);

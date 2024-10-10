@@ -3,8 +3,8 @@
 #include <limits.h>
 #include "x.h"
 
-f(r_,if(!ax)++rx;x)
-f(_r,if(!ax)$(rx,--rx)if(_j[jx]^=1L<<kx,!tx)N(_r(x))x)
+ _f(_r,P(ax,x)P(7&Ox,--Ox;x)if(!tx)i(nx,_r(xU[i]))_o(x))
+_f(r_,P(ax,x)++Ox;x)
 void kfree(U x){_r(x);}
 U kref(U x){return r_(x);}
 
