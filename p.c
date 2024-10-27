@@ -82,7 +82,7 @@ U pgreduce(pr *r) {
       else if(q==1) { /* 32 33 34 ... */
         a=*--pA;
         if(15==a>>60) a=vlookup(a);
-        *pA++=k(c,a,0);
+        *pA++=k(c%32,0,a);
       }
       else if(q==2) { /* 64 65 66 ... */
         b=*--pA;
@@ -95,7 +95,7 @@ U pgreduce(pr *r) {
         else {
           if(15==a>>60) a=vlookup(a);
           if(15==b>>60) b=vlookup(b);
-          *pA++=k(c,a,b);
+          *pA++=k(c%32,a,b);
         }
       }
       else if(q==3) { /* 96 97 98 ... sys monadic (exit) */
@@ -190,12 +190,12 @@ pr* pgparse(char *q) {
   pr *z=prnew();
   pgs *s=pgnew();
   s->p=q;
-  s->ti=0;s->tc=0;s->si=-1;s->ri=-1;s->vi=-1;
+  s->ti=0;s->tc=0;s->si=-1;s->zri=-1;s->vi=-1;
   memset(s->V,0,sizeof(s->V));
   if(!lex(s)||s->tc<1) { pgfree(s); return 0; }
 
   while(1+s->ti<s->tc) {
-    s->si=-1;s->ri=-1;s->vi=-1;
+    s->si=-1;s->zri=-1;s->vi=-1;
     z->bc[z->n]=xcalloc(1,256);
     z->values[z->n]=xcalloc(1,256*sizeof(U));
     s->pbc=z->bc[z->n];
@@ -214,11 +214,11 @@ pr* pgparse(char *q) {
         if(s->t[s->ti]>=LJ) { fprintf(stderr,"parse\n"); break; }
         r=LL[s->S[s->si--]][s->t[s->ti]];
         if(r==-1) { fprintf(stderr,"parse\n"); break; }
-        s->R[++s->ri]=r;
+        s->R[++s->zri]=r;
         s->S[++s->si]=-2; /* reduction marker */
         for(j=RC[r]-1;j>=0;j--) s->S[++s->si]=RT[r][j];
       }
-      while(s->si>=0&&s->S[s->si]==-2) { (*F[s->R[s->ri--]])(s); --s->si; }
+      while(s->si>=0&&s->S[s->si]==-2) { (*F[s->R[s->zri--]])(s); --s->si; }
       if(s->si<0) { --s->vi; break; }
     }
     z->bcn[z->n]=s->pbci;

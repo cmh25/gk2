@@ -5,6 +5,7 @@
 #include <limits.h>
 
 U k(i2,i3,i3);
+U tn(i2,i2);
 
 #define I2F(a) \
   ((a)==INT_MAX ? INFINITY \

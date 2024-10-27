@@ -1,2 +1,3 @@
 a:?.[ch] makefile
-	clang-13 -Ofast -oa [az].c -w -march=native -funsigned-char -fno-stack-protector -fno-unwind-tables -s
+	clang -Ofast -oa [az].c -fwritable-strings -funsigned-char -fno-unwind-tables -s -w -mpclmul -mavx512f -mavx512dq -mavx512bw -mavx512vbmi -Wno-incompatible-pointer-types
+
