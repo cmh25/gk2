@@ -42,15 +42,17 @@ void repl() {
     if(!i) { xfree(p); printf("  "); continue; }
     b[i++]='\n'; b[i]=0;
     r=pgparse(p);
-    if(TIMES) {
-      timer_start();
-      for(j=0;j<TIMES;j++) x=pgreduce(r);
-      printf("%.3f\n",timer_stop());
-    }
-    else {
-      x=pgreduce(r);
-      xfree(r);
-      kfree(x);
+    if(r) {
+      if(TIMES) {
+        timer_start();
+        for(j=0;j<TIMES;j++) x=pgreduce(r);
+        printf("%.3f\n",timer_stop());
+      }
+      else {
+        x=pgreduce(r);
+        xfree(r);
+        kfree(x);
+      }
     }
     xfree(p);
     printf("  ");

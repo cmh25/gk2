@@ -164,13 +164,13 @@ static int gname(pgs *pgs) {
 
 static void help() {
   printf(""
-  "Verb    (monad)"
-  "+ +            "
-  "- -            "
-  "* *      sqr   "
-  "! mod    index "
-  "@ @      first "
-  "? find   unique"
+  "Verb    (monad)\n"
+  "+ +            \n"
+  "- -            \n"
+  "* *      sqr   \n"
+  "! mod    index \n"
+  "@ @      first \n"
+  "? find   unique\n"
   "# take   count \n");
 }
 
