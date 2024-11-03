@@ -3,6 +3,7 @@
 #include <string.h>
 #include "k.h"
 #include "sym.h"
+#include "zv.h"
 
 /*
 s > e se
@@ -66,6 +67,7 @@ static U vlookup(char *v) {
   for(i=0;i<VI;i++) if(s==VNAMES[i]) return VVALUES[i];
   return r;
 }
+
 U pgreduce(pr *r) {
   int i,j;
   char c,q;
@@ -81,20 +83,39 @@ U pgreduce(pr *r) {
       if(!q) *pA++=values[c];
       else if(q==1) { /* 32 33 34 ... */
         a=*--pA;
-        if(15==a>>60) a=vlookup(a);
+        if(svx(a)) {
+          a=zv[svi(a)];
+          --zvi;
+          if(15==a>>60) a=vlookup(a);
+        }
         *pA++=k(c%32,0,a);
       }
       else if(q==2) { /* 64 65 66 ... */
         b=*--pA;
         a=*--pA;
-        if(c==64&&15==a>>60) { /* a:1 */
-          if(15==b>>60) b=vlookup(b);
-          VNAMES[VI]=sp(((U)a^15L<<60));
+        if(c==64&&svx(a)) { /* a:1 */
+          a=zv[svi(a)];
+          --zvi;
+          if(svx(b)) {
+            b=zv[svi(b)];
+            --zvi;
+            if(15==b>>60) b=vlookup(b);
+          }
+          VNAMES[VI]=sp((U)a^15L<<60);
           VVALUES[VI++]=kref(b);
+          *pA++=0;
         }
         else {
-          if(15==a>>60) a=vlookup(a);
-          if(15==b>>60) b=vlookup(b);
+          if(svx(a)) {
+            a=zv[svi(a)];
+            --zvi;
+            if(15==a>>60) a=vlookup(a);
+          }
+          if(svx(b)) {
+            b=zv[svi(b)];
+            --zvi;
+            if(15==b>>60) b=vlookup(b);
+          }
           *pA++=k(c%32,a,b);
         }
       }
@@ -105,7 +126,11 @@ U pgreduce(pr *r) {
       //if(pA[-1]==255) printf("!error\n");
     }
     v=*--pA;
-    if(15==v>>60) v=vlookup(v);
+    if(svx(v)) {
+      v=zv[svi(v)];
+      --zvi;
+      if(15==v>>60) v=vlookup(v);
+    }
     kprint(v);
   }
   return *pA;

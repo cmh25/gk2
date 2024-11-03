@@ -2,6 +2,7 @@
 #include <math.h>
 #include "x.h"
 #include "sym.h"
+#include "zv.h"
 
 static void push(pgs *s, int tt, U tv) {
   s->t[s->tc]=tt;
@@ -157,7 +158,8 @@ static int gname(pgs *pgs) {
   }
   c=*p; *p=0;
   z=sp(q);
-  push(pgs,T012,(U)z|0xfL<<60);
+  zv[zvi++]=(U)z|0xfL<<60;
+  push(pgs,T012,(U)zvi<<32); /* into mx */
   *p=c;
   return 1;
 }
@@ -210,4 +212,3 @@ int lex(pgs *pgs) {
   }
   return 1;
 }
-
