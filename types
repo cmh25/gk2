@@ -1,9 +1,14 @@
-#ifndef ZV_H
-#define ZV_H
+ax|tx
+----------
+0     8
+1     9
+2 c   a cv
+3 i   b iv
+4 f   c fv
+5     d
+6     e
+7 s   f sv
 
-#include "k.h"
-
-/*
 # U value k-core
  1      3     12     16    32 bits
 ax     tx     ox     mx    nx
@@ -13,13 +18,5 @@ z values are repl-level (non-kcore) objects. indicated when ax tx = 0 0 and mx !
 in this case, mx-1 is an index into the zv array of pointers. zv includes:
 - variable
 - lambda
-- elided arg
 - kerror (from core or signal)
-*/
-
-int svx(U x);
-int svi(U x);
-extern void *zv[32];
-extern int zvi;
-
-#endif /* ZV_H */
+- ...
