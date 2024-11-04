@@ -184,7 +184,7 @@ int lex(pgs *pgs) {
   while(1) {
     s=isblank(*p);
     while(isblank(*p)) ++p;
-    if((s||f)&&*p=='/') { while(*++p!='\n'){}; continue; }
+    if((s||f)&&*p=='/') { while(*++p!='\n'){}; while(*++p=='\n'){}; continue; }
     if(*p=='-') {
       if(!(s|f)&&(pgs->lt==T012||pgs->lt==T015)) { ++p; push(pgs,T013,'-'); }
       else if(isdigit(p[1])||(p[1]=='.'&&isdigit(p[2]))) gn(pgs);
@@ -197,7 +197,7 @@ int lex(pgs *pgs) {
     else if(*p=='[') { ++p; push(pgs,T016,0); }
     else if(*p==']') { ++p; push(pgs,T017,0); }
     else if(*p==';') { ++p; push(pgs,T010,0); }
-    else if(*p=='\n') { ++p; push(pgs,T011,0); }
+    else if(*p=='\n') { ++p; push(pgs,T011,0); while(*p=='\n')++p; f=1; continue; }
     else if(isalpha(*p)) gname(pgs);
     else if(*p=='\\'&&*(p+1)=='\\') {
       p+=2;
