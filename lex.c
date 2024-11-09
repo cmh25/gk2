@@ -130,13 +130,13 @@ static int gn(pgs *pgs) {
     }
   }
   if(ic) {
-    U x=tn(3,ic);
+    U x=K(3,ic);
     int *pi=sx;
     i(ic,pi[i]=iv[i])
     push(pgs,T012,x);
   }
   else if(fc) {
-    U x=tn(4,fc);
+    U x=K(4,fc);
     float *pf=sx;
     i(fc,pf[i]=fv[i])
     push(pgs,T012,x);

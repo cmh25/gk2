@@ -88,7 +88,7 @@ U pgreduce(pr *r) {
           --zvi;
           if(15==a>>60) a=vlookup(a);
         }
-        *pA++=k(c%32,0,a);
+        *pA++=k(c,0,a);
       }
       else if(q==2) { /* 64 65 66 ... */
         b=*--pA;
@@ -116,7 +116,7 @@ U pgreduce(pr *r) {
             --zvi;
             if(15==b>>60) b=vlookup(b);
           }
-          *pA++=k(c%32,a,b);
+          *pA++=k(c-32,a,b);
         }
       }
       else if(q==3) { /* 96 97 98 ... sys monadic (exit) */
