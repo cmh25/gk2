@@ -4,6 +4,7 @@
 #include "k.h"
 #include "sym.h"
 #include "zv.h"
+#include "scope.h"
 
 /*
 s > e se
@@ -57,18 +58,14 @@ static int RC[16]={1,2,2,1,1,1,1,1,0,2,1,3,3,2,0,3};
 
 #define Vvi s->V[s->vi]
 
-static char *VNAMES[256];
-static U *VVALUES[256];
-static VI=0;
 static U vlookup(char *v) {
   int i;
   U r=0;
   char *s=(char*)((U)v^15L<<60);
-  for(i=0;i<VI;i++) if(s==VNAMES[i]) return VVALUES[i];
-  return r;
+  return scope_get(gs,s);
 }
 
-U pgreduce(pr *r) {
+U pgreduce(pr *r, int p) {
   int i,j;
   char c,q;
   U A[256],*pA=A,a,b,v;
@@ -101,8 +98,7 @@ U pgreduce(pr *r) {
             --zvi;
             if(15==b>>60) b=vlookup(b);
           }
-          VNAMES[VI]=sp((U)a^15L<<60);
-          VVALUES[VI++]=kref(b);
+          scope_set(gs,a^15L<<60,b);
           *pA++=0;
         }
         else {
@@ -131,7 +127,7 @@ U pgreduce(pr *r) {
       --zvi;
       if(15==v>>60) v=vlookup(v);
     }
-    kprint(v);
+    if(p) kprint(v);
   }
   return *pA;
 }

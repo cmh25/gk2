@@ -13,6 +13,7 @@ U K(i2,i3);
 : (((a)==INT_MIN+1) ? -INFINITY \
 : (float)(a)))))
 
+void kinit();
 void kprint(U x);
 void kfree(U x);
 U kref(U x);

@@ -23,7 +23,7 @@ void load(char *fn) {
   p[t.st_size]=0;
   fclose(fp);
   r=pgparse(p);
-  x=pgreduce(r);
+  x=pgreduce(r,1);
   xfree(p);
   prfree(r);
   kfree(x);
@@ -45,11 +45,11 @@ void repl() {
     if(r) {
       if(TIMES) {
         timer_start();
-        for(j=0;j<TIMES;j++) x=pgreduce(r);
+        for(j=0;j<TIMES;j++) x=pgreduce(r,0);
         printf("%.3f\n",timer_stop());
       }
       else {
-        x=pgreduce(r);
+        x=pgreduce(r,1);
         xfree(r);
         kfree(x);
       }

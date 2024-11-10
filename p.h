@@ -47,7 +47,7 @@ typedef struct {
 pgs* pgnew(void);   
 void pgfree(pgs *s);
 pr* pgparse(char *q);
-U pgreduce(pr *r);
+U pgreduce(pr *r, int p);
 pr* prnew();
 void prfree(pr *r);
 
