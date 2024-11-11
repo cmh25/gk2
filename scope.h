@@ -11,7 +11,7 @@ typedef struct scope {
 } scope;
 
 extern scope *ks,*gs,*cs;
-extern dict *ktree,*C,*Z;
+//extern dict *ktree,*C,*Z;
 
 void scope_init();
 scope* scope_new(scope *p);

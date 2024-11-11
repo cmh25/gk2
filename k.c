@@ -33,16 +33,16 @@ static void pf(float f, char *c) {
   }
 }
 
-static int ffix(char *ds, int a0) {
+static int ffix(char *ds, int aaa) {
   if(strchr(ds,'.')||strchr(ds,'e')) return 0;
   if(!strcmp(ds,"inf")) { sprintf(ds,"0i"); return 0; }
   if(!strcmp(ds,"nan")) { sprintf(ds,"0n"); return 0; }
   if(!strcmp(ds,"-inf")) { sprintf(ds,"-0i"); return 0; }
-  return a0;
+  return aaa;
 }
 
 void kprint(U x) {
-  int *a,h,j,a0=1;
+  int *a,h,j,aaa=1;
   char ds[256];
   if(ax) {
     if(tx==3) pi((int)x,"\n");
@@ -63,16 +63,16 @@ void kprint(U x) {
       else if(1==nx) { printf(","); pf(*(float*)&a[0],"\n"); }
       else {
         sprintf(ds,"%0.*g",7,*(float*)&a[0]);
-        a0=ffix(ds,a0);
+        aaa=ffix(ds,aaa);
         printf("%s ",ds);
         for(j=1;j<nx-1;j++) {
           sprintf(ds,"%0.*g",7,*(float*)&a[j]);
-          a0=ffix(ds,a0);
+          aaa=ffix(ds,aaa);
           printf("%s ",ds);
         }
         sprintf(ds,"%0.*g",7,*(float*)&a[j]);
-        a0=ffix(ds,a0);
-        if(a0) strcat(ds,".0");
+        aaa=ffix(ds,aaa);
+        if(aaa) strcat(ds,".0");
         printf("%s\n",ds);
       }
     }

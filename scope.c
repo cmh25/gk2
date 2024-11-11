@@ -9,7 +9,7 @@
 
 static scope *scopea[SM];
 scope *ks,*gs,*cs;
-dict *ktree,*C,*Z;
+//dict *ktree,*C,*Z;
 
 void scope_init() {
   gs=scope_new(0);

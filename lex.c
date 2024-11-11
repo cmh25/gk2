@@ -3,6 +3,7 @@
 #include "x.h"
 #include "sym.h"
 #include "zv.h"
+#include "fn.h"
 
 static void push(pgs *s, int tt, U tv) {
   s->t[s->tc]=tt;
@@ -164,12 +165,39 @@ static int gname(pgs *pgs) {
   return 1;
 }
 
+static int gf(pgs *pgs) {
+  char *q,c,s=0;
+  fn *f;
+  int fc=0;
+  q=p;
+  while(1) {
+    if(*p=='"') p=xeqs(p);
+    switch(s) {
+    case 0:
+      if(*p=='}'&&fc==1) s=1;
+      else if(*p=='}') fc--;
+      else if(*p=='{') fc++;
+      break;
+    case 1: /* accept */
+      c=*p; *p=0;
+      f=fnnew(q);
+      push(pgs,T013,(U)f|0xeL<<60);
+      *p=c;
+      return 1;
+    default: return 0; /* error */
+    }
+    ++p;
+  }
+  return 1;
+}
+
 static void help() {
   printf(""
   "Verb    (monad)\n"
   "+ +            \n"
   "- -            \n"
   "* *      sqr   \n"
+  "%% div    sqrt  \n"
   "! mod    index \n"
   "@ @      first \n"
   "? find   unique\n"
@@ -196,6 +224,7 @@ int lex(pgs *pgs) {
     else if(*p==')') { ++p; push(pgs,T015,0); }
     else if(*p=='[') { ++p; push(pgs,T016,0); }
     else if(*p==']') { ++p; push(pgs,T017,0); }
+    else if(*p=='{') gf(pgs);
     else if(*p==';') { ++p; push(pgs,T010,0); }
     else if(*p=='\n') { ++p; push(pgs,T011,0); while(*p=='\n')++p; f=1; continue; }
     else if(isalpha(*p)) gname(pgs);

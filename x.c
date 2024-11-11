@@ -38,6 +38,21 @@ void* xrealloc(void *p, size_t s) {
   return p2;
 }
 
+void* xstrdup(const char *s) {
+  void *p=0;
+  if(!(p=strdup(s))) {
+    printf("error: xstrdup(): memory allocation failed\n");
+    exit(1);
+  }
+  return p;
+}
+
+void* xstrndup(const char *s, size_t n) {
+  void *p=xcalloc(n+1,1);
+  memcpy(p,s,n);
+  return p;
+}
+
 int xatoi(char *s) {
   int r;
   long a;
@@ -70,4 +85,73 @@ float xstrtof(char *s) {
     if((size_t)(e-s)!=strlen(s)) r=NAN;
   }
   return r;
+}
+
+char* xesc(char *p) {
+  char *ss;
+  int n,i,j=0;
+  if(!p) return 0;
+  n=strlen(p);
+  ss=xmalloc(1+strlen(p)*4);
+  for(i=0;i<n;i++) {
+    if(p[i]<32||p[i]>126) {
+      if(p[i]=='\b') { ss[j++]='\\'; ss[j++]='b'; }
+      else if(p[i]=='\t') { ss[j++]='\\'; ss[j++]='t'; }
+      else if(p[i]=='\n') { ss[j++]='\\'; ss[j++]='n'; }
+      else if(p[i]=='\r') { ss[j++]='\\'; ss[j++]='r'; }
+      else j+=sprintf(&ss[j],"\\%03o",(unsigned char)p[i]);
+    } else {
+      if(p[i]=='"') { ss[j++]='\\'; ss[j++]='"'; }
+      else if(p[i]=='\\') { ss[j++]='\\'; ss[j++]='\\'; }
+      else ss[j++]=p[i];
+    }
+  }
+  ss[j]=0;
+  return ss;
+}
+
+char* xunesc(char *p) {
+  char *ss;
+  int n,i,j=0,s=0;
+  unsigned char o;
+  if(!p) return 0;
+  n=strlen(p);
+  ss=xmalloc(1+n);
+  for(i=0;i<n;i++) {
+    switch(s) {
+    case 0:
+      if(strchr("\b\t\n\r\"",*p)) ss[j++]=*p;
+      else if(*p=='\\') s=1;
+      else ss[j++]=*p;
+      break;
+    case 1: /* escape */
+      if(isdigit(*p)&&*p<='7') { o=*p-48; s=2; } /* octal */
+      else { ss[j++]=*p; s=0; }
+      break;
+    case 2: /* octal */
+      if(isdigit(*p)&&*p<='7') { o*=8; o+=*p-48; s=3; }
+      else if(*p=='\\') { ss[j++]=o; s=1; }
+      else { ss[j++]=o; ss[j++]=*p; s=0; }
+      break;
+    case 3: /* octal */
+      if(isdigit(*p)&&*p<='7') { o*=8; o+=*p-48; ss[j++]=o; s=0; }
+      else if(*p=='\\') { ss[j++]=o; s=1; }
+      else { ss[j++]=o; ss[j++]=*p; s=0; }
+      break;
+    default: return 0; /* error */
+    }
+    ++p;
+  }
+  if(s==2||s==3) ss[j++]=o;
+  ss[j]=0;
+  return ss;
+}
+
+char* xeqs(char *p) {
+  ++p;
+  while(1) {
+    if(*p=='\\') p+=2;
+    if(*p++=='"') break;
+  }
+  return p;
 }
