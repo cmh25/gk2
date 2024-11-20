@@ -1,17 +1,17 @@
 #include "k.h"
 #include <stdio.h>
 #include <limits.h>
+#include <math.h>
+#include <string.h>
 #include "x.h"
 #include "scope.h"
 
-_f(_r,P(ax,x)P(63&rx,--rx;x)if(!tx)i(nx,_r(xU[i]))_k(x))
-__attribute((minsize,noinline)) U K(i2 i,i3 x){return ({k(i,x,0);});}
-void kfree(U x){_r(x);}
-U kref(U x){return r_(x);}
+void* px(U x){return(void*)k(0,x,0);}
+void kfree(U x){if(ax)return; k(15,0,x);}
+U kref(U x){if(ax)return x; return k(0,0,x);}
 
 void kinit() {
-  k_(0);
-  scope_init(0);
+  scope_init();
 }
 
 static void pi(int i, char *c) {
@@ -49,7 +49,8 @@ void kprint(U x) {
     else if(tx==4) { h=(int)x; pf(*(float*)&h,"\n"); }
   }
   else { /* vector */
-    a=sx;
+    //a=px(x);
+    a=(int*)k(0,x,0);
     if(tx==3) {
       if(!nx) printf("!0\n");
       else if(1==nx) { printf(","); pi(a[0],"\n"); }

@@ -1,5 +1,8 @@
 #include "lex.h"
+#include <stdio.h>
+#include <string.h>
 #include <math.h>
+#include <ctype.h>
 #include "x.h"
 #include "sym.h"
 #include "zv.h"
@@ -131,14 +134,14 @@ static int gn(pgs *pgs) {
     }
   }
   if(ic) {
-    U x=K(3,ic);
-    int *pi=sx;
+    U x=tn(3,ic);
+    int *pi=(int*)px(x);
     i(ic,pi[i]=iv[i])
     push(pgs,T012,x);
   }
   else if(fc) {
-    U x=K(4,fc);
-    float *pf=sx;
+    U x=tn(4,fc);
+    float *pf=(float*)px(x);
     i(fc,pf[i]=fv[i])
     push(pgs,T012,x);
   }

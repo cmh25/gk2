@@ -1,10 +1,13 @@
 #include "p.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "k.h"
 #include "sym.h"
 #include "zv.h"
 #include "scope.h"
+#include "x.h"
+#include "lex.h"
 
 /*
 s > e se
@@ -58,7 +61,7 @@ static int RC[16]={1,2,2,1,1,1,1,1,0,2,1,3,3,2,0,3};
 
 #define Vvi s->V[s->vi]
 
-static U vlookup(char *v) {
+static U vlookup(U v) {
   int i;
   U r=0;
   char *s=(char*)((U)v^15L<<60);
@@ -85,7 +88,7 @@ U pgreduce(pr *r, int p) {
           --zvi;
           if(15==a>>60) a=vlookup(a);
         }
-        *pA++=k(c,0,a);
+        *pA++=k(c%32,0,a);
       }
       else if(q==2) { /* 64 65 66 ... */
         b=*--pA;
@@ -98,7 +101,7 @@ U pgreduce(pr *r, int p) {
             --zvi;
             if(15==b>>60) b=vlookup(b);
           }
-          scope_set(gs,a^15L<<60,b);
+          scope_set(gs,(char*)(a^15L<<60),b);
           *pA++=0;
         }
         else {
@@ -112,7 +115,7 @@ U pgreduce(pr *r, int p) {
             --zvi;
             if(15==b>>60) b=vlookup(b);
           }
-          *pA++=k(c-32,a,b);
+          *pA++=k(c%32,a,b);
         }
       }
       else if(q==3) { /* 96 97 98 ... sys monadic (exit) */

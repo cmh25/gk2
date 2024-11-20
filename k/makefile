@@ -1,2 +1,4 @@
+o=-Ofast -fno-builtin -funsigned-char -fno-unwind-tables -Wno-parentheses -Wno-incompatible-pointer-types -Wfatal-errors -march=native
+
 a:?.[ch] makefile
-	clang-13 -Ofast -oa [az].c -fwritable-strings -funsigned-char -fno-unwind-tables -s -w -march=native
+	clang-17 -oa [az].c $o -s #-nostdlib

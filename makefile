@@ -1,10 +1,13 @@
+o=-Oz -funsigned-char -fno-unwind-tables -Wno-parentheses -Wno-incompatible-pointer-types -Wfatal-errors
+g=-g -funsigned-char -fno-unwind-tables -Wno-parentheses -Wno-incompatible-pointer-types -Wfatal-errors
+
 all: gk
 
 gk:
-	clang-13 -Ofast -ogk k/[az].c p.c lex.c timer.c x.c k.c main.c repl.c sym.c zv.c dict.c scope.c fn.c -w -march=native -funsigned-char -fno-stack-protector -fno-unwind-tables
+	clang-17 -ogk k/a.c p.c lex.c timer.c x.c k.c main.c repl.c sym.c zv.c dict.c scope.c fn.c $o -mavx512f -mavx512bw -mpclmul -mavx512dq -mavx512vbmi -mavx512vpopcntdq
 
 gkd:
-	clang-13 -g -ogk k/[az].c p.c lex.c timer.c x.c k.c main.c repl.c sym.c zv.c dict.c scope.c fn.c -w -march=native -funsigned-char -fno-stack-protector -fno-unwind-tables
+	clang-17 -ogk k/a.c p.c lex.c timer.c x.c k.c main.c repl.c sym.c zv.c dict.c scope.c fn.c $g -mavx512f -mavx512bw -mpclmul -mavx512dq -mavx512vbmi -mavx512vpopcntdq
 
 test: gk
 	$(MAKE) -C t

@@ -1,46 +1,52 @@
-#define M(m,n,z) r(mz(m,tn(tx,m*n)),z)
-#define Xz(z)                 {VX=sx;J(Nx,z;++X)}
-#define RV(t,n,x,z) R(t,n,VX=x;VR=sr;J(Nr,R_=_(z)))
-#define X(z)     r(uz(x),VX=sx;VR=sr;J(Nx,R_=_(z);++X))
-#define R3(z)    r(uz(x),UX=sx;UR=sr;J(nx,R_=_(z);++X))
-#define R2(z) __(r(uz(x),iX=sx;iR=sr;j(nx,R_=_(z);++X)))
-#define R(t,n,z) r(tn(t,n),z)
-#define _tn(g,z) _U(g,z,it,in)
-#include"k.h"
-#define V2(g,f) VF(g,o(p##f)(a,b)) //#define V2(t,g,f) VF(g,bu(elementwise_##f)((t##6)a,(t##6)b))
-UV(bi,o(cvtd2mask)(a))UV(bj,o(cvtq2mask)(a))_U(c2,bu(ia32_compressstoresi512_mask)(s,a,m);nu(m),ss,im,Va)
-_F(X9,-a^bu(ia32_pclmulqdq128)((j4){x},~(j4){},0)[0])Vg(S6,2>i?o(vpermi2varqi)(z0,i?62+I0:63+I0,a):$4(i-2,o(alignd)(a,z0,15),o(alignd)(a,z0,14),o(alignd)(a,z0,12),o(alignd)(a,z0,8)))
-VE(sq,o(sqrtps)(x,4))Vf(pc,o(vpopcntq_)(a))V2(a4,shufb)V2(A0,ermvarqi)V2(A2,ermvarsi)V2(LG,minub)V2(MG,maxub)V2(LI,minud)V2(MI,maxud)
-#define A_ *A++
-#define R_ *R++
-#define ex (4>tx?(int)ix:*(e2*)&x)
-#define Nx n3(nx<<bx) 
-#define Ix ((i6)*X)
-#define Ex ((e6)*X)
-#define ae x(a,xe)
-#define ka x(a,kx)
-#define ga x(a,gx)
-#define ia x(a,ix)
-#define ea x(a,ex)
-#define jx (b(60)&x)
+#define M(m,n,z) r(mz(m,x(en(m*n-n,n,a),tn(ta,x)-x+m*n)),z)
+#define _x(z) r(_(z),_r(x))
+#define _a(z) r(_(z),_r(a))
+#define V_(b,z)   _x(r(tn(1+tx,nx),V*R=r0;b*X=x0;J(Nr,R_=_(z))))
+#define _V(t,b,z) _x(r(tn(t,nx   ),b*R=r0;V*X=x0;J(Nx,R_=_(z))))
+#define Q(n,z)    _x(r(tn(0,n ),U*R=r0;j(nr,R_=_(z))))
+#define H(t,b,z)  _x(r(tn(t,nx),b*R=r0;j(nx,R_=_(z))))
+#define U(z) r(uz(x),U*R=r0;U*X=x0;J(nx,R_=_(z)))
+#define V(z) r(uz(x),V*R=r0;V*X=x0;J(Nx,R_=_(z)))
+#define sx ((i0*)(0x7fffffffffc0&rx))
+#include"_.h"//to[mn] 4/12/48
+#define o(f) B(ia32_##f##512) //UV(bj,o(cvtq2mask)(a))_U(c2,B(ia32_compressstoresi512_mask)(s,a,m);nu(m),ss,im,Va)
+#define V2(g,f) VF(g,o(f)(a,b))
+UV(bg,B(ia32_cvtb2mask512)(a))UV(bi,o(cvtd2mask)(a))VE(_q,o(sqrtps)(x,4))Vf(pc,o(vpopcntq_)(a))V2(a4,pshufb)V2(A0,permvarqi)V2(A2,permvarsi)
+_F(X9,-a^B(ia32_pclmulqdq128)((j4){x},~(j4){},0)[0])Vg(S6,2>i?o(vpermi2varqi)(z0,i?62+I0:63+I0,a):$4(i-2,o(alignd)(a,z0,15),o(alignd)(a,z0,14),o(alignd)(a,z0,12),o(alignd)(a,z0,8)))
+#if 13<__clang_major__
+VF(MG,B(elementwise_max)(a,b))VF(MI,B(elementwise_max)((i6)a,(i6)b))
+#else
+V2(MG,pmaxub)V2(MI,pmaxud)
+#endif
+_u(tb,t(1,i))_U(te,t(4,*(i2*)&e),ee)
+#define _e(g,z,x...) _D(e2,g,z,x)
 #define J(n,z) j(n6(n),z)
-#define eA e2*A
-#define eR e2*R
-#define iR i2*R
-#define iA i2*A
-#define iX i2*X
-#define IA i6*A
-#define IX i6*X
-#define ER e6*R
+#define X_ *X++
+#define R_ *R++
+_g(mz,(U)i<<32|~(b(16)<<32)&x)VF(SG,a+b)VF(SI,(i6)a+b)VF(SE,(e6)a+b)j6 P,Q={0xc6a4a7935bd1e995};_D(j6,PQ,Q^=P;P=(P<<55|P>>9)^Q^Q<<14;Q=Q<<37|Q>>27;P+Q)
+#define ra O[4095&a>>48]
+#define rx O[4095&x>>48]
+#define Nx n3(nx<<bx) 
+#define bx b[tx]
+#define ix (i2)x
+#define X_ *X++
+#define R_ *R++
+#define J(n,z) j(n6(n),z)
+#define Nx n3(nx<<bx) 
+#define AZ *A++
+#define Ix ((i6)X_)
+#define Ex ((e6)X_)
+#define ex (4>tx?(int)ix:*(e2*)&x)
+#define jx (b(60)&x)
 #define EA e6*A
 #define EX e6*X
-#define Ib i6 b
 #define Eb e6 b
 #define Ez e6 z
 #define QR Qr(ax)
-#define _x(z) r(_(z),$(63&rx,--rx)_k(x))
-#define __(z) r(_(z),$(63&ra,--ra)_k(a))
 #define Qz(b) P(b,0)
 #define Qr(b) P(b,1)
-#define Qt(b) P(b,2)
-#define Qn(b) P(b,3)
+#define Qn(b) P(b,2)
+#define Qt(b) P(b,3)
+_U(ds,J(n,R_=X_)n,in,VR,VX)//xV[Nx>>6]|=(i0)(Nx%64)<=I0 
+
+
