@@ -1,18 +1,20 @@
-o=-Oz -funsigned-char -fno-unwind-tables -Wno-parentheses -Wno-incompatible-pointer-types -Wfatal-errors
-g=-g -funsigned-char -fno-unwind-tables -Wno-parentheses -Wno-incompatible-pointer-types -Wfatal-errors
+CORE=k.shakti
 
 all: gk
 
 gk:
-	clang-17 -ogk k/a.c p.c lex.c timer.c x.c k.c main.c repl.c sym.c zv.c dict.c scope.c fn.c $o -mavx512f -mavx512bw -mpclmul -mavx512dq -mavx512vbmi -mavx512vpopcntdq
+	$(MAKE) -C $(CORE)
+	clang-17 -O3 -ogk p.c lex.c timer.c x.c k.c main.c repl.c sym.c zv.c dict.c scope.c fn.c $(CORE)/k.a
 
 gkd:
-	clang-17 -ogk k/a.c p.c lex.c timer.c x.c k.c main.c repl.c sym.c zv.c dict.c scope.c fn.c $g -mavx512f -mavx512bw -mpclmul -mavx512dq -mavx512vbmi -mavx512vpopcntdq
+	$(MAKE) -C $(CORE)
+	clang-17 -g -ogk p.c lex.c timer.c x.c k.c main.c repl.c sym.c zv.c dict.c scope.c fn.c $(CORE)/kd.a
 
 test: gk
 	$(MAKE) -C t
 
 clean:
+	$(MAKE) -C $(CORE) clean
 	rm -f gk
 
 .PHONY: test
