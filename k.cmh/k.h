@@ -7,6 +7,7 @@
 #define mx (b(16)&x>>32)
 #define nx (int)x
 #define _(z) ({z;})
+#define x(b,z) _(typeof(b)x=b;z)
 #define W(z) while(_(z))
 #define i(b,z) {int $=b;int i=0;W(i<$){z;++i;}}
 #define j(b,z) {int $=b;int j=0;W(j<$){z;++j;}}
