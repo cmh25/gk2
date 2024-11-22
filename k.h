@@ -17,7 +17,7 @@ extern U tn(int,int);
 #define j(b,z) {int $=b;int j=0;W(j<$){z;++j;}}
 #define t(t,z) ((U)(t)<<60|(z))
 
-#define I2F(a) \
+#define FI(a) \
   ((a)==INT_MAX ? INFINITY \
 : (((a)==INT_MIN ? NAN \
 : (((a)==INT_MIN+1) ? -INFINITY \

@@ -106,7 +106,7 @@ static int gn(pgs *pgs) {
         else if(r==2) {
           fm=imm;
           fv=xrealloc(fv,fm*sizeof(float));
-          for(i=0;i<ic;i++) fv[fc++]=I2F(iv[i]);
+          for(i=0;i<ic;i++) fv[fc++]=FI(iv[i]);
           xfree(iv); iv=0; ic=0;
           if(fc==fm) { fm<<=1; fv=xrealloc(fv,fm*sizeof(float)); }
           fv[fc++]=fff;
@@ -121,7 +121,7 @@ static int gn(pgs *pgs) {
         while(isblank(*p))++p;
         r=gn_();
         if(r==1) {
-          fff=I2F(iii);
+          fff=FI(iii);
           if(fc==fm) { fm<<=1; fv=xrealloc(fv,fm*sizeof(float)); }
           fv[fc++]=fff;
         }

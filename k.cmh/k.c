@@ -1,25 +1,11 @@
 #include "k.h"
 #include <stdlib.h>
+#include "v.h"
 
 static void *O[512];
 static int R[512];
 static int F[512];
 static int oi,om=512,fm=512,fi=-1;
-
-U plus(U a, U x) {
-  U r=0;
-  float f;
-  switch(x(a,tx)) {
-  case 3:
-    r=t(3,(int)a+(int)x);
-    break;
-  case 4:
-    f=(*(float*)&a)+(*(float*)&x);
-    r=t(4,*((int*)&f));
-    break;
-  }
-  return r;
-}
 
 /*
 k(0,x,0)  // raw pointer
@@ -56,7 +42,7 @@ U tn(int t, int n) {
     if(fi>-1) j=fi--;
     else j=oi++;
     O[j]=v;
-    r=t(11,n);
+    r=t(t+8,n);
     r|=(U)j<<48;
   }
   return r;
