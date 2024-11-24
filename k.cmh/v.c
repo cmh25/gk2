@@ -483,3 +483,7 @@ U F(U a,U x) { \
 LME(less,<)
 LME(more,>)
 LME(equal,==)
+
+U match(U a,U x) {
+  return t(3,!kcmpr(a,x));
+}

@@ -30,6 +30,7 @@ U k(int i,U a,U x) {
     case 7: r=less(a,x); break;
     case 8: r=more(a,x); break;
     case 9: r=equal(a,x); break;
+    case 10: r=match(a,x); break;
     }
   }
   else { /* monad */
@@ -61,6 +62,40 @@ U tn(int t,int n) {
     O[j]=v;
     r=t(t+8,n);
     r|=(U)j<<48;
+  }
+  return r;
+}
+
+int kcmpr(U a, U x) {
+  int r=0,i,at=a>>60,xt=x>>60,*pai,*pxi;
+  float *paf,*pxf;
+  if(at<xt) r=-1;
+  else if(at>xt) r=1;
+  else if(at==3 && (int)a<(int)x) r=-1;
+  else if(at==3 && (int)a>(int)x) r=1;
+  else if(at==4 && fu(a)<fu(x)) r=-1;
+  else if(at==4 && fu(a)>fu(x)) r=1;
+  else if(at==0xb) {
+    pai=(int*)k(0,a,0);
+    pxi=(int*)k(0,x,0);
+    for(i=0;;++i) {
+      if(i==x(a,nx) && i<nx) { r=-1; break; }
+      else if(i==nx && i<x(a,nx)) { r=1; break; }
+      else if(i==x(a,nx) && i==nx) break;
+      else if(pai[i]<pxi[i]) { r=-1; break; }
+      else if(pai[i]>pxi[i]) { r=1; break; }
+    }
+  }
+  else if(at==0xc) {
+    paf=(float*)k(0,a,0);
+    pxf=(float*)k(0,x,0);
+    for(i=0;;++i) {
+      if(i==x(a,nx) && i<nx) { r=-1; break; }
+      else if(i==nx && i<x(a,nx)) { r=1; break; }
+      else if(i==x(a,nx) && i==nx) break;
+      else if(paf[i]<pxf[i]) { r=-1; break; }
+      else if(paf[i]>pxf[i]) { r=1; break; }
+    }
   }
   return r;
 }

@@ -1,4 +1,5 @@
-CORE=k.shakti
+CORE=k.cmh
+#CORE=k.shakti
 
 all: gk
 

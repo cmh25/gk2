@@ -33,5 +33,6 @@ typedef unsigned long U;
 typedef unsigned int uint;
 U k(int i, U a, U x);
 U tn(int t, int n);
+int kcmpr(U a, U x);
 
 #endif /* K_H */
