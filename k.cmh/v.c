@@ -27,25 +27,38 @@ U F(U a,U x) { \
     } break; \
   case 4: \
     switch(xt) { \
-    case 3: r=F(x,a); break; \
+    case 3: f=fu(a) O fi((int)x); r=t(4,*(uint*)&f); break; \
     case 4: f=fu(a) O fu(x); r=t(4,*(uint*)&f); break; \
     case 0xb: \
       r=tn(4,nx); \
       prf=(float*)k(0,r,0); \
       pxi=(int*)k(0,x,0); \
-      i(nx,*prf++=fu(a) O fi(*pxi);++pxi) \
+      f=fu(a); \
+      i(nx,*prf++=f O fi(*pxi);++pxi) \
       break; \
     case 0xc: \
       r=tn(4,nx); \
       prf=(float*)k(0,r,0); \
       pxf=(float*)k(0,x,0); \
-      i(nx,*prf++=fu(a) O *pxf++) \
+      f=fu(a); \
+      i(nx,*prf++=f O *pxf++) \
       break; \
     } break; \
   case 0xb: \
     switch(xt) { \
-    case 3: r=F(x,a); break; \
-    case 4: r=F(x,a); break; \
+    case 3: \
+      r=tn(3,x(a,nx)); \
+      pri=(int*)k(0,r,0); \
+      pai=(int*)k(0,a,0); \
+      i(nx,*pri++=*pai++ O (int)x) \
+      break; \
+    case 4: \
+      r=tn(4,x(a,nx)); \
+      prf=(float*)k(0,r,0); \
+      pai=(int*)k(0,a,0); \
+      f=fu(x); \
+      i(x(a,nx),*prf++=fi(*pai) O f;++pai) \
+      break; \
     case 0xb: \
       r=tn(3,nx); \
       pri=(int*)k(0,r,0); \
@@ -63,9 +76,27 @@ U F(U a,U x) { \
     } break; \
   case 0xc: \
     switch(xt) { \
-    case 3: r=F(x,a); break; \
-    case 4: r=F(x,a); break; \
-    case 0xb: r=F(x,a); break; \
+    case 3: \
+      r=tn(4,x(a,nx)); \
+      prf=(float*)k(0,r,0); \
+      paf=(float*)k(0,a,0); \
+      f=fi((int)x); \
+      i(x(a,nx),*prf++=*paf++ O f) \
+      break; \
+    case 4: \
+      r=tn(4,x(a,nx)); \
+      prf=(float*)k(0,r,0); \
+      paf=(float*)k(0,a,0); \
+      f=fu(x); \
+      i(x(a,nx),*prf++=*paf++ O f) \
+      break; \
+    case 0xb: \
+      r=tn(4,nx); \
+      prf=(float*)k(0,r,0); \
+      paf=(float*)k(0,a,0); \
+      pxi=(int*)k(0,x,0); \
+      i(nx,*prf++=*paf++ O fi(*pxi);++pxi) \
+      break; \
     case 0xc: \
       r=tn(4,nx); \
       prf=(float*)k(0,r,0); \
@@ -131,14 +162,14 @@ U divide(U a,U x) {
     case 3:
       r=tn(4,x(a,nx));
       prf=(float*)k(0,r,0);
-      pai=(int*)k(0,x,0);
+      pai=(int*)k(0,a,0);
       f=fi((int)x);
       i(x(a,nx),*prf++=fi(*pai) / f;++pai)
       break;
     case 4:
       r=tn(4,x(a,nx));
       prf=(float*)k(0,r,0);
-      pai=(int*)k(0,x,0);
+      pai=(int*)k(0,a,0);
       f=fu(x);
       i(x(a,nx),*prf++=fi(*pai) / f;++pai)
       break;
@@ -162,14 +193,14 @@ U divide(U a,U x) {
     case 3:
       r=tn(4,x(a,nx));
       prf=(float*)k(0,r,0);
-      paf=(float*)k(0,x,0);
+      paf=(float*)k(0,a,0);
       f=fi((int)x);
       i(x(a,nx),*prf++=*paf++ / f)
       break;
     case 4:
       r=tn(4,x(a,nx));
       prf=(float*)k(0,r,0);
-      paf=(float*)k(0,x,0);
+      paf=(float*)k(0,a,0);
       f=fu(x);
       i(x(a,nx),*prf++=*paf++ / f)
       break;

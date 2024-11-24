@@ -1,6 +1,7 @@
 #include "k.h"
 #include <stdlib.h>
 #include "v.h"
+#include <stdio.h>
 
 static void *O[512];
 static int R[512];
@@ -14,12 +15,12 @@ k(15,0,x) // ref -
 k(0,0,0)  // workspace
 */
 // P=":+-*%&|<>=~.!@?#_^,$LMSA..ERZ
-U k(int i, U a, U x) {
+U k(int i,U a,U x) {
   U r=0;
   int j;
   if(a) { /* dyad */
     switch(i) {
-    case 0: if(!x) r=(U)O[b(12)&a>>48]; break; /* deref */
+    case 0: if(!x&&!x(a,ax)) r=(U)O[b(12)&a>>48]; break; /* deref */
     case 1: r=plus(a,x); break;
     case 2: r=minus(a,x); break;
     case 3: r=times(a,x); break;
@@ -33,7 +34,7 @@ U k(int i, U a, U x) {
     case 3: r=square(x); break;
     case 12: r=bang(x); break;
     case 15: /* ref - */
-      if(x) {
+      if(x&&!ax) {
         j=b(12)&x>>48;
         if(R[j])R[j]--;
         else { free(O[j]); F[++fi]=j; }
@@ -43,7 +44,7 @@ U k(int i, U a, U x) {
   return r;
 }
 
-U tn(int t, int n) {
+U tn(int t,int n) {
   U r=0;
   void *v=0;
   int j;
