@@ -25,6 +25,11 @@ U k(int i,U a,U x) {
     case 2: r=minus(a,x); break;
     case 3: r=times(a,x); break;
     case 4: r=divide(a,x); break;
+    case 5: r=minand(a,x); break;
+    case 6: r=maxor(a,x); break;
+    case 7: r=less(a,x); break;
+    case 8: r=more(a,x); break;
+    case 9: r=equal(a,x); break;
     }
   }
   else { /* monad */

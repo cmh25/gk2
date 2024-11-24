@@ -258,3 +258,228 @@ U square(U x) {
   }
   return r;
 }
+
+#define MAMO(F,O) \
+U F(U a,U x) { \
+  U r; \
+  int *pri,*pai,*pxi; \
+  float *prf,*paf,*pxf; \
+  int at=a>>60,xt=x>>60; \
+  float f; \
+  switch(at) { \
+  case 3: \
+    switch(xt) { \
+    case 3: r=(int)a O (int)x?a:x; break; \
+    case 4: f=fi((int)a); f=f O fu(x)?f:fu(x); r=t(4,*(uint*)&f); break; \
+    case 0xb: \
+      r=tn(3,nx); \
+      pri=(int*)k(0,r,0); \
+      pxi=(int*)k(0,x,0); \
+      i(nx,*pri++=(int)a O *pxi?a:*pxi;++pxi) \
+      break; \
+    case 0xc: \
+      r=tn(4,nx); \
+      prf=(float*)k(0,r,0); \
+      pxf=(float*)k(0,x,0); \
+      f=fi((int)a); \
+      i(nx,*prf++=f O *pxf?f:*pxf;++pxf) \
+      break; \
+    } break; \
+  case 4: \
+    switch(xt) { \
+    case 3: f=fi((int)x); f=f O fu(a)?f:fu(a); r=t(4,*(uint*)&f); break; \
+    case 4: r=fu(a) O fu(x)?a:x; break; \
+    case 0xb: \
+      r=tn(4,nx); \
+      prf=(float*)k(0,r,0); \
+      pxi=(int*)k(0,x,0); \
+      f=fu(a); \
+      i(nx,*prf++=f O fi(*pxi)?f:fi(*pxi);++pxi) \
+      break; \
+    case 0xc: \
+      r=tn(4,nx); \
+      prf=(float*)k(0,r,0); \
+      pxf=(float*)k(0,x,0); \
+      f=fu(a); \
+      i(nx,*prf++=f O *pxf?f:*pxf;++pxf) \
+      break; \
+    } break; \
+  case 0xb: \
+    switch(xt) { \
+    case 3: \
+      r=tn(3,x(a,nx)); \
+      pri=(int*)k(0,r,0); \
+      pai=(int*)k(0,a,0); \
+      i(x(a,nx),*pri++=*pai O (int)x?*pai:x;++pai) \
+      break; \
+    case 4: \
+      r=tn(4,x(a,nx)); \
+      prf=(float*)k(0,r,0); \
+      pai=(int*)k(0,a,0); \
+      f=fu(x); \
+      i(x(a,nx),*prf++=fi(*pai) O f?fi(*pai):f;++pai) \
+      break; \
+    case 0xb: \
+      r=tn(3,nx); \
+      pri=(int*)k(0,r,0); \
+      pai=(int*)k(0,a,0); \
+      pxi=(int*)k(0,x,0); \
+      i(nx,*pri++=*pai O *pxi?*pai:*pxi;++pai;++pxi) \
+      break; \
+    case 0xc: \
+      r=tn(4,nx); \
+      prf=(float*)k(0,r,0); \
+      pai=(int*)k(0,a,0); \
+      pxf=(float*)k(0,x,0); \
+      i(nx,*prf++=fi(*pai) O *pxf?fi(*pai):*pxf;++pai;++pxf) \
+      break; \
+    } break; \
+  case 0xc: \
+    switch(xt) { \
+    case 3: \
+      r=tn(4,x(a,nx)); \
+      prf=(float*)k(0,r,0); \
+      paf=(float*)k(0,a,0); \
+      f=fi((int)x); \
+      i(x(a,nx),*prf++=*paf O f?*paf:f;++paf) \
+      break; \
+    case 4: \
+      r=tn(4,x(a,nx)); \
+      prf=(float*)k(0,r,0); \
+      paf=(float*)k(0,a,0); \
+      f=fu(x); \
+      i(x(a,nx),*prf++=*paf O f?*paf:f;++paf) \
+      break; \
+    case 0xb: \
+      r=tn(4,nx); \
+      prf=(float*)k(0,r,0); \
+      paf=(float*)k(0,a,0); \
+      pxi=(int*)k(0,x,0); \
+      i(nx,*prf++=*paf O fi(*pxi)?*paf:fi(*pxi);++paf;++pxi) \
+      break; \
+    case 0xc: \
+      r=tn(4,nx); \
+      prf=(float*)k(0,r,0); \
+      paf=(float*)k(0,a,0); \
+      pxf=(float*)k(0,x,0); \
+      i(nx,*prf++=*paf O *pxf?*paf:*pxf;++paf;++pxf) \
+      break; \
+    } break; \
+  } \
+  return r; \
+}
+MAMO(minand,<)
+MAMO(maxor,>)
+
+#define LME(F,O) \
+U F(U a,U x) { \
+  U r=0; \
+  int *pri,*pai,*pxi; \
+  float *prf,*paf,*pxf; \
+  int at=a>>60,xt=x>>60; \
+  float f; \
+  switch(at) { \
+  case 3: \
+    switch(xt) { \
+    case 3: r=t(3,(int)a O (int)x); break; \
+    case 4: r=t(3,(int)a O fu(x)); break; \
+    case 0xb: \
+      r=tn(3,nx); \
+      pri=(int*)k(0,r,0); \
+      pxi=(int*)k(0,x,0); \
+      i(nx,*pri++=(int)a O *pxi++) \
+      break; \
+    case 0xc: \
+      r=tn(3,nx); \
+      pri=(int*)k(0,r,0); \
+      pxf=(float*)k(0,x,0); \
+      f=fi((int)a); \
+      i(nx,*pri++=f O *pxf++) \
+      break; \
+    } break; \
+  case 4: \
+    switch(xt) { \
+    case 3: r=t(3,fu(a) O (int)x); break; \
+    case 4: r=t(3,fu(a) O fu(x)); break; \
+    case 0xb: \
+      r=tn(3,nx); \
+      pri=(int*)k(0,r,0); \
+      pxi=(int*)k(0,x,0); \
+      f=fu(a); \
+      i(nx,*pri++=f O fi(*pxi);++pxi) \
+      break; \
+    case 0xc: \
+      r=tn(3,nx); \
+      pri=(int*)k(0,r,0); \
+      pxf=(float*)k(0,x,0); \
+      f=fu(a); \
+      i(nx,*pri++=f O *pxf++) \
+      break; \
+    } break; \
+  case 0xb: \
+    switch(xt) { \
+    case 3: \
+      r=tn(3,x(a,nx)); \
+      pri=(int*)k(0,r,0); \
+      pai=(int*)k(0,a,0); \
+      i(x(a,nx),*pri++=*pai++ O (int)x) \
+      break; \
+    case 4: \
+      r=tn(3,x(a,nx)); \
+      pri=(int*)k(0,r,0); \
+      pai=(int*)k(0,a,0); \
+      f=fu(x); \
+      i(x(a,nx),*pri++=fi(*pai) O f;++pai) \
+      break; \
+    case 0xb: \
+      r=tn(3,nx); \
+      pri=(int*)k(0,r,0); \
+      pai=(int*)k(0,a,0); \
+      pxi=(int*)k(0,x,0); \
+      i(nx,*pri++=*pai++ O *pxi++) \
+      break; \
+    case 0xc: \
+      r=tn(3,nx); \
+      pri=(int*)k(0,r,0); \
+      pai=(int*)k(0,a,0); \
+      pxf=(float*)k(0,x,0); \
+      i(nx,*pri++=fi(*pai) O *pxf++;++pai) \
+      break; \
+    } break; \
+  case 0xc: \
+    switch(xt) { \
+    case 3: \
+      r=tn(3,x(a,nx)); \
+      pri=(int*)k(0,r,0); \
+      paf=(float*)k(0,a,0); \
+      f=fi((int)x); \
+      i(x(a,nx),*pri++=*paf++ O f) \
+      break; \
+    case 4: \
+      r=tn(3,x(a,nx)); \
+      pri=(int*)k(0,r,0); \
+      paf=(float*)k(0,a,0); \
+      f=fu(x); \
+      i(x(a,nx),*pri++=*paf++ O f) \
+      break; \
+    case 0xb: \
+      r=tn(3,nx); \
+      pri=(int*)k(0,r,0); \
+      paf=(float*)k(0,a,0); \
+      pxi=(int*)k(0,x,0); \
+      i(nx,*pri++=*paf++ O fi(*pxi);++pxi) \
+      break; \
+    case 0xc: \
+      r=tn(3,nx); \
+      pri=(int*)k(0,r,0); \
+      paf=(float*)k(0,a,0); \
+      pxf=(float*)k(0,x,0); \
+      i(nx,*pri++=*paf++ O *pxf++) \
+      break; \
+    } break; \
+  } \
+  return r; \
+}
+LME(less,<)
+LME(more,>)
+LME(equal,==)
