@@ -103,6 +103,7 @@ U pgreduce(pr *r, int p) {
           }
           scope_set(gs,(char*)(a^15L<<60),b);
           *pA++=0;
+          kfree(b);
         }
         else {
           if(svx(a)) {
@@ -119,7 +120,7 @@ U pgreduce(pr *r, int p) {
         }
       }
       else if(q==3) { /* 96 97 98 ... sys monadic (exit) */
-        if(c==96) exit(0);
+        if(c==96) { prfree(r); scope_free(gs); exit(0); }
       }
       //suspend console, invoke repl
       //if(pA[-1]==255) printf("!error\n");
@@ -130,7 +131,10 @@ U pgreduce(pr *r, int p) {
       --zvi;
       if(15==v>>60) v=vlookup(v);
     }
-    if(p) kprint(v);
+    if(p) {
+      kprint(v);
+      kfree(v);
+    }
   }
   return *pA;
 }
@@ -208,6 +212,7 @@ void prfree(pr *r) {
   xfree(r->bc);
   xfree(r->bcn);
   xfree(r->values);
+  xfree(r);
 }
 pr* pgparse(char *q) {
   int i,j,r;

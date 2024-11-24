@@ -26,7 +26,6 @@ void load(char *fn) {
   x=pgreduce(r,1);
   xfree(p);
   prfree(r);
-  kfree(x);
 }
 
 void repl() {
@@ -45,14 +44,14 @@ void repl() {
     if(r) {
       if(TIMES) {
         timer_start();
-        for(j=0;j<TIMES;j++) x=pgreduce(r,0);
+        for(j=0;j<TIMES;j++) kfree(pgreduce(r,0));
         printf("%.3f\n",timer_stop());
       }
       else {
         x=pgreduce(r,1);
-        xfree(r);
         kfree(x);
       }
+      prfree(r);
     }
     xfree(p);
     printf("  ");

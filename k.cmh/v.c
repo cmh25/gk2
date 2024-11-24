@@ -50,7 +50,7 @@ U F(U a,U x) { \
       r=tn(3,x(a,nx)); \
       pri=(int*)k(0,r,0); \
       pai=(int*)k(0,a,0); \
-      i(nx,*pri++=*pai++ O (int)x) \
+      i(x(a,nx),*pri++=*pai++ O (int)x) \
       break; \
     case 4: \
       r=tn(4,x(a,nx)); \

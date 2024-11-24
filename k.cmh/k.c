@@ -43,9 +43,13 @@ U k(int i,U a,U x) {
       if(x&&!ax) {
         j=b(12)&x>>48;
         if(R[j])R[j]--;
-        else { free(O[j]); F[++fi]=j; }
+        else { free(O[j]); O[j]=0; F[++fi]=j; }
       }
     }
+  }
+  if(i&&i!=15) {
+    k(15,0,a);
+    k(15,0,x);
   }
   return r;
 }
@@ -57,7 +61,7 @@ U tn(int t,int n) {
   if(t==3) v=malloc(sizeof(int)*n);
   else if(t==4) v=malloc(sizeof(float)*n);
   if(v) {
-    if(fi>-1) j=fi--;
+    if(fi>-1) j=F[fi--];
     else j=oi++;
     O[j]=v;
     r=t(t+8,n);
