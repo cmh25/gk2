@@ -13,20 +13,31 @@ k(0,0,x)  // ref +
 k(15,0,x) // ref -
 k(0,0,0)  // workspace
 */
+// P=":+-*%&|<>=~.!@?#_^,$LMSA..ERZ
 U k(int i, U a, U x) {
   U r=0;
   int j;
-  switch(i) {
-  case 0:
-    if(a&&!x) r=(U)O[b(12)&a>>48]; /* deref */
-    if((!a)&&x) R[b(12)&a>>48]++;    /* ref + */
-    break;
-  case 1: r=plus(a,x); break;
-  case 15:
-    if((!a)&x) {
-      j=b(12&a>>48);
-      if(R[j])R[j]--;
-      else { free(O[j]); F[++fi]=j; }
+  if(a) { /* dyad */
+    switch(i) {
+    case 0: if(!x) r=(U)O[b(12)&a>>48]; break; /* deref */
+    case 1: r=plus(a,x); break;
+    case 2: r=minus(a,x); break;
+    case 3: r=times(a,x); break;
+    case 4: r=divide(a,x); break;
+    }
+  }
+  else { /* monad */
+    switch(i) {
+    case 0: if(x) { R[b(12)&x>>48]++; r=x; } break; /* ref + */
+    case 2: r=negate(x); break;
+    case 3: r=square(x); break;
+    case 12: r=bang(x); break;
+    case 15: /* ref - */
+      if(x) {
+        j=b(12)&x>>48;
+        if(R[j])R[j]--;
+        else { free(O[j]); F[++fi]=j; }
+      }
     }
   }
   return r;

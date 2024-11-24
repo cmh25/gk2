@@ -17,7 +17,7 @@
 #define t(t,z) ((U)(t)<<60|(z))
 #define fu(x) (*(float*)&x)
 
-#define FI(a) \
+#define fi(a) \
   ((a)==INT_MAX ? INFINITY \
 : (((a)==INT_MIN ? NAN \
 : (((a)==INT_MIN+1) ? -INFINITY \
