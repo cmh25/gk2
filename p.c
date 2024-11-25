@@ -133,7 +133,7 @@ U pgreduce(pr *r, int p) {
     }
     if(p) {
       kprint(v);
-      kfree(v);
+      if(i+1<r->n) kfree(v);
     }
   }
   return *pA;
