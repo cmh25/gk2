@@ -1,5 +1,6 @@
 #!/bin/bash
 
+if [ "$CORE" = "" ]; then CORE=k.cmh; fi
 if [ "$CORE" != "k.cmh" ]; then echo "valgrind tests not available for $CORE core"; exit 0; fi
 
 os=`uname -s`
