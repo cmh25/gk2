@@ -11,6 +11,7 @@
 
 void load(char *fn) {
   FILE *fp=0; U x; pr *r; char *p;
+  size_t zr;
   #ifdef _WIN32
     struct _stat64 t;
     if(-1==_stat64(fn,&t)) { fprintf(stderr,"%s: %s\n",fn,strerror(errno)); return; }
@@ -21,12 +22,13 @@ void load(char *fn) {
   fp=fopen(fn,"r");
   if(!fp) { fprintf(stderr,"%s: %s\n",fn,strerror(errno)); return; }
   p=xmalloc(1+t.st_size);
-  if(t.st_size<fread(p,1,t.st_size,fp)) {
+  zr=fread(p,1,t.st_size,fp);
+  if(t.st_size<zr) {
     fprintf(stderr,"%s: error reading file\n",fn);
     xfree(p);
     return;
   }
-  p[t.st_size]=0;
+  p[zr]=0;
   fclose(fp);
   r=pgparse(p);
   x=pgreduce(r,1);
