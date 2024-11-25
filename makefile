@@ -19,6 +19,7 @@ testv: gk
 	$(MAKE) -C t testv
 
 clean:
+	$(MAKE) -C t clean
 	$(MAKE) -C $(CORE) clean
 	rm -f gk
 
