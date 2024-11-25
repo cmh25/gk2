@@ -207,10 +207,20 @@ static void help(void) {
   "- -            \n"
   "* *      sqr   \n"
   "%% div    sqrt  \n"
+  "& and    flip  \n"
+  "| or     flop  \n"
+  "< <      asc   \n"
+  "> >      desc  \n"
+  "= =      group \n"
+  "~ ~      match \n"
+  ". .      value \n"
   "! mod    index \n"
   "@ @      first \n"
   "? find   unique\n"
-  "# take   count \n");
+  "# take   count \n"
+  "_ drop   floor \n"
+  "^ cut    order \n"
+  ", join   enlist\n");
 }
 
 unsigned int TIMES;
