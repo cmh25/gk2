@@ -3,7 +3,11 @@
 
 #include <limits.h>
 
-typedef unsigned long U;
+#ifdef _WIN32
+  typedef unsigned long long U;
+#else
+  typedef unsigned long U;
+#endif
 extern U k(int,U,U);
 extern U tn(int,int);
 #define b(i) ((1L<<(i))-1)
@@ -12,9 +16,8 @@ extern U tn(int,int);
 #define mx (b(16)&x>>32)
 #define nx (int)x
 #define _(z) ({z;})
-#define W(z) while(_(z))
-#define i(b,z) {int $=b;int i=0;W(i<$){z;++i;}}
-#define j(b,z) {int $=b;int j=0;W(j<$){z;++j;}}
+#define i(b,z) {int n=b;int i=0;while(i<n){z;++i;}}
+#define j(b,z) {int n=b;int j=0;while(j<n){z;++j;}}
 #define t(t,z) ((U)(t)<<60|(z))
 
 #define FI(a) \

@@ -10,12 +10,18 @@
 #include "repl.h"
 
 void load(char *fn) {
-  FILE *fp=0; U x; pr *r; struct stat t; char *p;
-  if(-1==stat(fn,&t)) { fprintf(stderr,"%s: %s\n",fn,strerror(errno)); return; }
+  FILE *fp=0; U x; pr *r; char *p;
+  #ifdef _WIN32
+    struct _stat64 t;
+    if(-1==_stat64(fn,&t)) { fprintf(stderr,"%s: %s\n",fn,strerror(errno)); return; }
+  #else
+    struct stat t;
+    if(-1==stat(fn,&t)) { fprintf(stderr,"%s: %s\n",fn,strerror(errno)); return; }
+  #endif
   fp=fopen(fn,"r");
   if(!fp) { fprintf(stderr,"%s: %s\n",fn,strerror(errno)); return; }
   p=xmalloc(1+t.st_size);
-  if(t.st_size!=fread(p,1,t.st_size,fp)) {
+  if(t.st_size<fread(p,1,t.st_size,fp)) {
     fprintf(stderr,"%s: error reading file\n",fn);
     xfree(p);
     return;

@@ -145,8 +145,8 @@ static int gn(pgs *pgs) {
     i(fc,pf[i]=fv[i])
     push(pgs,T012,x);
   }
-  else if(r==1) push(pgs,T012,iii&0xffffffff|3L<<60);
-  else if(r==2) push(pgs,T012,*((int*)&fff)&0xffffffff|4L<<60);
+  else if(r==1) push(pgs,T012,iii&0xffffffff|(U)3<<60);
+  else if(r==2) push(pgs,T012,*((int*)&fff)&0xffffffff|(U)4<<60);
   if(iv) xfree(iv);
   if(fv) xfree(fv);
   return r;
@@ -162,7 +162,7 @@ static int gname(pgs *pgs) {
   }
   c=*p; *p=0;
   z=sp(q);
-  zv[zvi++]=(U)z|0xfL<<60;
+  zv[zvi++]=(U)z|(U)0xf<<60;
   push(pgs,T012,(U)zvi<<32); /* into mx */
   *p=c;
   return 1;
@@ -184,7 +184,7 @@ static int gf(pgs *pgs) {
     case 1: /* accept */
       c=*p; *p=0;
       f=fnnew(q);
-      push(pgs,T013,(U)f|0xeL<<60);
+      push(pgs,T013,(U)f|(U)0xe<<60);
       *p=c;
       return 1;
     default: return 0; /* error */
@@ -234,7 +234,7 @@ int lex(pgs *pgs) {
     else if(*p=='\\'&&*(p+1)=='\\') {
       p+=2;
       push(pgs,T013,96);
-      push(pgs,T012,3L<<60); /* zero */
+      push(pgs,T012,(U)3<<60); /* zero */
     }
     else if(*p=='\\'&&*(p+1)=='\n') { help(); return 0; }
     else if(*p=='\\'&&*(p+1)=='t') { p+=2; if(!(TIMES=atoi(p)))TIMES=1; while(isdigit(*p))++p; }

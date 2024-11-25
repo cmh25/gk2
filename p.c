@@ -64,7 +64,7 @@ static int RC[16]={1,2,2,1,1,1,1,1,0,2,1,3,3,2,0,3};
 static U vlookup(U v) {
   int i;
   U r=0;
-  char *s=(char*)((U)v^15L<<60);
+  char *s=(char*)(v^(U)15<<60);
   return scope_get(gs,s);
 }
 
@@ -101,7 +101,7 @@ U pgreduce(pr *r, int p) {
             --zvi;
             if(15==b>>60) b=vlookup(b);
           }
-          scope_set(gs,(char*)(a^15L<<60),b);
+          scope_set(gs,(char*)(a^(U)15<<60),b);
           *pA++=0;
           kfree(b);
         }
