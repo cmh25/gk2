@@ -6,22 +6,26 @@
 
 #define b(i) ((1L<<(i))-1)
 #define ax !(x>>63)
+#define aa !(a>>63)
 #define tx (7&x>>60)
+#define ta (7&a>>60)
+#define ox (b(12)&x>>48)
+#define oa (b(12)&a>>48)
 #define mx (b(16)&x>>32)
 #define nx (int)x
+#define na (int)a
 #define _(z) ({z;})
 #define x(b,z) _(typeof(b)x=b;z)
-#define W(z) while(_(z))
-#define i(b,z) {int $=b;int i=0;W(i<$){z;++i;}}
-#define j(b,z) {int $=b;int j=0;W(j<$){z;++j;}}
+#define i(b,z) {int n=b;int i=0;while(i<n){z;++i;}}
+#define j(b,z) {int n=b;int j=0;while(j<n){z;++j;}}
 #define t(t,z) ((U)(t)<<60|(z))
 #define fu(x) (*(float*)&x)
 
-#define fi(a) \
-  ((a)==INT_MAX ? INFINITY \
-: (((a)==INT_MIN ? NAN \
-: (((a)==INT_MIN+1) ? -INFINITY \
-: (float)(a)))))
+#define fi(x) \
+  ((x)==INT_MAX ? INFINITY \
+: (((x)==INT_MIN ? NAN \
+: (((x)==INT_MIN+1) ? -INFINITY \
+: (float)(x)))))
 
 /*
 # U value k-core
@@ -29,7 +33,11 @@
 ax     tx     ox     mx    nx
 63 62..60 59..48 47..32 31..0
 */
-typedef unsigned long U;
+#ifdef _WIN32
+  typedef unsigned long long U;
+#else
+  typedef unsigned long U;
+#endif
 typedef unsigned int uint;
 U k(int i, U a, U x);
 U tn(int t, int n);

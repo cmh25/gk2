@@ -20,7 +20,7 @@ U k(int i,U a,U x) {
   int j;
   if(a) { /* dyad */
     switch(i) {
-    case 0: if(!x&&!x(a,ax)) r=(U)O[b(12)&a>>48]; break; /* deref */
+    case 0: if(!x&&!aa) r=(U)O[oa]; break; /* deref */
     case 1: r=plus(a,x); break;
     case 2: r=minus(a,x); break;
     case 3: r=times(a,x); break;
@@ -35,7 +35,7 @@ U k(int i,U a,U x) {
   }
   else { /* monad */
     switch(i) {
-    case 0: if(x) { R[b(12)&x>>48]++; r=x; } break; /* ref + */
+    case 0: if(x) { R[ox]++; r=x; } break; /* ref + */
     case 2: r=negate(x); break;
     case 3: r=square(x); break;
     case 12: r=bang(x); break;
@@ -83,9 +83,9 @@ int kcmpr(U a, U x) {
     pai=(int*)k(0,a,0);
     pxi=(int*)k(0,x,0);
     for(i=0;;++i) {
-      if(i==x(a,nx) && i<nx) { r=-1; break; }
-      else if(i==nx && i<x(a,nx)) { r=1; break; }
-      else if(i==x(a,nx) && i==nx) break;
+      if(i==na && i<nx) { r=-1; break; }
+      else if(i==nx && i<na) { r=1; break; }
+      else if(i==na && i==nx) break;
       else if(pai[i]<pxi[i]) { r=-1; break; }
       else if(pai[i]>pxi[i]) { r=1; break; }
     }
@@ -94,9 +94,9 @@ int kcmpr(U a, U x) {
     paf=(float*)k(0,a,0);
     pxf=(float*)k(0,x,0);
     for(i=0;;++i) {
-      if(i==x(a,nx) && i<nx) { r=-1; break; }
-      else if(i==nx && i<x(a,nx)) { r=1; break; }
-      else if(i==x(a,nx) && i==nx) break;
+      if(i==na && i<nx) { r=-1; break; }
+      else if(i==nx && i<na) { r=1; break; }
+      else if(i==na && i==nx) break;
       else if(paf[i]<pxf[i]) { r=-1; break; }
       else if(paf[i]>pxf[i]) { r=1; break; }
     }

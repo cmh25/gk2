@@ -47,17 +47,17 @@ U F(U a,U x) { \
   case 0xb: \
     switch(xt) { \
     case 3: \
-      r=tn(3,x(a,nx)); \
+      r=tn(3,na); \
       pri=(int*)k(0,r,0); \
       pai=(int*)k(0,a,0); \
-      i(x(a,nx),*pri++=*pai++ O (int)x) \
+      i(na,*pri++=*pai++ O (int)x) \
       break; \
     case 4: \
-      r=tn(4,x(a,nx)); \
+      r=tn(4,na); \
       prf=(float*)k(0,r,0); \
       pai=(int*)k(0,a,0); \
       f=fu(x); \
-      i(x(a,nx),*prf++=fi(*pai) O f;++pai) \
+      i(na,*prf++=fi(*pai) O f;++pai) \
       break; \
     case 0xb: \
       r=tn(3,nx); \
@@ -77,18 +77,18 @@ U F(U a,U x) { \
   case 0xc: \
     switch(xt) { \
     case 3: \
-      r=tn(4,x(a,nx)); \
+      r=tn(4,na); \
       prf=(float*)k(0,r,0); \
       paf=(float*)k(0,a,0); \
       f=fi((int)x); \
-      i(x(a,nx),*prf++=*paf++ O f) \
+      i(na,*prf++=*paf++ O f) \
       break; \
     case 4: \
-      r=tn(4,x(a,nx)); \
+      r=tn(4,na); \
       prf=(float*)k(0,r,0); \
       paf=(float*)k(0,a,0); \
       f=fu(x); \
-      i(x(a,nx),*prf++=*paf++ O f) \
+      i(na,*prf++=*paf++ O f) \
       break; \
     case 0xb: \
       r=tn(4,nx); \
@@ -160,18 +160,18 @@ U divide(U a,U x) {
   case 0xb:
     switch(xt) {
     case 3:
-      r=tn(4,x(a,nx));
+      r=tn(4,na);
       prf=(float*)k(0,r,0);
       pai=(int*)k(0,a,0);
       f=fi((int)x);
-      i(x(a,nx),*prf++=fi(*pai) / f;++pai)
+      i(na,*prf++=fi(*pai) / f;++pai)
       break;
     case 4:
-      r=tn(4,x(a,nx));
+      r=tn(4,na);
       prf=(float*)k(0,r,0);
       pai=(int*)k(0,a,0);
       f=fu(x);
-      i(x(a,nx),*prf++=fi(*pai) / f;++pai)
+      i(na,*prf++=fi(*pai) / f;++pai)
       break;
     case 0xb:
       r=tn(4,nx);
@@ -191,18 +191,18 @@ U divide(U a,U x) {
   case 0xc:
     switch(xt) {
     case 3:
-      r=tn(4,x(a,nx));
+      r=tn(4,na);
       prf=(float*)k(0,r,0);
       paf=(float*)k(0,a,0);
       f=fi((int)x);
-      i(x(a,nx),*prf++=*paf++ / f)
+      i(na,*prf++=*paf++ / f)
       break;
     case 4:
-      r=tn(4,x(a,nx));
+      r=tn(4,na);
       prf=(float*)k(0,r,0);
       paf=(float*)k(0,a,0);
       f=fu(x);
-      i(x(a,nx),*prf++=*paf++ / f)
+      i(na,*prf++=*paf++ / f)
       break;
     case 0xb:
       r=tn(4,nx);
@@ -307,17 +307,17 @@ U F(U a,U x) { \
   case 0xb: \
     switch(xt) { \
     case 3: \
-      r=tn(3,x(a,nx)); \
+      r=tn(3,na); \
       pri=(int*)k(0,r,0); \
       pai=(int*)k(0,a,0); \
-      i(x(a,nx),*pri++=*pai O (int)x?*pai:x;++pai) \
+      i(na,*pri++=*pai O (int)x?*pai:x;++pai) \
       break; \
     case 4: \
-      r=tn(4,x(a,nx)); \
+      r=tn(4,na); \
       prf=(float*)k(0,r,0); \
       pai=(int*)k(0,a,0); \
       f=fu(x); \
-      i(x(a,nx),*prf++=fi(*pai) O f?fi(*pai):f;++pai) \
+      i(na,*prf++=fi(*pai) O f?fi(*pai):f;++pai) \
       break; \
     case 0xb: \
       r=tn(3,nx); \
@@ -337,18 +337,18 @@ U F(U a,U x) { \
   case 0xc: \
     switch(xt) { \
     case 3: \
-      r=tn(4,x(a,nx)); \
+      r=tn(4,na); \
       prf=(float*)k(0,r,0); \
       paf=(float*)k(0,a,0); \
       f=fi((int)x); \
-      i(x(a,nx),*prf++=*paf O f?*paf:f;++paf) \
+      i(na,*prf++=*paf O f?*paf:f;++paf) \
       break; \
     case 4: \
-      r=tn(4,x(a,nx)); \
+      r=tn(4,na); \
       prf=(float*)k(0,r,0); \
       paf=(float*)k(0,a,0); \
       f=fu(x); \
-      i(x(a,nx),*prf++=*paf O f?*paf:f;++paf) \
+      i(na,*prf++=*paf O f?*paf:f;++paf) \
       break; \
     case 0xb: \
       r=tn(4,nx); \
@@ -419,17 +419,17 @@ U F(U a,U x) { \
   case 0xb: \
     switch(xt) { \
     case 3: \
-      r=tn(3,x(a,nx)); \
+      r=tn(3,na); \
       pri=(int*)k(0,r,0); \
       pai=(int*)k(0,a,0); \
-      i(x(a,nx),*pri++=*pai++ O (int)x) \
+      i(na,*pri++=*pai++ O (int)x) \
       break; \
     case 4: \
-      r=tn(3,x(a,nx)); \
+      r=tn(3,na); \
       pri=(int*)k(0,r,0); \
       pai=(int*)k(0,a,0); \
       f=fu(x); \
-      i(x(a,nx),*pri++=fi(*pai) O f;++pai) \
+      i(na,*pri++=fi(*pai) O f;++pai) \
       break; \
     case 0xb: \
       r=tn(3,nx); \
@@ -449,18 +449,18 @@ U F(U a,U x) { \
   case 0xc: \
     switch(xt) { \
     case 3: \
-      r=tn(3,x(a,nx)); \
+      r=tn(3,na); \
       pri=(int*)k(0,r,0); \
       paf=(float*)k(0,a,0); \
       f=fi((int)x); \
-      i(x(a,nx),*pri++=*paf++ O f) \
+      i(na,*pri++=*paf++ O f) \
       break; \
     case 4: \
-      r=tn(3,x(a,nx)); \
+      r=tn(3,na); \
       pri=(int*)k(0,r,0); \
       paf=(float*)k(0,a,0); \
       f=fu(x); \
-      i(x(a,nx),*pri++=*paf++ O f) \
+      i(na,*pri++=*paf++ O f) \
       break; \
     case 0xb: \
       r=tn(3,nx); \
