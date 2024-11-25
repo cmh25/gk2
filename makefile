@@ -23,6 +23,6 @@ testv: gk
 clean:
 	$(MAKE) -C t clean
 	$(MAKE) -C $(CORE) clean
-	rm -f gk
+	rm -f gk *.o
 
 .PHONY: test
