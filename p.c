@@ -62,8 +62,6 @@ static int RC[16]={1,2,2,1,1,1,1,1,0,2,1,3,3,2,0,3};
 #define Vvi s->V[s->vi]
 
 static U vlookup(U v) {
-  int i;
-  U r=0;
   char *s=(char*)(v^(U)15<<60);
   return scope_get(gs,s);
 }
@@ -80,7 +78,7 @@ U pgreduce(pr *r, int p) {
     for(j=0;j<n;j++) {
       c=bc[j];
       q=c>>5;
-      if(!q) *pA++=values[c];
+      if(!q) *pA++=values[(int)c];
       else if(q==1) { /* 32 33 34 ... */
         a=*--pA;
         if(svx(a)) {
@@ -140,6 +138,7 @@ U pgreduce(pr *r, int p) {
 }
 
 static void r000(pgs *s) { /* $a > s */
+  (void)s;
 }
 static void r001(pgs *s) { /* s > e se */
   s->vi--;
@@ -156,8 +155,10 @@ static void r003(pgs *s) { /* e > ez */
   else s->pbc[s->pbci++]=b.v; /* sys exit 96 */
 }
 static void r004(pgs *s) { /* se > ';' */
+  (void)s;
 }
 static void r005(pgs *s) { /* se > '\n' */
+  (void)s;
 }
 static void r006(pgs *s) { /* o > N */
   s->values[s->valuei]=Vvi.n;
@@ -165,6 +166,7 @@ static void r006(pgs *s) { /* o > N */
   s->pbc[s->pbci++]=Vvi.n;
 }
 static void r007(pgs *s) { /* o > klist */
+  (void)s;
 }
 static void r008(pgs *s) { /* ez > */
    s->V[++s->vi].v=0;
@@ -177,18 +179,23 @@ static void r009(pgs *s) { /* ez > V e */
   Vvi.n=b.n;
 }
 static void r010(pgs *s) { /* ez > plist */
+  (void)s;
 }
 static void r011(pgs *s) { /* klist > '(' elist ')' */
   s->vi-=2;
   s->V[s->vi]=s->V[s->vi+1];
 }
 static void r012(pgs *s) { /* plist > '[' elist ']' */
+  (void)s;
 }
 static void r013(pgs *s) { /* elist > e elistz */
+  (void)s;
 }
 static void r014(pgs *s) { /* elistz > */
+  (void)s;
 }
 static void r015(pgs *s) { /* elistz > se e elistz */
+  (void)s;
 }
 
 static void (*F[16])(pgs *s)={r000,r001,r002,r003,r004,r005,r006,r007,r008,r009,r010,r011,r012,r013,r014,r015};

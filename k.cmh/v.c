@@ -115,7 +115,7 @@ PMT(times,*)
 U divide(U a,U x) {
   U r=0;
   float f;
-  int *pri,*pai,*pxi;
+  int *pai,*pxi;
   float *prf,*paf,*pxf;
   int at=a>>60,xt=x>>60;
   switch(at) {
@@ -375,7 +375,7 @@ MAMO(maxor,>)
 U F(U a,U x) { \
   U r=0; \
   int *pri,*pai,*pxi; \
-  float *prf,*paf,*pxf; \
+  float *paf,*pxf; \
   int at=a>>60,xt=x>>60; \
   float f; \
   switch(at) { \

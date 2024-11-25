@@ -45,11 +45,10 @@ void scope_free(scope *s) {
 
 U scope_get(scope *s, char *n) {
   U r=0;
-  char *p=0,*nn,*rp;
   if(!s) return 0;
   if(!n) return 0;
   r=dget(s->d,n);
-  if(!r && s->p && s!=gs) r = scope_get(s->p,n);
+  if(!r && s->p && s!=gs) r=scope_get(s->p,n);
   return r;
 }
 

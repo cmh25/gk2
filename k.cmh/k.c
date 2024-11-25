@@ -6,7 +6,7 @@
 static void *O[512];
 static int R[512];
 static int F[512];
-static int oi,om=512,fm=512,fi=-1;
+static int oi,om=512,fm=511,fi=-1;
 
 /*
 k(0,x,0)  // raw pointer
@@ -44,6 +44,7 @@ U k(int i,U a,U x) {
         j=b(12)&x>>48;
         if(R[j])R[j]--;
         else { free(O[j]); O[j]=0; F[++fi]=j; }
+        if(fi==fm) { fprintf(stderr,"error: fm\n"); exit(1); }
       }
     }
   }
@@ -63,6 +64,7 @@ U tn(int t,int n) {
   if(v) {
     if(fi>-1) j=F[fi--];
     else j=oi++;
+    if(oi==om) { fprintf(stderr,"error: om\n"); exit(1); }
     O[j]=v;
     r=t(t+8,n);
     r|=(U)j<<48;

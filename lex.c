@@ -145,8 +145,8 @@ static int gn(pgs *pgs) {
     i(fc,pf[i]=fv[i])
     push(pgs,T012,x);
   }
-  else if(r==1) push(pgs,T012,iii&0xffffffff|(U)3<<60);
-  else if(r==2) push(pgs,T012,*((int*)&fff)&0xffffffff|(U)4<<60);
+  else if(r==1) push(pgs,T012,(iii&0xffffffff)|(U)3<<60);
+  else if(r==2) push(pgs,T012,(*((int*)&fff)&0xffffffff)|(U)4<<60);
   if(iv) xfree(iv);
   if(fv) xfree(fv);
   return r;

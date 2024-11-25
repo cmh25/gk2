@@ -10,7 +10,7 @@
 #include "repl.h"
 
 void load(char *fn) {
-  FILE *fp=0; U x; pr *r; char *p;
+  FILE *fp=0; pr *r; char *p;
   size_t zr;
   #ifdef _WIN32
     struct _stat64 t;
@@ -23,7 +23,7 @@ void load(char *fn) {
   if(!fp) { fprintf(stderr,"%s: %s\n",fn,strerror(errno)); return; }
   p=xmalloc(1+t.st_size);
   zr=fread(p,1,t.st_size,fp);
-  if(t.st_size<zr) {
+  if((size_t)t.st_size<zr) {
     fprintf(stderr,"%s: error reading file\n",fn);
     xfree(p);
     return;
@@ -31,13 +31,13 @@ void load(char *fn) {
   p[zr]=0;
   fclose(fp);
   r=pgparse(p);
-  x=pgreduce(r,1);
+  (void)pgreduce(r,1);
   xfree(p);
   prfree(r);
 }
 
 void repl() {
-  int c,j; size_t i,m=2; pgs *s; char *b,*p; U x;
+  int c,j; size_t i,m=2; char *b,*p; U x;
   pr *r;
   printf("  ");
   for(i=0;;i=0) {
@@ -52,7 +52,7 @@ void repl() {
     if(r) {
       if(TIMES) {
         timer_start();
-        for(j=0;j<TIMES;j++) kfree(pgreduce(r,0));
+        for(j=0;j<(int)TIMES;j++) kfree(pgreduce(r,0));
         printf("%.3f\n",timer_stop());
       }
       else {
