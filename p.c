@@ -201,9 +201,9 @@ static void r015(pgs *s) { /* elistz > se e elistz */
 static void (*F[16])(pgs *s)={r000,r001,r002,r003,r004,r005,r006,r007,r008,r009,r010,r011,r012,r013,r014,r015};
 
 
-pgs* pgnew() { pgs *s=xcalloc(1,sizeof(pgs)); s->valuei=1; return s; }
+pgs* pgnew(void) { pgs *s=xcalloc(1,sizeof(pgs)); s->valuei=1; return s; }
 void pgfree(pgs *s) { xfree(s); }
-pr* prnew() {
+pr* prnew(void) {
   pr *z=xcalloc(1,sizeof(pr));
   z->bc=xcalloc(256,sizeof(char*));
   z->bcn=xcalloc(256,sizeof(int));
@@ -222,7 +222,7 @@ void prfree(pr *r) {
   xfree(r);
 }
 pr* pgparse(char *q) {
-  int i,j,r;
+  int j,r;
   pr *z=prnew();
   pgs *s=pgnew();
   s->p=q;
@@ -240,7 +240,7 @@ pr* pgparse(char *q) {
     s->valuei=0;
 
     s->S[++s->si]=T000; /* $a */
-    for(i=0;;i++) {
+    for(;;) {
       if(s->S[s->si]==s->t[s->ti]) {
         s->V[++s->vi].n=s->v[s->ti++];
         --s->si;

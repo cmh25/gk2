@@ -36,7 +36,7 @@ void load(char *fn) {
   prfree(r);
 }
 
-void repl() {
+void repl(void) {
   int c,j; size_t i,m=2; char *b,*p; U x;
   pr *r;
   printf("  ");

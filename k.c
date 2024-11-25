@@ -10,7 +10,7 @@ void* px(U x){return(void*)k(0,x,0);}
 void kfree(U x){if(ax)return; k(15,0,x);}
 U kref(U x){if(ax)return x; return k(0,0,x);}
 
-void kinit() {
+void kinit(void) {
   scope_init();
 }
 

@@ -194,7 +194,7 @@ static int gf(pgs *pgs) {
   return 1;
 }
 
-static void help() {
+static void help(void) {
   printf(""
   "Verb    (monad)\n"
   "+ +            \n"

@@ -11,7 +11,7 @@ static scope *scopea[SM];
 scope *ks,*gs,*cs;
 //dict *ktree,*C,*Z;
 
-void scope_init() {
+void scope_init(void) {
   gs=scope_new(0);
 }
 

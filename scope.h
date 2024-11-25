@@ -13,7 +13,7 @@ typedef struct scope {
 extern scope *ks,*gs,*cs;
 //extern dict *ktree,*C,*Z;
 
-void scope_init();
+void scope_init(void);
 scope* scope_new(scope *p);
 scope* scope_newk(scope *p, char *k);
 void scope_free(scope *s);

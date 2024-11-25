@@ -29,7 +29,7 @@ extern U tn(int,int);
 void* px(U x);
 void kfree(U x);
 U kref(U x);
-void kinit();
+void kinit(void);
 void kprint(U x);
 
 #endif /* K_H */
