@@ -19,7 +19,7 @@ in this case, mx-1 is an index into the zv array of pointers. zv includes:
 
 int svx(U x);
 int svi(U x);
-extern U zv[32];
-extern int zvi;
+extern U zv[1024];
+extern int zvi,zvm;
 
 #endif /* ZV_H */

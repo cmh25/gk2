@@ -156,14 +156,20 @@ static int gname(pgs *pgs) {
   char c,*q=p;
   int s=*p=='.';
   char *z;
+  int zi;
+  U zval;
   while(1) {
     if(!s) { if(isalpha(*p)) { ++p; s=1; } else break; }
     else { if(isalnum(*p)) ++p; else if(*p=='.') { ++p; s=0; } else break; }
   }
   c=*p; *p=0;
   z=sp(q);
-  zv[zvi++]=(U)z|(U)0xf<<60;
-  push(pgs,T012,(U)zvi<<32); /* into mx */
+  zval=(U)z|(U)0xf<<60;
+  for(zi=0;zi<zvi;++zi)if(zv[zi]==zval)break;
+  if(zi==zvi)zi=++zvi;
+  if(zvi==zvm) { fprintf(stderr,"error: zvm\n"); exit(1); }
+  zv[zi++]=zval;
+  push(pgs,T012,(U)zi<<32); /* into mx */
   *p=c;
   return 1;
 }
