@@ -238,7 +238,7 @@ int lex(pgs *pgs) {
       else { ++p; push(pgs,T013,'-'); }
     }
     else if(isdigit(*p)||(*p=='.'&&isdigit(p[1]))) gn(pgs);
-    else if(*p&&strchr(":+-*%&|<>=~.!@?#_^,$",*p)) { push(pgs,T013,*p); ++p; }
+    else if(*p&&strchr(":+-*%&|<>=~.!@?#_^,$LMSA..ERZ",*p)) { push(pgs,T013,*p); ++p; }
     else if(*p=='(') { ++p; push(pgs,T014,0); }
     else if(*p==')') { ++p; push(pgs,T015,0); }
     else if(*p=='[') { ++p; push(pgs,T016,0); }
