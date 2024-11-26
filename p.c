@@ -67,15 +67,16 @@ static U vlookup(U v) {
 }
 
 U pgreduce(pr *r, int p) {
-  int i,j;
+  int i,j,quiet;
   char c,q;
-  U A[256],*pA=A,a,b,v;
+  U A[256],*pA=A,a,b,v,a0;
   for(i=0;i<r->n;i++) {
     int n=r->bcn[i];
     char *bc=r->bc[i];
     U *values=r->values[i];
     pA=A;
     for(j=0;j<n;j++) {
+      quiet=0;
       c=bc[j];
       q=c>>5;
       if(!q) *pA++=values[(int)c];
@@ -91,13 +92,15 @@ U pgreduce(pr *r, int p) {
         b=*--pA;
         a=*--pA;
         if(c==64&&svx(a)) { /* a:1 */
+          a0=a;
           a=zv[svi(a)];
           if(svx(b)) {
             b=zv[svi(b)];
             if(15==b>>60) b=vlookup(b);
           }
           scope_set(gs,(char*)(a^(U)15<<60),b);
-          *pA++=0;
+          *pA++=a0;
+          quiet=1;
           kfree(b);
         }
         else {
@@ -124,7 +127,8 @@ U pgreduce(pr *r, int p) {
       if(15==v>>60) v=vlookup(v);
     }
     if(p) {
-      kprint(v);
+      if(quiet) quiet=0;
+      else kprint(v);
       if(i+1<r->n) kfree(v);
     }
   }
@@ -220,12 +224,12 @@ pr* pgparse(char *q) {
   pr *z=prnew();
   pgs *s=pgnew();
   s->p=q;
-  s->ti=0;s->tc=0;s->si=-1;s->zri=-1;s->vi=-1;
+  s->ti=0;s->tc=0;s->si=-1;s->ri=-1;s->vi=-1;
   memset(s->V,0,sizeof(s->V));
   if(!lex(s)||s->tc<1) { pgfree(s); return 0; }
 
   while(1+s->ti<s->tc) {
-    s->si=-1;s->zri=-1;s->vi=-1;
+    s->si=-1;s->ri=-1;s->vi=-1;
     z->bc[z->n]=xcalloc(1,256);
     z->values[z->n]=xcalloc(1,256*sizeof(U));
     s->pbc=z->bc[z->n];
@@ -244,11 +248,11 @@ pr* pgparse(char *q) {
         if(s->t[s->ti]>=LJ) { fprintf(stderr,"parse\n"); break; }
         r=LL[s->S[s->si--]][s->t[s->ti]];
         if(r==-1) { fprintf(stderr,"parse\n"); break; }
-        s->R[++s->zri]=r;
+        s->R[++s->ri]=r;
         s->S[++s->si]=-2; /* reduction marker */
         for(j=RC[r]-1;j>=0;j--) s->S[++s->si]=RT[r][j];
       }
-      while(s->si>=0&&s->S[s->si]==-2) { (*F[s->R[s->zri--]])(s); --s->si; }
+      while(s->si>=0&&s->S[s->si]==-2) { (*F[s->R[s->ri--]])(s); --s->si; }
       if(s->si<0) { --s->vi; break; }
     }
     z->bcn[z->n]=s->pbci;

@@ -33,7 +33,7 @@ typedef struct {
   int S[1024];   /* state */
   int R[1024];   /* rules */
   pn V[1024];    /* values */
-  int si,zri,vi;  /* index */
+  int si,ri,vi;  /* index */
   int t[1024];   /* tokens */
   int ti,tc;     /* tokens index,count */
   U v[1024];     /* token values */
