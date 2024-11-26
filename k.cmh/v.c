@@ -651,8 +651,27 @@ U square(U x) {
 }
 
 U sqrt_(U x) {
-  (void)x;
-  return 0;
+  U r=0;
+  int *pxi;
+  float *prf,*pxf;
+  float f;
+  switch(tx) {
+  case 3: f=sqrtf(fi((int)x)); r=t(4,*(uint*)&f); break;
+  case 4: f=sqrtf(fu(x)); r=t(4,*(uint*)&f); break;
+  case 0xb:
+    r=tn(4,nx);
+    prf=(float*)k(0,r,0);
+    pxi=(int*)k(0,x,0);
+    i(nx,*prf++=sqrtf(fi(*pxi));++pxi)
+    break;
+  case 0xc:
+    r=tn(4,nx);
+    prf=(float*)k(0,r,0);
+    pxf=(float*)k(0,x,0);
+    i(nx,*prf++=sqrtf(*pxf++))
+    break;
+  }
+  return r;
 }
 
 U flip(U x) {

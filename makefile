@@ -8,11 +8,11 @@ all: gk
 
 gk:
 	$(MAKE) -C $(CORE)
-	clang -O3 -ogk p.c lex.c timer.c x.c k.c main.c repl.c sym.c zv.c dict.c scope.c fn.c $(CORE)/k.a
+	clang -O3 -ogk p.c lex.c timer.c x.c k.c main.c repl.c sym.c zv.c dict.c scope.c fn.c $(CORE)/k.a -lm
 
 gkd:
 	$(MAKE) -C $(CORE)
-	clang -gdwarf-4 $(W) -ogk p.c lex.c timer.c x.c k.c main.c repl.c sym.c zv.c dict.c scope.c fn.c $(CORE)/kd.a
+	clang -gdwarf-4 $(W) -ogk p.c lex.c timer.c x.c k.c main.c repl.c sym.c zv.c dict.c scope.c fn.c $(CORE)/kd.a -lm
 
 test: gk
 	$(MAKE) -C t
