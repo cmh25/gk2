@@ -18,6 +18,7 @@ U take(U a,U x);
 
 U negate(U x);
 U square(U x);
+U reverse(U x);
 U bang(U x);
 U enlist(U x);
 

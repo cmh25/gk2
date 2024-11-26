@@ -612,3 +612,26 @@ U take(U a,U x) {
   }
   return r;
 }
+
+U reverse(U x) {
+  U r=0;
+  int *pri,*pxi;
+  float *prf,*pxf;
+  switch(tx) {
+  case 3: r=x; break;
+  case 4: r=x; break;
+  case 0xb:
+    r=tn(3,nx);
+    pri=(int*)k(0,r,0);
+    pxi=(int*)k(0,x,0);
+    i(nx,*pri++=pxi[nx-i-1])
+    break;
+  case 0xc:
+    r=tn(4,nx);
+    prf=(float*)k(0,r,0);
+    pxf=(float*)k(0,x,0);
+    i(nx,*prf++=pxf[nx-i-1])
+    break;
+  }
+  return r;
+}

@@ -40,6 +40,7 @@ U k(int i,U a,U x) {
     case 0: if(x) { R[ox]++; r=x; } break; /* ref + */
     case 2: r=negate(x); break;
     case 3: r=square(x); break;
+    case 6: r=reverse(x); break;
     case 12: r=bang(x); break;
     case 15: /* ref - */
       if(x&&!ax) {
