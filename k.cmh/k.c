@@ -31,17 +31,34 @@ U k(int i,U a,U x) {
     case 8: r=more(a,x); break;
     case 9: r=equal(a,x); break;
     case 10: r=match(a,x); break;
+    case 11: r=dot(a,x); break;
+    case 12: r=mod(a,x); break;
+    case 13: r=at(a,x); break;
+    case 14: r=find(a,x); break;
     case 15: r=take(a,x); break;
+    case 16: r=drop(a,x); break;
+    case 17: r=cut(a,x); break;
     case 18: r=join(a,x); break;
+    case 19: r=parse(a,x); break;
     }
   }
   else { /* monad */
     switch(i) {
     case 0: if(x) { R[ox]++; r=x; } break; /* ref + */
+    case 1: r=pos(x); break;
     case 2: r=negate(x); break;
     case 3: r=square(x); break;
+    case 4: r=sqrt_(x); break;
+    case 5: r=flip(x); break;
     case 6: r=reverse(x); break;
+    case 7: r=asc(x); break;
+    case 8: r=desc(x); break;
+    case 9: r=group(x); break;
+    case 10: r=not_(x); break;
+    case 11: r=value(x); break;
     case 12: r=bang(x); break;
+    case 13: r=first(x); break;
+    case 14: r=unique(x); break;
     case 15: /* ref - */
       if(x&&!ax) {
         j=b(12)&x>>48;
@@ -52,7 +69,10 @@ U k(int i,U a,U x) {
       }
       else r=t(3,1); break;
       break;
+    case 16: r=floor_(x); break;
+    case 17: r=order(x); break;
     case 18: r=enlist(x); break;
+    case 19: r=str(x); break;
     }
   }
   if(i&&i!=15) {

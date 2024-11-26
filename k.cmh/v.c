@@ -221,39 +221,6 @@ U divide(U a,U x) {
   return r;
 }
 
-U bang(U x) {
-  U r;
-  int *pri;
-  switch(tx) {
-  case 3:
-    r=tn(3,nx);
-    pri=(int*)k(0,r,0);
-    i(nx,*pri++=i)
-    break;
-  }
-  return r;
-}
-
-U negate(U x) {
-  U r;
-  float f;
-  switch(tx) {
-  case 3: r=t(3,(uint)(-(int)x)); break;
-  case 4: f=-fu(x); r=t(4,*(uint*)&f); break;
-  }
-  return r;
-}
-
-U square(U x) {
-  U r;
-  float f;
-  switch(tx) {
-  case 3: r=t(3,(uint)((int)x*(int)x)); break;
-  case 4: f=-fu(x); f*=f; r=t(4,*(uint*)&f); break;
-  }
-  return r;
-}
-
 #define MAMO(F,O) \
 U F(U a,U x) { \
   U r; \
@@ -478,7 +445,76 @@ LME(more,>)
 LME(equal,==)
 
 U match(U a,U x) {
+  (void)a; (void)x;
   return t(3,!kcmpr(a,x));
+}
+
+U dot(U a,U x) {
+  (void)a; (void)x;
+  return 0;
+}
+
+U mod(U a,U x) {
+  (void)a; (void)x;
+  return 0;
+}
+
+U at(U a,U x) {
+  (void)a; (void)x;
+  return 0;
+}
+
+U find(U a,U x) {
+  (void)a; (void)x;
+  return 0;
+}
+
+U take(U a,U x) {
+  U r=0;
+  int *pri,*pxi;
+  float *prf,*pxf;
+  int c,d;
+  switch(ta) {
+  case 3:
+    c=(int)a<0?-a:a;
+    switch(tx) {
+    case 3:
+      r=tn(3,c);
+      pri=(int*)k(0,r,0);
+      i(c,*pri++=(int)x)
+      break;
+    case 4:
+      r=tn(4,c);
+      prf=(float*)k(0,r,0);
+      i(c,*prf++=fu(x))
+      break;
+    case 0xb:
+      r=tn(3,c);
+      pri=(int*)k(0,r,0);
+      pxi=(int*)k(0,x,0);
+      if((int)a<0) { d=c%nx; i(c,*pri++=pxi[(nx-d+i)%nx]) }
+      else i(c,*pri++=pxi[i%nx])
+      break;
+    case 0xc:
+      r=tn(4,c);
+      prf=(float*)k(0,r,0);
+      pxf=(float*)k(0,x,0);
+      if((int)a<0) { d=c%nx; i(c,*prf++=pxf[(nx-d+i)%nx]) }
+      else i(c,*prf++=pxf[i%nx])
+      break;
+    } break;
+  }
+  return r;
+}
+
+U drop(U a,U x) {
+  (void)a; (void)x;
+  return 0;
+}
+
+U cut(U a,U x) {
+  (void)a; (void)x;
+  return 0;
 }
 
 U join(U a,U x) {
@@ -556,61 +592,44 @@ U join(U a,U x) {
   return r;
 }
 
-U enlist(U x) {
-  U r=0;
-  int *pri;
-  float *prf;
+U parse(U a,U x) {
+  (void)a; (void)x;
+  return 0;
+}
+
+U pos(U x) {
+  (void)x;
+  return 0;
+}
+
+U negate(U x) {
+  U r;
+  float f;
   switch(tx) {
-  case 3:
-    r=tn(3,1);
-    pri=(int*)k(0,r,0);
-    *pri=(int)x;
-    break;
-  case 4:
-    r=tn(4,1);
-    prf=(float*)k(0,r,0);
-    *prf=fu(x);
-    break;
+  case 3: r=t(3,(uint)(-(int)x)); break;
+  case 4: f=-fu(x); r=t(4,*(uint*)&f); break;
   }
   return r;
 }
 
-U take(U a,U x) {
-  U r=0;
-  int *pri,*pxi;
-  float *prf,*pxf;
-  int c,d;
-  switch(ta) {
-  case 3:
-    c=(int)a<0?-a:a;
-    switch(tx) {
-    case 3:
-      r=tn(3,c);
-      pri=(int*)k(0,r,0);
-      i(c,*pri++=(int)x)
-      break;
-    case 4:
-      r=tn(4,c);
-      prf=(float*)k(0,r,0);
-      i(c,*prf++=fu(x))
-      break;
-    case 0xb:
-      r=tn(3,c);
-      pri=(int*)k(0,r,0);
-      pxi=(int*)k(0,x,0);
-      if((int)a<0) { d=c%nx; i(c,*pri++=pxi[(nx-d+i)%nx]) }
-      else i(c,*pri++=pxi[i%nx])
-      break;
-    case 0xc:
-      r=tn(4,c);
-      prf=(float*)k(0,r,0);
-      pxf=(float*)k(0,x,0);
-      if((int)a<0) { d=c%nx; i(c,*prf++=pxf[(nx-d+i)%nx]) }
-      else i(c,*prf++=pxf[i%nx])
-      break;
-    } break;
+U square(U x) {
+  U r;
+  float f;
+  switch(tx) {
+  case 3: r=t(3,(uint)((int)x*(int)x)); break;
+  case 4: f=-fu(x); f*=f; r=t(4,*(uint*)&f); break;
   }
   return r;
+}
+
+U sqrt_(U x) {
+  (void)x;
+  return 0;
+}
+
+U flip(U x) {
+  (void)x;
+  return 0;
 }
 
 U reverse(U x) {
@@ -634,4 +653,86 @@ U reverse(U x) {
     break;
   }
   return r;
+}
+
+U asc(U x) {
+  (void)x;
+  return 0;
+}
+
+U desc(U x) {
+  (void)x;
+  return 0;
+}
+
+U group(U x) {
+  (void)x;
+  return 0;
+}
+
+U not_(U x) {
+  (void)x;
+  return 0;
+}
+
+U value(U x) {
+  (void)x;
+  return 0;
+}
+
+U bang(U x) {
+  U r;
+  int *pri;
+  switch(tx) {
+  case 3:
+    r=tn(3,nx);
+    pri=(int*)k(0,r,0);
+    i(nx,*pri++=i)
+    break;
+  }
+  return r;
+}
+
+U first(U x) {
+  (void)x;
+  return 0;
+}
+
+U unique(U x) {
+  (void)x;
+  return 0;
+}
+
+U floor_(U x) {
+  (void)x;
+  return 0;
+}
+
+U order(U x) {
+  (void)x;
+  return 0;
+}
+
+U enlist(U x) {
+  U r=0;
+  int *pri;
+  float *prf;
+  switch(tx) {
+  case 3:
+    r=tn(3,1);
+    pri=(int*)k(0,r,0);
+    *pri=(int)x;
+    break;
+  case 4:
+    r=tn(4,1);
+    prf=(float*)k(0,r,0);
+    *prf=fu(x);
+    break;
+  }
+  return r;
+}
+
+U str(U x) {
+  (void)x;
+  return 0;
 }
