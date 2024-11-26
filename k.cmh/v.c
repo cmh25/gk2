@@ -604,20 +604,48 @@ U pos(U x) {
 
 U negate(U x) {
   U r;
+  int *pri,*pxi;
+  float *prf,*pxf;
   float f;
   switch(tx) {
   case 3: r=t(3,(uint)(-(int)x)); break;
   case 4: f=-fu(x); r=t(4,*(uint*)&f); break;
+  case 0xb:
+    r=tn(3,nx);
+    pri=(int*)k(0,r,0);
+    pxi=(int*)k(0,x,0);
+    i(nx,*pri++=-*pxi++)
+    break;
+  case 0xc:
+    r=tn(4,nx);
+    prf=(float*)k(0,r,0);
+    pxf=(float*)k(0,x,0);
+    i(nx,*prf++=-*pxf++)
+    break;
   }
   return r;
 }
 
 U square(U x) {
   U r;
+  int *pri,*pxi;
+  float *prf,*pxf;
   float f;
   switch(tx) {
   case 3: r=t(3,(uint)((int)x*(int)x)); break;
   case 4: f=-fu(x); f*=f; r=t(4,*(uint*)&f); break;
+  case 0xb:
+    r=tn(3,nx);
+    pri=(int*)k(0,r,0);
+    pxi=(int*)k(0,x,0);
+    i(nx,*pri++=*pxi**pxi;++pxi)
+    break;
+  case 0xc:
+    r=tn(4,nx);
+    prf=(float*)k(0,r,0);
+    pxf=(float*)k(0,x,0);
+    i(nx,*prf++=*pxf**pxf;++pxf)
+    break;
   }
   return r;
 }
