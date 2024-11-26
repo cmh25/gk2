@@ -31,6 +31,8 @@ U k(int i,U a,U x) {
     case 8: r=more(a,x); break;
     case 9: r=equal(a,x); break;
     case 10: r=match(a,x); break;
+    case 15: r=take(a,x); break;
+    case 18: r=join(a,x); break;
     }
   }
   else { /* monad */
@@ -45,7 +47,11 @@ U k(int i,U a,U x) {
         if(R[j])R[j]--;
         else { free(O[j]); O[j]=0; F[++fi]=j; }
         if(fi==fm) { fprintf(stderr,"error: fm\n"); exit(1); }
+        r=t(3,nx); /* #v */
       }
+      else r=t(3,1); break;
+      break;
+    case 18: r=enlist(x); break;
     }
   }
   if(i&&i!=15) {
