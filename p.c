@@ -69,6 +69,7 @@ static U vlookup(U v) {
 U pgreduce(pr *r, int p) {
   int i,j,quiet;
   char c,q;
+  char *e;
   U A[256],*pA=A,a,b,v,a0;
   for(i=0;i<r->n;i++) {
     int n=r->bcn[i];
@@ -118,8 +119,15 @@ U pgreduce(pr *r, int p) {
       else if(q==3) { /* 96 97 98 ... sys monadic (exit) */
         if(c==96) { prfree(r); scope_free(gs); exit(0); }
       }
-      //suspend console, invoke repl
-      //if(pA[-1]==255) printf("!error\n");
+      //todo: suspend console, invoke repl
+      e=0;
+      if(pA[-1]<4) {
+        if(pA[-1]==0) { e="nyi"; }
+        else if(pA[-1]==1) { e="rank"; }
+        else if(pA[-1]==2) { e="len"; }
+        else if(pA[-1]==3) { e="type"; }
+      }
+      if(e) pA[-1]=zvadd((U)sp(e),0xe);
     }
     v=*--pA;
     if(svx(v)) {
@@ -132,7 +140,7 @@ U pgreduce(pr *r, int p) {
       if(i+1<r->n) kfree(v);
     }
   }
-  return *pA;
+  return v;
 }
 
 static void r000(pgs *s) { /* $a > s */

@@ -12,10 +12,9 @@ extern U k(int,U,U);
 extern U tn(int,int);
 #define b(i) ((1L<<(i))-1)
 #define ax !(x>>63)
-#define tx (7&x>>60)
+#define tx (x>>60)
 #define mx (b(16)&x>>32)
 #define nx (int)x
-#define _(z) ({z;})
 #define i(b,z) {int n=b;int i=0;while(i<n){z;++i;}}
 #define j(b,z) {int n=b;int j=0;while(j<n){z;++j;}}
 #define t(t,z) ((U)(t)<<60|(z))

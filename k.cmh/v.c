@@ -6,6 +6,7 @@ U F(U a,U x) { \
   float f; \
   int *pri,*pai,*pxi; \
   float *prf,*paf,*pxf; \
+  if(!(aa||ax)&&na!=nx) return 2; \
   switch(ta) { \
   case 3: \
     switch(tx) { \
@@ -116,6 +117,7 @@ U divide(U a,U x) {
   float f;
   int *pai,*pxi;
   float *prf,*paf,*pxf;
+  if(!(aa||ax)&&na!=nx) return 2;
   switch(ta) {
   case 3:
     switch(tx) {
@@ -227,6 +229,7 @@ U F(U a,U x) { \
   int *pri,*pai,*pxi; \
   float *prf,*paf,*pxf; \
   float f; \
+  if(!(aa||ax)&&na!=nx) return 2; \
   switch(ta) { \
   case 3: \
     switch(tx) { \
@@ -338,6 +341,7 @@ U F(U a,U x) { \
   int *pri,*pai,*pxi; \
   float *paf,*pxf; \
   float f; \
+  if(!(aa||ax)&&na!=nx) return 2; \
   switch(ta) { \
   case 3: \
     switch(tx) { \
@@ -736,6 +740,7 @@ U bang(U x) {
     pri=(int*)k(0,r,0);
     i(nx,*pri++=i)
     break;
+  default: return 3;
   }
   return r;
 }

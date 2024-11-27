@@ -21,5 +21,6 @@ int svx(U x);
 int svi(U x);
 extern U zv[1024];
 extern int zvi,zvm;
+U zvadd(U v,int t);
 
 #endif /* ZV_H */

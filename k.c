@@ -42,39 +42,41 @@ static int ffix(char *ds, int a0) {
 }
 
 void kprint(U x) {
-  int *a,h,j,a0=1;
+  int h,j,a0=1;
   char ds[256];
-  if(ax) {
-    if(tx==3) pi((int)x,"\n");
-    else if(tx==4) { h=(int)x; pf(*(float*)&h,"\n"); }
-  }
-  else { /* vector */
-    a=(int*)px(x);
-    if(tx==3) {
-      if(!nx) printf("!0\n");
-      else if(1==nx) { printf(","); pi(a[0],"\n"); }
-      else {
-        for(j=0;j<nx-1;j++) pi(a[j]," ");
-        pi(a[j],"\n");
-      }
+  int *pxi;
+  float *pxf;
+  switch(tx) {
+  case 3: pi((int)x,"\n"); break;
+  case 4: h=(int)x; pf(*(float*)&h,"\n"); break;
+  case 0xb: 
+    pxi=(int*)px(x);
+    if(!nx) printf("!0\n");
+    else if(1==nx) { printf(","); pi(pxi[0],"\n"); }
+    else {
+      for(j=0;j<nx-1;j++) pi(pxi[j]," ");
+      pi(pxi[j],"\n");
     }
-    else if(tx==4) {
-      if(!nx) printf("0#0.0\n");
-      else if(1==nx) { printf(","); pf(*(float*)&a[0],"\n"); }
-      else {
-        sprintf(ds,"%0.*g",7,*(float*)&a[0]);
+    break;
+  case 0xc:
+    pxf=(float*)px(x);
+    if(!nx) printf("0#0.0\n");
+    else if(1==nx) { printf(","); pf(pxf[0],"\n"); }
+    else {
+      sprintf(ds,"%0.*g",7,pxf[0]);
+      a0=ffix(ds,a0);
+      printf("%s ",ds);
+      for(j=1;j<nx-1;j++) {
+        sprintf(ds,"%0.*g",7,pxf[j]);
         a0=ffix(ds,a0);
         printf("%s ",ds);
-        for(j=1;j<nx-1;j++) {
-          sprintf(ds,"%0.*g",7,*(float*)&a[j]);
-          a0=ffix(ds,a0);
-          printf("%s ",ds);
-        }
-        sprintf(ds,"%0.*g",7,*(float*)&a[j]);
-        a0=ffix(ds,a0);
-        if(a0) strcat(ds,".0");
-        printf("%s\n",ds);
       }
+      sprintf(ds,"%0.*g",7,pxf[j]);
+      a0=ffix(ds,a0);
+      if(a0) strcat(ds,".0");
+      printf("%s\n",ds);
     }
+    break; 
+  case 0xe: printf("%s\n",(char*)((0xeL<<60)^x)); break;
   }
 }
