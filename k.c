@@ -77,6 +77,6 @@ void kprint(U x) {
       printf("%s\n",ds);
     }
     break; 
-  case 0xe: printf("%s\n",(char*)((0xeL<<60)^x)); break;
+  case 0xe: printf("%s\n",(char*)(((U)0xe<<60)^x)); break;
   }
 }
