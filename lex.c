@@ -160,7 +160,7 @@ static int gname(pgs *pgs) {
     else { if(isalnum(*p)) ++p; else if(*p=='.') { ++p; s=0; } else break; }
   }
   c=*p; *p=0;
-  push(pgs,T012,zvadd((U)sp(q),0xf));
+  push(pgs,T012,zvset((U)sp(q),0xf));
   *p=c;
   return 1;
 }

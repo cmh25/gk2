@@ -10,17 +10,16 @@ ax     tx     ox     mx    nx
 63 62..60 59..48 47..32 31..0
 
 z values are repl-level (non-kcore) objects. indicated when ax tx = 0 0 and mx != 0.
-in this case, mx-1 is an index into the zv array of pointers. zv includes:
-- variable
-- lambda
-- elided arg
-- kerror (from core or signal)
+in this case, mx-1 is an index into the zv array of pointers. each zv pointer is
+tagged with one of these types in the high 4 bits.
+- f: variable
+- e: kerror (from core or signal)
+- d: elided arg
+- c: lambda
 */
 
-int svx(U x);
-int svi(U x);
-extern U zv[1024];
-extern int zvi,zvm;
-U zvadd(U v,int t);
+int zv(U x);
+U zvset(U v,int t);
+U zvget(U z);
 
 #endif /* ZV_H */

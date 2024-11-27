@@ -83,8 +83,8 @@ U pgreduce(pr *r, int p) {
       if(!q) *pA++=values[(int)c];
       else if(q==1) { /* 32 33 34 ... */
         a=*--pA;
-        if(svx(a)) {
-          a=zv[svi(a)];
+        if(zv(a)) {
+          a=zvget(a);
           if(15==a>>60) a=vlookup(a);
         }
         *pA++=k(c%32,0,a);
@@ -92,11 +92,11 @@ U pgreduce(pr *r, int p) {
       else if(q==2) { /* 64 65 66 ... */
         b=*--pA;
         a=*--pA;
-        if(c==64&&svx(a)) { /* a:1 */
+        if(c==64&&zv(a)) { /* a:1 */
           a0=a;
-          a=zv[svi(a)];
-          if(svx(b)) {
-            b=zv[svi(b)];
+          a=zvget(a);
+          if(zv(b)) {
+            b=zvget(b);
             if(15==b>>60) b=vlookup(b);
           }
           scope_set(gs,(char*)(a^(U)15<<60),b);
@@ -105,12 +105,12 @@ U pgreduce(pr *r, int p) {
           kfree(b);
         }
         else {
-          if(svx(a)) {
-            a=zv[svi(a)];
+          if(zv(a)) {
+            a=zvget(a);
             if(15==a>>60) a=vlookup(a);
           }
-          if(svx(b)) {
-            b=zv[svi(b)];
+          if(zv(b)) {
+            b=zvget(b);
             if(15==b>>60) b=vlookup(b);
           }
           *pA++=k(c%32,a,b);
@@ -127,11 +127,11 @@ U pgreduce(pr *r, int p) {
         else if(pA[-1]==2) { e="len"; }
         else if(pA[-1]==3) { e="type"; }
       }
-      if(e) pA[-1]=zvadd((U)sp(e),0xe);
+      if(e) pA[-1]=zvset((U)sp(e),0xe);
     }
     v=*--pA;
-    if(svx(v)) {
-      v=zv[svi(v)];
+    if(zv(v)) {
+      v=zvget(v);
       if(15==v>>60) v=vlookup(v);
     }
     if(p) {
