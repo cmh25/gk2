@@ -1,4 +1,5 @@
 #include "v.h"
+#include <stdlib.h>
 
 #define PMT(F,O) \
 U F(U a,U x) { \
@@ -512,8 +513,50 @@ U take(U a,U x) {
 }
 
 U drop(U a,U x) {
-  (void)a; (void)x;
-  return 0;
+  U r=0;
+  int *pri,*pxi;
+  float *prf,*pxf;
+  switch(ta) {
+  case 3:
+    switch(tx) {
+    case 3: r=x; break;
+    case 4: r=x; break;
+    case 0xb:
+      if(abs((int)a)>=nx) r=tn(3,0);
+      else if((int)a>0) {
+        r=tn(3,nx-(int)a);
+        pri=(int*)k(0,r,0);
+        pxi=(int*)k(0,x,0);
+        i(nx-(int)a,*pri++=pxi[i+(int)a])
+      }
+      else if((int)a<0) {
+        r=tn(3,nx+(int)a);
+        pri=(int*)k(0,r,0);
+        pxi=(int*)k(0,x,0);
+        i(nx+(int)a,*pri++=*pxi++)
+      }
+      else r=kcp(x);
+      break;
+    case 0xc:
+      if(abs((int)a)>=nx) r=tn(4,0);
+      else if((int)a>0) {
+        r=tn(4,nx-(int)a);
+        prf=(float*)k(0,r,0);
+        pxf=(float*)k(0,x,0);
+        i(nx-(int)a,*prf++=pxf[i+(int)a])
+      }
+      else if((int)a<0) {
+        r=tn(4,nx+(int)a);
+        prf=(float*)k(0,r,0);
+        pxf=(float*)k(0,x,0);
+        i(nx+(int)a,*prf++=*pxf++)
+      }
+      else r=kcp(x);
+      break;
+    } break;
+  default: r=3;
+  }
+  return r;
 }
 
 U cut(U a,U x) {
@@ -740,7 +783,7 @@ U bang(U x) {
     pri=(int*)k(0,r,0);
     i(nx,*pri++=i)
     break;
-  default: return 3;
+  default: r=3;
   }
   return r;
 }
@@ -756,8 +799,22 @@ U unique(U x) {
 }
 
 U floor_(U x) {
-  (void)x;
-  return 0;
+  U r=0;
+  int *pri;
+  float *pxf;
+  switch(tx) {
+  case 3: r=x; break;
+  case 4: r=t(3,(uint)floor(fu(x))); break;
+  case 0xb: r=kcp(x); break;
+  case 0xc:
+    r=tn(3,nx);
+    pri=(int*)k(0,r,0);
+    pxf=(float*)k(0,x,0);
+    i(nx,*pri++=floor(fu(*pxf));++pxf)
+    break;
+  default: r=3;
+  }
+  return r;
 }
 
 U order(U x) {
