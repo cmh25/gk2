@@ -3,8 +3,6 @@
 
 #include "k.h"
 
-extern unsigned int TIMES;
-
 #define T000   0 /* $a */
 #define T001   1 /* s */
 #define T002   2 /* e */

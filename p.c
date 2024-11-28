@@ -8,6 +8,7 @@
 #include "scope.h"
 #include "x.h"
 #include "lex.h"
+#include "timer.h"
 
 /*
 s > e se
@@ -68,7 +69,7 @@ static U vlookup(U v) {
 }
 
 U pgreduce(pr *r, int p) {
-  int i,j,quiet,w;
+  int i,j,quiet,w,timer=0,times=1;
   char c,q;
   char *e,*s;
   U A[256],*pA=A,a,b,v,a0;
@@ -76,6 +77,16 @@ U pgreduce(pr *r, int p) {
     int n=r->bcn[i];
     char *bc=r->bc[i];
     U *values=r->values[i];
+    if(bc[1]==96) { prfree(r); scope_free(gs); exit(0); }
+    else if(bc[1]==97) {
+      timer=1;
+      a=values[(int)bc[0]];
+      if(zv(a)) { a=zvget(a); if(15==a>>60) a=vlookup(a); }
+      times=(int)a;
+      timer_start();
+      continue;
+    }
+    while(times--) {
     pA=A;
     for(j=0;j<n;j++) {
       quiet=0;
@@ -84,10 +95,7 @@ U pgreduce(pr *r, int p) {
       if(!q) *pA++=values[(int)c];
       else if(q==1) { /* 32 33 34 ... */
         a=*--pA;
-        if(zv(a)) {
-          a=zvget(a);
-          if(15==a>>60) a=vlookup(a);
-        }
+        if(zv(a)) { a=zvget(a); if(15==a>>60) a=vlookup(a); }
         *pA++=k(c%32,0,a);
       }
       else if(q==2) { /* 64 65 66 ... */
@@ -96,32 +104,20 @@ U pgreduce(pr *r, int p) {
         if(c==64&&zv(a)) { /* a:1 */
           a0=a;
           a=zvget(a);
-          if(zv(b)) {
-            b=zvget(b);
-            if(15==b>>60) b=vlookup(b);
-          }
+          if(zv(b)) { b=zvget(b); if(15==b>>60) b=vlookup(b); }
           scope_set(gs,(char*)(a^(U)15<<60),b);
           *pA++=a0;
           quiet=1;
           kfree(b);
         }
         else {
-          if(zv(a)) {
-            a=zvget(a);
-            if(15==a>>60) a=vlookup(a);
-          }
-          if(zv(b)) {
-            b=zvget(b);
-            if(15==b>>60) b=vlookup(b);
-          }
+          if(zv(a)) { a=zvget(a); if(15==a>>60) a=vlookup(a); }
+          if(zv(b)) { b=zvget(b); if(15==b>>60) b=vlookup(b); }
           /* adverb? / \ ' */
           w=c%32;
           if(w==30) { s=strchr(_P,(char)a); a=s-_P; }
           *pA++=k(w,a,b);
         }
-      }
-      else if(q==3) { /* 96 97 98 ... sys monadic (exit) */
-        if(c==96) { prfree(r); scope_free(gs); exit(0); }
       }
       //todo: suspend console, invoke repl
       e=0;
@@ -133,12 +129,15 @@ U pgreduce(pr *r, int p) {
       }
       if(e) pA[-1]=zvset((U)sp(e),0xe);
     }
+    }
+    times=1;
     v=*--pA;
     if(zv(v)) {
       v=zvget(v);
       if(15==v>>60) v=vlookup(v);
     }
-    if(p) {
+    if(timer) { timer=0; printf("%f\n",timer_stop()); }
+    else if(p) {
       if(quiet) quiet=0;
       else kprint(v);
       if(i+1<r->n) kfree(v);

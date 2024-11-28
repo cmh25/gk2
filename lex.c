@@ -216,10 +216,8 @@ static void help(void) {
   ", join   enlist\n");
 }
 
-unsigned int TIMES;
 int lex(pgs *pgs) {
-  int f=1,s;
-  TIMES=0;
+  int f=1,s,t;
   p=pgs->p;
   while(1) {
     s=isblank(*p);
@@ -238,9 +236,18 @@ int lex(pgs *pgs) {
     else if(*p=='\\'&&*(p+1)=='\n') { help(); return 0; }
     else if(*p=='\\'&&*(p+1)=='t') {
       p+=2;
+      push(pgs,T013,97);
       while(*p==' '&&*p!='\n') ++p;
-      if((TIMES=atoi(p))) while(isdigit(*p))++p;
-      else TIMES=1;
+      if((t=atoi(p))) {
+        while(isdigit(*p))++p;
+        push(pgs,T012,(U)t|(U)3<<60);
+      }
+      else if(isalpha(*p)) gname(pgs);
+      else {
+        t=1;
+        push(pgs,T012,(U)t|(U)3<<60);
+      }
+      push(pgs,T010,0);
     }
     else if(isdigit(*p)||(*p=='.'&&isdigit(p[1]))) gn(pgs);
     else if(*p&&strchr(_P,*p)) {

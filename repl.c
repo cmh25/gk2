@@ -37,7 +37,7 @@ void load(char *fn) {
 }
 
 void repl(void) {
-  int c,j; size_t i,m=2; char *b,*p; U x;
+  int c; size_t i,m=2; char *b,*p;
   pr *r;
   printf("  ");
   for(i=0;;i=0) {
@@ -50,15 +50,7 @@ void repl(void) {
     b[i++]='\n'; b[i]=0;
     r=pgparse(p);
     if(r) {
-      if(TIMES) {
-        timer_start();
-        for(j=0;j<(int)TIMES;j++) kfree(pgreduce(r,0));
-        printf("%.3f\n",timer_stop());
-      }
-      else {
-        x=pgreduce(r,1);
-        kfree(x);
-      }
+      kfree(pgreduce(r,1));
       prfree(r);
     }
     xfree(p);
