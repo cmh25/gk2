@@ -46,6 +46,7 @@ void kprint(U x) {
   char ds[256];
   int *pxi;
   float *pxf;
+  U *pxu;
   switch(tx) {
   case 3: pi((int)x,"\n"); break;
   case 4: h=(int)x; pf(*(float*)&h,"\n"); break;
@@ -77,6 +78,16 @@ void kprint(U x) {
       printf("%s\n",ds);
     }
     break; 
+  case 8:
+    pxu=(U*)px(x);
+    printf("(");
+    for(j=0;j<nx;j++) {
+      if(pxu[j]>>60==3) pi((int)pxu[j],"");
+      else if(pxu[j]>>60==4) { h=(int)pxu[j]; pf(*(float*)&h,""); }
+      if(j<nx-1) printf(";");
+    }
+    printf(")\n");
+    break;
   case 0xe: printf("%s\n",(char*)(((U)0xe<<60)^x)); break;
   }
 }

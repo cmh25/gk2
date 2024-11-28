@@ -8,6 +8,8 @@
 #include "zv.h"
 #include "fn.h"
 
+static char *_P=":+-*%&|<>=~.!@?#_^,$LMSA..ERZ'/\\";
+
 static void push(pgs *s, int tt, U tv) {
   s->t[s->tc]=tt;
   s->v[s->tc++]=tv;
@@ -228,8 +230,23 @@ int lex(pgs *pgs) {
       else if(isdigit(p[1])||(p[1]=='.'&&isdigit(p[2]))) gn(pgs);
       else { ++p; push(pgs,T013,'-'); }
     }
+    else if(*p=='\\'&&*(p+1)=='\\') {
+      p+=2;
+      push(pgs,T013,96);
+      push(pgs,T012,(U)3<<60); /* zero */
+    }
+    else if(*p=='\\'&&*(p+1)=='\n') { help(); return 0; }
+    else if(*p=='\\'&&*(p+1)=='t') {
+      p+=2;
+      while(*p==' '&&*p!='\n') ++p;
+      if((TIMES=atoi(p))) while(isdigit(*p))++p;
+      else TIMES=1;
+    }
     else if(isdigit(*p)||(*p=='.'&&isdigit(p[1]))) gn(pgs);
-    else if(*p&&strchr(":+-*%&|<>=~.!@?#_^,$LMSA..ERZ",*p)) { push(pgs,T013,*p); ++p; }
+    else if(*p&&strchr(_P,*p)) {
+      if(p[1]&&p[1]=='/') { push(pgs,T012,*p); ++p; push(pgs,T013,*p); ++p; }
+      else { push(pgs,T013,*p); ++p; }
+    }
     else if(*p=='(') { ++p; push(pgs,T014,0); }
     else if(*p==')') { ++p; push(pgs,T015,0); }
     else if(*p=='[') { ++p; push(pgs,T016,0); }
@@ -238,13 +255,6 @@ int lex(pgs *pgs) {
     else if(*p==';') { ++p; push(pgs,T010,0); }
     else if(*p=='\n') { ++p; push(pgs,T011,0); while(*p=='\n')++p; f=1; continue; }
     else if(isalpha(*p)) gname(pgs);
-    else if(*p=='\\'&&*(p+1)=='\\') {
-      p+=2;
-      push(pgs,T013,96);
-      push(pgs,T012,(U)3<<60); /* zero */
-    }
-    else if(*p=='\\'&&*(p+1)=='\n') { help(); return 0; }
-    else if(*p=='\\'&&*(p+1)=='t') { p+=2; if(!(TIMES=atoi(p)))TIMES=1; while(isdigit(*p))++p; }
     else if(!*p) { push(pgs,T018,0); break; }
     else { printf("lex\n"); return 0; }
     f=0;

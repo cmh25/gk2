@@ -568,6 +568,7 @@ U join(U a,U x) {
   U r=0;
   int *pri,*pai,*pxi;
   float *prf,*paf,*pxf;
+  U *pru;
   switch(ta) {
   case 3:
     switch(tx) {
@@ -576,6 +577,12 @@ U join(U a,U x) {
       pri=(int*)k(0,r,0);
       pri[0]=(int)a;
       pri[1]=(int)x;
+      break;
+    case 4:
+      r=tn(0,2);
+      pru=(U*)k(0,r,0);
+      pru[0]=kcp(a);
+      pru[1]=kcp(x);
       break;
     case 0xb:
       r=tn(3,1+nx);

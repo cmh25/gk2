@@ -1,7 +1,8 @@
 #include "k.h"
 #include <stdlib.h>
-#include "v.h"
 #include <stdio.h>
+#include "v.h"
+#include "av.h"
 
 static void *O[512];
 static int R[512];
@@ -40,6 +41,7 @@ U k(int i,U a,U x) {
     case 17: r=cut(a,x); break;
     case 18: r=join(a,x); break;
     case 19: r=parse(a,x); break;
+    case 30: r=over(a,x); break;
     }
   }
   else { /* monad */
@@ -88,6 +90,7 @@ U tn(int t,int n) {
   int j;
   if(t==3) v=malloc(sizeof(int)*n);
   else if(t==4) v=malloc(sizeof(float)*n);
+  else if(t==0) v=malloc(sizeof(U)*n);
   if(v) {
     if(fi>-1) j=F[fi--];
     else j=oi++;

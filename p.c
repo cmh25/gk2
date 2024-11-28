@@ -21,7 +21,8 @@ elist > e elistz
 elistz > | se e elistz
 */
 
-char *_P=":+-*%&|<>=~.!@?#_^,$";
+//char *_P=":+-*%&|<>=~.!@?#_^,$";
+static char *_P=":+-*%&|<>=~.!@?#_^,$LMSA..ERZ'/\\";
 
 #define LI 10
 #define LJ 19
@@ -67,9 +68,9 @@ static U vlookup(U v) {
 }
 
 U pgreduce(pr *r, int p) {
-  int i,j,quiet;
+  int i,j,quiet,w;
   char c,q;
-  char *e;
+  char *e,*s;
   U A[256],*pA=A,a,b,v,a0;
   for(i=0;i<r->n;i++) {
     int n=r->bcn[i];
@@ -113,7 +114,10 @@ U pgreduce(pr *r, int p) {
             b=zvget(b);
             if(15==b>>60) b=vlookup(b);
           }
-          *pA++=k(c%32,a,b);
+          /* adverb? / \ ' */
+          w=c%32;
+          if(w==30) { s=strchr(_P,(char)a); a=s-_P; }
+          *pA++=k(w,a,b);
         }
       }
       else if(q==3) { /* 96 97 98 ... sys monadic (exit) */
