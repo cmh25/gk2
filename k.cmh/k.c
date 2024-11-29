@@ -72,7 +72,7 @@ U k(int i,U a,U x) {
       else r=t(3,1); break;
       break;
     case 16: r=floor_(x); break;
-    case 17: r=order(x); break;
+    case 17: r=rule(x); break;
     case 18: r=enlist(x); break;
     case 19: r=str(x); break;
     }

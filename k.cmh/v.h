@@ -38,7 +38,7 @@ U bang(U x);
 U first(U x);
 U unique(U x);
 U floor_(U x);
-U order(U x);
+U rule(U x);
 U enlist(U x);
 U str(U x);
 

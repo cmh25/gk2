@@ -212,7 +212,7 @@ static void help(void) {
   "? find   unique\n"
   "# take   count \n"
   "_ drop   floor \n"
-  "^ cut    order \n"
+  "^ cut    rule  \n"
   ", join   enlist\n");
 }
 

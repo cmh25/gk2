@@ -835,9 +835,20 @@ U floor_(U x) {
   return r;
 }
 
-U order(U x) {
-  (void)x;
-  return 0;
+U rule(U x) {
+  U r=0;
+  float f,g,*prf;
+  switch(tx) {
+  case 3:
+    r=tn(4,(int)x);
+    prf=(float*)k(0,r,0);
+    g=1.0/(int)x;
+    f=0;
+    i((int)x,*prf++=f;f+=g)
+    break;
+  default: r=3; /* type */
+  }
+  return r;
 }
 
 U enlist(U x) {
