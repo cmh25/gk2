@@ -42,7 +42,7 @@ static int ffix(char *ds, int a0) {
 }
 
 void kprint(U x) {
-  int h,j,a0=1;
+  int h,j,a0=1,m;
   char ds[256];
   int *pxi;
   float *pxf;
@@ -64,18 +64,33 @@ void kprint(U x) {
     if(!nx) printf("0#0.0\n");
     else if(1==nx) { printf(","); pf(pxf[0],"\n"); }
     else {
-      sprintf(ds,"%0.*g",7,pxf[0]);
-      a0=ffix(ds,a0);
-      printf("%s ",ds);
-      for(j=1;j<nx-1;j++) {
-        sprintf(ds,"%0.*g",7,pxf[j]);
+      m=mx?nx/mx:nx;
+      if(m==1) {
+        for(j=0;j<nx;j++) {
+          sprintf(ds,"%0.*g",7,pxf[j]);
+          a0=ffix(ds,a0);
+          if(a0) strcat(ds,".0");
+          printf("%s\n",ds);
+        }
+      }
+      else {
+        sprintf(ds,"%0.*g",7,pxf[0]);
         a0=ffix(ds,a0);
         printf("%s ",ds);
+        for(j=1;j<nx-1;j++) {
+          sprintf(ds,"%0.*g",7,pxf[j]);
+          a0=ffix(ds,a0);
+          if(m&&!((j+1)%m)) {
+            if(a0) strcat(ds,".0");
+            printf("%s\n",ds);
+          }
+          else printf("%s ",ds);
+        }
+        sprintf(ds,"%0.*g",7,pxf[j]);
+        a0=ffix(ds,a0);
+        if(a0) strcat(ds,".0");
+        printf("%s\n",ds);
       }
-      sprintf(ds,"%0.*g",7,pxf[j]);
-      a0=ffix(ds,a0);
-      if(a0) strcat(ds,".0");
-      printf("%s\n",ds);
     }
     break; 
   case 8:

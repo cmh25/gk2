@@ -783,14 +783,25 @@ U value(U x) {
 
 U bang(U x) {
   U r;
-  int *pri;
+  int *pri,*pxi,m,n,p;
+  float *prf;
   switch(tx) {
   case 3:
     r=tn(3,nx);
     pri=(int*)k(0,r,0);
     i(nx,*pri++=i)
     break;
-  default: r=3;
+  case 0xb:
+    if(nx!=2) { r=2; break; }/* len */
+    pxi=(int*)k(0,x,0);
+    m=pxi[0]; n=pxi[1];
+    p=m*n;
+    r=tn(4,p);
+    prf=(float*)k(0,r,0);
+    i(p,*prf++=1.0);
+    r|=(U)m<<32;
+    break;
+  default: r=3; /* type */
   }
   return r;
 }
