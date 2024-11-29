@@ -465,8 +465,50 @@ U mod(U a,U x) {
 }
 
 U at(U a,U x) {
-  (void)a; (void)x;
-  return 0;
+  U r=0;
+  float f,*paf,*pxf;
+  int s,*pai,*pxi;
+  switch(ta) {
+  case 0xb:
+    switch(tx) {
+    case 0xb:
+      if(na!=nx) { r=2; break; }/* len */
+      s=0;
+      pai=(int*)k(0,a,0);
+      pxi=(int*)k(0,x,0);
+      i(nx,s+=*pai++**pxi++)
+      r=t(3,s);
+      break;
+    case 0xc:
+      if(na!=nx) { r=2; break; }/* len */
+      f=0;
+      pai=(int*)k(0,a,0);
+      pxf=(float*)k(0,x,0);
+      i(nx,f+=fi(*pai)**pxf++;++pai)
+      r=t(4,*(uint*)&f);
+      break;
+    } break;
+  case 0xc:
+    switch(tx) {
+    case 0xb:
+      if(na!=nx) { r=2; break; }/* len */
+      f=0;
+      paf=(float*)k(0,a,0);
+      pxi=(int*)k(0,x,0);
+      i(nx,f+=*paf++*fi(*pxi);++pxi)
+      r=t(4,*(uint*)&f);
+      break;
+    case 0xc:
+      if(na!=nx) { r=2; break; }/* len */
+      f=0;
+      paf=(float*)k(0,a,0);
+      pxf=(float*)k(0,x,0);
+      i(nx,f+=*paf++**pxf++)
+      r=t(4,*(uint*)&f);
+      break;
+    } break;
+  }
+  return r;
 }
 
 U find(U a,U x) {
@@ -807,8 +849,34 @@ U bang(U x) {
 }
 
 U first(U x) {
-  (void)x;
-  return 0;
+  U r;
+  int *pri,*pxi,m;
+  float *prf,*pxf;
+  switch(tx) {
+  case 3: r=x; break;
+  case 4: r=x; break;
+  case 0xb:
+    pxi=(int*)k(0,x,0);
+    if(mx) {
+      m=nx/mx;
+      r=tn(3,m);
+      pri=(int*)k(0,r,0);
+      i(m,*pri++=*pxi++)
+    }
+    else r=t(3,(uint)*pxi);
+    break;
+  case 0xc:
+    pxf=(float*)k(0,x,0);
+    if(mx) {
+      m=nx/mx;
+      r=tn(4,m);
+      prf=(float*)k(0,r,0);
+      i(m,*prf++=*pxf++)
+    }
+    else r=t(4,*(uint*)pxf);
+    break;
+  }
+  return r;
 }
 
 U unique(U x) {

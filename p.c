@@ -129,6 +129,7 @@ U pgreduce(pr *r, int p) {
       }
       if(e) pA[-1]=zvset((U)sp(e),0xe);
     }
+    if(timer)kfree(pA[-1]);
     }
     times=1;
     v=*--pA;
