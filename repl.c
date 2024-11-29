@@ -31,8 +31,8 @@ void load(char *fn) {
   p[zr]=0;
   fclose(fp);
   r=pgparse(p);
-  (void)pgreduce(r,1);
   xfree(p);
+  (void)pgreduce(r,1);
   prfree(r);
 }
 

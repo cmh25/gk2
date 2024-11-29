@@ -96,6 +96,7 @@ U pgreduce(pr *r, int p) {
       else if(q==1) { /* 32 33 34 ... */
         a=*--pA;
         if(zv(a)) { a=zvget(a); if(15==a>>60) a=vlookup(a); }
+        else if(timer&&times) kref(a);
         *pA++=k(c%32,0,a);
       }
       else if(q==2) { /* 64 65 66 ... */
@@ -105,6 +106,7 @@ U pgreduce(pr *r, int p) {
           a0=a;
           a=zvget(a);
           if(zv(b)) { b=zvget(b); if(15==b>>60) b=vlookup(b); }
+          else if(timer&&times) kref(b);
           scope_set(gs,(char*)(a^(U)15<<60),b);
           *pA++=a0;
           quiet=1;
@@ -112,7 +114,9 @@ U pgreduce(pr *r, int p) {
         }
         else {
           if(zv(a)) { a=zvget(a); if(15==a>>60) a=vlookup(a); }
+          else if(timer&&times) kref(a);
           if(zv(b)) { b=zvget(b); if(15==b>>60) b=vlookup(b); }
+          else if(timer&&times) kref(b);
           /* adverb? / \ ' */
           w=c%32;
           if(w==30) { s=strchr(_P,(char)a); a=s-_P; }
@@ -141,8 +145,8 @@ U pgreduce(pr *r, int p) {
     else if(p) {
       if(quiet) quiet=0;
       else kprint(v);
-      if(i+1<r->n) kfree(v);
     }
+    if(i+1<r->n) kfree(v);
   }
   return v;
 }

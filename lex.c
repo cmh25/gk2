@@ -237,16 +237,11 @@ int lex(pgs *pgs) {
     else if(*p=='\\'&&*(p+1)=='t') {
       p+=2;
       push(pgs,T013,97);
-      while(*p==' '&&*p!='\n') ++p;
-      if((t=atoi(p))) {
-        while(isdigit(*p))++p;
-        push(pgs,T012,(U)t|(U)3<<60);
-      }
+      if(isblank(*p)) { t=1; push(pgs,T012,(U)t|(U)3<<60); }
+      else if((t=atoi(p))) { while(isdigit(*p))++p; push(pgs,T012,(U)t|(U)3<<60); }
       else if(isalpha(*p)) gname(pgs);
-      else {
-        t=1;
-        push(pgs,T012,(U)t|(U)3<<60);
-      }
+      if(isblank(*p)) while(isblank(*p)) ++p;
+      else { printf("lex\n"); return 0; }
       push(pgs,T010,0);
     }
     else if(isdigit(*p)||(*p=='.'&&isdigit(p[1]))) gn(pgs);
