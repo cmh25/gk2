@@ -242,7 +242,7 @@ pr* pgparse(char *q) {
   s->p=q;
   s->ti=0;s->tc=0;s->si=-1;s->ri=-1;s->vi=-1;
   memset(s->V,0,sizeof(s->V));
-  if(!lex(s)||s->tc<1) { pgfree(s); return 0; }
+  if(!lex(s)||s->tc<1) { pgfree(s); prfree(z); return 0; }
 
   while(1+s->ti<s->tc) {
     s->si=-1;s->ri=-1;s->vi=-1;

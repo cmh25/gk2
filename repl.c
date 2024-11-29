@@ -49,11 +49,11 @@ void repl(void) {
     if(!i) { xfree(p); printf("  "); continue; }
     b[i++]='\n'; b[i]=0;
     r=pgparse(p);
+    xfree(p);
     if(r) {
       kfree(pgreduce(r,1));
       prfree(r);
     }
-    xfree(p);
     printf("  ");
   }
 }
