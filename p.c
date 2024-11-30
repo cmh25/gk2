@@ -9,6 +9,7 @@
 #include "x.h"
 #include "lex.h"
 #include "timer.h"
+#include "repl.h"
 
 /*
 s > e se
@@ -70,12 +71,13 @@ static U vlookup(U v) {
 
 U pgreduce(pr *r, int p) {
   int i,j,quiet,w,timer=0,times=1;
-  char c,q;
-  char *e,*s;
-  U A[256],*pA=A,a,b,v,a0;
+  char c,q,n;
+  char *e,*s,*bc,*s2;
+  U A[256],*pA=A,a,b,v=0,a0;
+  if(!r->n) return v;
   for(i=0;i<r->n;i++) {
-    int n=r->bcn[i];
-    char *bc=r->bc[i];
+    if(!(n=r->bcn[i])) continue;
+    bc=r->bc[i];
     U *values=r->values[i];
     if(bc[1]==96) { prfree(r); scope_free(gs); exit(0); }
     else if(bc[1]==97) {
@@ -84,6 +86,17 @@ U pgreduce(pr *r, int p) {
       if(zv(a)) { a=zvget(a); if(15==a>>60) a=vlookup(a); }
       times=(int)a;
       timer_start();
+      continue;
+    }
+    else if(bc[1]==98) {
+      a=values[(int)bc[0]];
+      s=(char*)k(0,a,0);
+      s2=xmalloc(1+(int)a);
+      *s2=0;
+      strncat(s2,s,(int)a);
+      load(s2);
+      kfree(a);
+      xfree(s2);
       continue;
     }
     while(times--) {
@@ -160,13 +173,15 @@ static void r001(pgs *s) { /* s > e se */
 static void r002(pgs *s) { /* e > o ez */
   pn b=s->V[s->vi--];
   char *a;
-  if(b.n) if((a=strchr(_P,b.v))) s->pbc[s->pbci++]=64+a-_P;
+  if(b.v&&b.n) if((a=strchr(_P,b.v))) s->pbc[s->pbci++]=64+a-_P;
 }
 static void r003(pgs *s) { /* e > ez */
   pn b=Vvi;
   char *a;
-  if((a=strchr(_P,b.v))) s->pbc[s->pbci++]=32+a-_P;
-  else s->pbc[s->pbci++]=b.v; /* sys exit 96 */
+  if(b.v) {
+    if((a=strchr(_P,b.v))) s->pbc[s->pbci++]=32+a-_P;
+    else s->pbc[s->pbci++]=b.v; /* sys exit 96 */
+  }
 }
 static void r004(pgs *s) { /* se > ';' */
   (void)s;
@@ -235,14 +250,14 @@ void prfree(pr *r) {
   xfree(r->values);
   xfree(r);
 }
-pr* pgparse(char *q) {
+pr* pgparse(char *q, int load) {
   int j,r;
   pr *z=prnew();
   pgs *s=pgnew();
   s->p=q;
   s->ti=0;s->tc=0;s->si=-1;s->ri=-1;s->vi=-1;
   memset(s->V,0,sizeof(s->V));
-  if(!lex(s)||s->tc<1) { pgfree(s); prfree(z); return 0; }
+  if(!lex(s,load)||s->tc<1) { pgfree(s); prfree(z); return 0; }
 
   while(1+s->ti<s->tc) {
     s->si=-1;s->ri=-1;s->vi=-1;

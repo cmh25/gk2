@@ -30,7 +30,7 @@ void load(char *fn) {
   }
   p[zr]=0;
   fclose(fp);
-  r=pgparse(p);
+  r=pgparse(p,1);
   xfree(p);
   (void)pgreduce(r,1);
   prfree(r);
@@ -48,7 +48,7 @@ void repl(void) {
     }
     if(!i) { xfree(p); printf("  "); continue; }
     b[i++]='\n'; b[i]=0;
-    r=pgparse(p);
+    r=pgparse(p,0);
     xfree(p);
     if(r) {
       kfree(pgreduce(r,1));

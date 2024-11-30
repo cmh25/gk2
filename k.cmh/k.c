@@ -91,6 +91,7 @@ U tn(int t,int n) {
   if(t==3) v=malloc(sizeof(int)*n);
   else if(t==4) v=malloc(sizeof(float)*n);
   else if(t==0) v=malloc(sizeof(U)*n);
+  else if(t==2) v=malloc(n);
   if(v) {
     if(fi>-1) j=F[fi--];
     else j=oi++;
