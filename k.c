@@ -105,4 +105,5 @@ void kprint(U x) {
     break;
   case 0xe: printf("%s\n",(char*)(((U)0xe<<60)^x)); break;
   }
+  kfree(x);
 }

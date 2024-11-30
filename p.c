@@ -154,12 +154,11 @@ U pgreduce(pr *r, int p) {
       v=zvget(v);
       if(15==v>>60) v=vlookup(v);
     }
-    if(timer) { timer=0; printf("%f\n",timer_stop()); }
+    if(timer) { kfree(v); timer=0; printf("%f\n",timer_stop()); }
     else if(p) {
-      if(quiet) quiet=0;
+      if(quiet) { kfree(v); quiet=0; }
       else kprint(v);
     }
-    if(i+1<r->n) kfree(v);
   }
   return v;
 }

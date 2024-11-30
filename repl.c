@@ -51,7 +51,7 @@ void repl(void) {
     r=pgparse(p,0);
     xfree(p);
     if(r) {
-      kfree(pgreduce(r,1));
+      (void)pgreduce(r,1);
       prfree(r);
     }
     printf("  ");
