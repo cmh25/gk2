@@ -5,12 +5,12 @@ gk2 is a reimplementation of gk designed to be compatible with the high performa
 :warning: **status: extremely experimental**
 
 gk2 has a clean separation between the repl (read eval print loop) and the core k functions. There are currently two cores available:
-1. k.cmh (default) portable, compiles and runs on lin/win/mac
-2. k.shakti (extreme high performance on linux+avx512)
+1. k.default: portable, compiles and runs on lin/win/mac
+2. k.shakti: extreme high performance on linux+avx512
 
 To use the shakti core, change these line in the toplevel makefile:
 ```
-CORE=k.cmh
+CORE=k.default
 #CORE=k.shakti
 ```
 

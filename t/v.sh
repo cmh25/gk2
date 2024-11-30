@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [ "$CORE" = "" ]; then CORE=k.cmh; fi
-if [ "$CORE" != "k.cmh" ]; then echo "valgrind tests not available for $CORE core"; exit 0; fi
+if [ "$CORE" = "" ]; then CORE=k.default; fi
+if [ "$CORE" != "k.default" ]; then echo "valgrind tests not available for $CORE core"; exit 0; fi
 
 os=`uname -s`
 if [ "$os" = "Darwin" ]; then echo "valgrind tests are linux only"; exit 0; fi

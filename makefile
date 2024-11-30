@@ -1,4 +1,4 @@
-CORE=k.cmh
+CORE=k.default
 #CORE=k.shakti
 export CORE
 
