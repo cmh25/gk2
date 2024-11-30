@@ -23,8 +23,7 @@ elist > e elistz
 elistz > | se e elistz
 */
 
-//char *_P=":+-*%&|<>=~.!@?#_^,$";
-static char *_P=":+-*%&|<>=~.!@?#_^,$LMSA..ERZ'/\\";
+static char *P=":+-*%&|<>=~.!@?#_^,$LMSA..ERZ'/\\";
 
 #define LI 10
 #define LJ 19
@@ -94,7 +93,7 @@ U pgreduce(pr *r, int p) {
       s2=xmalloc(1+(int)a);
       *s2=0;
       strncat(s2,s,(int)a);
-      load(s2);
+      load(s2,2);
       kfree(a);
       xfree(s2);
       continue;
@@ -132,7 +131,7 @@ U pgreduce(pr *r, int p) {
           else if(timer&&times) kref(b);
           /* adverb? / \ ' */
           w=c%32;
-          if(w==30) { s=strchr(_P,(char)a); a=s-_P; }
+          if(w==30) { s=strchr(P,(char)a); a=s-P; }
           *pA++=k(w,a,b);
         }
       }
@@ -150,10 +149,7 @@ U pgreduce(pr *r, int p) {
     }
     times=1;
     v=*--pA;
-    if(zv(v)) {
-      v=zvget(v);
-      if(15==v>>60) v=vlookup(v);
-    }
+    if(zv(v)) { v=zvget(v); if(15==v>>60) v=vlookup(v); }
     if(timer) { kfree(v); timer=0; printf("%f\n",timer_stop()); }
     else if(p) {
       if(quiet) { kfree(v); quiet=0; }
@@ -172,13 +168,13 @@ static void r001(pgs *s) { /* s > e se */
 static void r002(pgs *s) { /* e > o ez */
   pn b=s->V[s->vi--];
   char *a;
-  if(b.v&&b.n) if((a=strchr(_P,b.v))) s->pbc[s->pbci++]=64+a-_P;
+  if(b.v&&b.n) if((a=strchr(P,b.v))) s->pbc[s->pbci++]=64+a-P;
 }
 static void r003(pgs *s) { /* e > ez */
   pn b=Vvi;
   char *a;
   if(b.v) {
-    if((a=strchr(_P,b.v))) s->pbc[s->pbci++]=32+a-_P;
+    if((a=strchr(P,b.v))) s->pbc[s->pbci++]=32+a-P;
     else s->pbc[s->pbci++]=b.v; /* sys exit 96 */
   }
 }

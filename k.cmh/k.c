@@ -21,16 +21,16 @@ U k(int i,U a,U x) {
   int j;
   if(a) { /* dyad */
     switch(i) {
-    case 0: if(!x&&!aa) r=(U)O[oa]; break; /* deref */
-    case 1: r=plus(a,x); break;
-    case 2: r=minus(a,x); break;
-    case 3: r=times(a,x); break;
-    case 4: r=divide(a,x); break;
-    case 5: r=minand(a,x); break;
-    case 6: r=maxor(a,x); break;
-    case 7: r=less(a,x); break;
-    case 8: r=more(a,x); break;
-    case 9: r=equal(a,x); break;
+    case  0: if(!x&&!aa) r=(U)O[oa]; break; /* deref */
+    case  1: r=plus(a,x); break;
+    case  2: r=minus(a,x); break;
+    case  3: r=times(a,x); break;
+    case  4: r=divide(a,x); break;
+    case  5: r=minand(a,x); break;
+    case  6: r=maxor(a,x); break;
+    case  7: r=less(a,x); break;
+    case  8: r=more(a,x); break;
+    case  9: r=equal(a,x); break;
     case 10: r=match(a,x); break;
     case 11: r=dot(a,x); break;
     case 12: r=mod(a,x); break;
@@ -46,16 +46,16 @@ U k(int i,U a,U x) {
   }
   else { /* monad */
     switch(i) {
-    case 0: if(x) { R[ox]++; r=x; } break; /* ref + */
-    case 1: r=pos(x); break;
-    case 2: r=negate(x); break;
-    case 3: r=square(x); break;
-    case 4: r=sqrt_(x); break;
-    case 5: r=flip(x); break;
-    case 6: r=reverse(x); break;
-    case 7: r=asc(x); break;
-    case 8: r=desc(x); break;
-    case 9: r=group(x); break;
+    case  0: if(x) { R[ox]++; r=x; } break; /* ref + */
+    case  1: r=pos(x); break;
+    case  2: r=negate(x); break;
+    case  3: r=square(x); break;
+    case  4: r=sqrt_(x); break;
+    case  5: r=flip(x); break;
+    case  6: r=reverse(x); break;
+    case  7: r=asc(x); break;
+    case  8: r=desc(x); break;
+    case  9: r=group(x); break;
     case 10: r=not_(x); break;
     case 11: r=value(x); break;
     case 12: r=bang(x); break;
@@ -85,19 +85,19 @@ U k(int i,U a,U x) {
 }
 
 U tn(int t,int n) {
-  U r=0;
-  void *v=0;
-  int j;
-  if(t==3) v=malloc(sizeof(int)*n);
-  else if(t==4) v=malloc(sizeof(float)*n);
-  else if(t==0) v=malloc(sizeof(U)*n);
-  else if(t==2) v=malloc(n);
+  U r=0; void *v=0; int j;
+  switch(t) {
+  case 0: v=malloc(sizeof(U)*n); break;
+  case 2: v=malloc(n); break;
+  case 3: v=malloc(sizeof(int)*n); break;
+  case 4: v=malloc(sizeof(float)*n); break;
+  }
   if(v) {
     if(fi>-1) j=F[fi--];
     else j=oi++;
     if(oi==om) { fprintf(stderr,"error: om\n"); exit(1); }
     O[j]=v;
-    r=t(t+8,n);
+    r=t(8+t,n);
     r|=(U)j<<48;
   }
   return r;

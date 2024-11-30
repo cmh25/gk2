@@ -9,7 +9,7 @@
 #include "x.h"
 #include "repl.h"
 
-void load(char *fn) {
+void load(char *fn, int load) {
   FILE *fp=0; pr *r; char *p;
   size_t zr;
   #ifdef _WIN32
@@ -30,7 +30,7 @@ void load(char *fn) {
   }
   p[zr]=0;
   fclose(fp);
-  r=pgparse(p,1);
+  r=pgparse(p,load);
   xfree(p);
   (void)pgreduce(r,1);
   prfree(r);

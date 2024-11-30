@@ -8,7 +8,30 @@
 #include "zv.h"
 #include "fn.h"
 
-static char *_P=":+-*%&|<>=~.!@?#_^,$LMSA..ERZ'/\\";
+static char *P=":+-*%&|<>=~.!@?#_^,$LMSA..ERZ'/\\";
+
+static void help(void) {
+  printf(""
+  "Verb    (monad)\n"
+  "+ +            \n"
+  "- -            \n"
+  "* *      sqr   \n"
+  "%% div    sqrt  \n"
+  "& and    flip  \n"
+  "| or     flop  \n"
+  "< <      asc   \n"
+  "> >      desc  \n"
+  "= =      group \n"
+  "~ ~      match \n"
+  ". .      value \n"
+  "! mod    index \n"
+  "@ @      first \n"
+  "? find   unique\n"
+  "# take   count \n"
+  "_ drop   floor \n"
+  "^ cut    rule  \n"
+  ", join   enlist\n");
+}
 
 static void push(pgs *s, int tt, U tv) {
   s->t[s->tc]=tt;
@@ -251,85 +274,73 @@ static int gf(pgs *pgs) {
   return 1;
 }
 
-static void help(void) {
-  printf(""
-  "Verb    (monad)\n"
-  "+ +            \n"
-  "- -            \n"
-  "* *      sqr   \n"
-  "%% div    sqrt  \n"
-  "& and    flip  \n"
-  "| or     flop  \n"
-  "< <      asc   \n"
-  "> >      desc  \n"
-  "= =      group \n"
-  "~ ~      match \n"
-  ". .      value \n"
-  "! mod    index \n"
-  "@ @      first \n"
-  "? find   unique\n"
-  "# take   count \n"
-  "_ drop   floor \n"
-  "^ cut    rule  \n"
-  ", join   enlist\n");
-}
-
-int lex(pgs *pgs, int load) {
-  int f=1,s,t;
-  char c,*q;
-  p=pgs->p;
+static int gback(pgs *pgs, int load) {
+  char c,*q,*puc;
+  int t;
   U u;
-  char *puc;
-  while(1) {
-    s=isblank(*p);
-    while(isblank(*p)) ++p;
-    if((s||f)&&*p=='/') { while(*++p!='\n'){}; while(*++p=='\n'){}; continue; }
-    if(*p=='-') {
-      if(!(s|f)&&(pgs->lt==T012||pgs->lt==T015)) { ++p; push(pgs,T013,'-'); }
-      else if(isdigit(p[1])||(p[1]=='.'&&isdigit(p[2]))) gn(pgs);
-      else { ++p; push(pgs,T013,'-'); }
+  if(p[1]=='\\') {
+    if(load==2) { /* \l file */
+      push(pgs,T010,0);
+      *p=0;
     }
-    else if(*p=='\\'&&*(p+1)=='\\') {
+    else {
       p+=2;
       push(pgs,T013,96);
       push(pgs,T012,(U)3<<60); /* zero */
     }
-    else if(*p=='\\'&&*(p+1)=='\n') {
-      if(load) {
-        if(f) push(pgs,T010,0);
-        ++p;
-        p[1]=0;
-      }
-      else { help(); return 0; }
-    }
-    else if(*p=='\\'&&*(p+1)=='t') {
-      p+=2;
-      push(pgs,T013,97);
-      if(isblank(*p)) { t=1; push(pgs,T012,(U)t|(U)3<<60); }
-      else if((t=atoi(p))) { while(isdigit(*p))++p; push(pgs,T012,(U)t|(U)3<<60); }
-      else if(isalpha(*p)) gname(pgs);
-      if(isblank(*p)) while(isblank(*p)) ++p;
-      else { printf("lex\n"); return 0; }
+  }
+  else if(p[1]=='\n') {
+    if(load) {
       push(pgs,T010,0);
+      ++p;
+      p[1]=0;
     }
-    else if(*p=='\\'&&p[1]=='l'&&p[2]&&strchr(" \n\t",p[2])) {
-      push(pgs,T013,98);
-      p+=2;
-      while(isblank(*p))++p;
-      q=p;
-      while(*p&&*p!='\n')++p;
-      c=*p; *p=0;
-      if(strlen(q)) {
-        u=tn(2,strlen(q));
-        puc=(char*)k(0,u,0);
-        i((int)u,*puc++=q[i])
-        push(pgs,T012,u);
-      }
-      else push(pgs,T012,0);
-      *p=c;
+    else { help(); return 0; }
+  }
+  else if(p[1]=='t') {
+    p+=2;
+    push(pgs,T013,97);
+    if(isblank(*p)) { t=1; push(pgs,T012,(U)t|(U)3<<60); }
+    else if((t=atoi(p))) { while(isdigit(*p))++p; push(pgs,T012,(U)t|(U)3<<60); }
+    else if(isalpha(*p)) gname(pgs);
+    if(isblank(*p)) while(isblank(*p)) ++p;
+    else { printf("lex\n"); return 0; }
+    push(pgs,T010,0);
+  }
+  else if(p[1]=='l'&&p[2]&&strchr(" \n\t",p[2])) {
+    push(pgs,T013,98);
+    p+=2;
+    while(isblank(*p))++p;
+    q=p;
+    while(*p&&*p!='\n')++p;
+    c=*p; *p=0;
+    if(strlen(q)) {
+      u=tn(2,strlen(q));
+      puc=(char*)k(0,u,0);
+      i((int)u,*puc++=q[i])
+      push(pgs,T012,u);
     }
+    else push(pgs,T012,0);
+    *p=c;
+  }
+  return 1;
+}
+
+int lex(pgs *pgs, int load) {
+  int f=1,s;
+  p=pgs->p;
+  while(1) {
+    s=isblank(*p);
+    while(isblank(*p)) ++p;
+    if((s||f)&&*p=='/') { while(*++p!='\n'){}; }
+    else if(*p=='-') {
+      if(!(s|f)&&(pgs->lt==T012||pgs->lt==T015)) { ++p; push(pgs,T013,'-'); }
+      else if(isdigit(p[1])||(p[1]=='.'&&isdigit(p[2]))) gn(pgs);
+      else { ++p; push(pgs,T013,'-'); }
+    }
+    else if(f&&*p=='\\') { if(!gback(pgs,load)) return 0; }
     else if(isdigit(*p)||(*p=='.'&&isdigit(p[1]))) gn(pgs);
-    else if(*p&&strchr(_P,*p)) {
+    else if(*p&&strchr(P,*p)) {
       if(p[1]&&p[1]=='/') { push(pgs,T012,*p); ++p; push(pgs,T013,*p); ++p; }
       else { push(pgs,T013,*p); ++p; }
     }
