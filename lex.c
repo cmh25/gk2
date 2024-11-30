@@ -287,6 +287,8 @@ static int gback(pgs *pgs, int load) {
       p+=2;
       push(pgs,T013,96);
       push(pgs,T012,(U)3<<60); /* zero */
+      push(pgs,T011,0);
+      *p=0;
     }
   }
   else if(p[1]=='\n') {

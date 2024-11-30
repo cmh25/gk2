@@ -8,9 +8,10 @@ if [ "$os" = "Darwin" ]; then echo "valgrind tests are linux only"; exit 0; fi
 which valgrind &>/dev/null
 if [ $? -ne 0 ]; then echo "valgrind not found" && exit 1; fi
 ec=0
+vo="--leak-check=full --show-leak-kinds=all --error-exitcode=1 --errors-for-leak-kinds=all"
 for t in `cat tests`; do
   echo -n "t$t: "
-  valgrind --leak-check=full ../gk t$t >/dev/null 2> v$t
+  valgrind $vo ../gk t$t >/dev/null 2> v$t
   grep -q "ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)" v$t
   if [ $? -ne 0 ]; then
     ec=$((ec+1))

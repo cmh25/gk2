@@ -10,6 +10,7 @@
 #include "lex.h"
 #include "timer.h"
 #include "repl.h"
+#include "sys.h"
 
 /*
 s > e se
@@ -78,7 +79,7 @@ U pgreduce(pr *r, int p) {
     if(!(n=r->bcn[i])) continue;
     bc=r->bc[i];
     U *values=r->values[i];
-    if(bc[1]==96) { prfree(r); scope_free(gs); exit(0); }
+    if(bc[1]==96) { prfree(r); exit_(0); }
     else if(bc[1]==97) {
       timer=1;
       a=values[(int)bc[0]];

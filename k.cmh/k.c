@@ -43,6 +43,7 @@ U k(int i,U a,U x) {
     case 19: r=parse(a,x); break;
     case 30: r=over(a,x); break;
     }
+    if(i) {k(15,0,a); k(15,0,x); }
   }
   else { /* monad */
     switch(i) {
@@ -76,10 +77,7 @@ U k(int i,U a,U x) {
     case 18: r=enlist(x); break;
     case 19: r=str(x); break;
     }
-  }
-  if(i&&i!=15) {
-    k(15,0,a);
-    k(15,0,x);
+    if(i&&i!=15) k(15,0,x);
   }
   return r;
 }

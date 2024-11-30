@@ -3,6 +3,9 @@
 #include <stdio.h>
 #include "x.h"
 
+static char **sh;
+static int j,k;
+
 int hs(char *s) {
   int h=0;
   while(*s) h=(h<<5)-h+*s++;
@@ -10,9 +13,7 @@ int hs(char *s) {
 }
 
 char* sp(char *s) {
-  static char **sh;
-  static int i,j,k;
-  int h = hs(s);
+  int i,h=hs(s);
   char **p,*t;
   if(k) for(;(t=sh[h&(k-1)]);++h) if(!strcmp(s,t)) return t;
   if(j==k) {
@@ -26,4 +27,10 @@ char* sp(char *s) {
   }
   if(!(t=xmalloc(1+strlen(s)))){fprintf(stderr,"sp");exit(1);}
   return j+=2,sh[h&(k-1)]=strcpy(t,s);
+}
+
+void sf(void) {
+  int i;
+  for(i=0;i<k;i++) if(sh[i]) xfree(sh[i]);
+  xfree(sh);
 }
