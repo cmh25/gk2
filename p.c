@@ -263,7 +263,6 @@ pr* pgparse(char *q, int load) {
     s->pbci=z->bcn[z->n];
     s->values=z->values[z->n];
     s->valuei=0;
-
     s->S[++s->si]=T000; /* $a */
     for(;;) {
       if(s->S[s->si]==s->t[s->ti]) {
@@ -285,7 +284,6 @@ pr* pgparse(char *q, int load) {
     z->bcn[z->n]=s->pbci;
     ++z->n;
   }
-
   pgfree(s);
   return z;
 }

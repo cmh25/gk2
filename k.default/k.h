@@ -34,6 +34,13 @@ ax     tx     ox     mx    nx
 : (((x)==INT_MIN+1) ? -INFINITY \
 : (float)(x)))))
 
+#define PRI pri=(int*)k(0,r,0)
+#define PAI pai=(int*)k(0,a,0)
+#define PXI pxi=(int*)k(0,x,0)
+#define PRF prf=(float*)k(0,r,0)
+#define PAF paf=(float*)k(0,a,0)
+#define PXF pxf=(float*)k(0,x,0)
+
 #ifdef _WIN32
   typedef unsigned long long U;
 #else

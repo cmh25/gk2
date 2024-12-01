@@ -3,6 +3,9 @@
 
 #include "k.h"
 
+extern U (*FD[])(U,U);
+extern U (*FM[])(U);
+
 U plus(U a,U x);
 U minus(U a,U x);
 U times(U a,U x);
