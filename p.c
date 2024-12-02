@@ -24,7 +24,7 @@ elist > e elistz
 elistz > | se e elistz
 */
 
-static char *P=":+-*%&|<>=~.!@?#_^,$LMSA..ERZ'/\\";
+static char *P=":+-*%&|<>=~.!@?#_^,$.........'/\\";
 
 #define LI 10
 #define LJ 19
@@ -66,7 +66,8 @@ static int RC[16]={1,2,2,1,1,1,1,1,0,2,1,3,3,2,0,3};
 
 static U vlookup(U v) {
   char *s=(char*)(v^(U)15<<60);
-  return scope_get(gs,s);
+  U r=scope_get(gs,s);
+  return r?r:4;
 }
 
 U pgreduce(pr *r, int p) {
@@ -111,7 +112,8 @@ U pgreduce(pr *r, int p) {
         a=*--pA;
         if(zv(a)) { a=zvget(a); if(15==a>>60) a=vlookup(a); }
         else if(timer&&times) kref(a);
-        *pA++=k(c%32,0,a);
+        if(a==4) *pA++=4; /* value */
+        else *pA++=k(c%32,0,a);
         }
       }
       else if(q==2) { /* 64 65 66 ... */
@@ -123,41 +125,49 @@ U pgreduce(pr *r, int p) {
           a=zvget(a);
           if(zv(b)) { b=zvget(b); if(15==b>>60) b=vlookup(b); }
           else if(timer&&times) kref(b);
-          scope_set(gs,(char*)(a^(U)15<<60),b);
-          *pA++=a0;
-          quiet=1;
-          kfree(b);
+          if(b==4) *pA++=4;  /* value */
+          else {
+            scope_set(gs,(char*)(a^(U)15<<60),b);
+            *pA++=a0;
+            quiet=1;
+            kfree(b);
+          }
         }
         else {
           if(zv(a)) { a=zvget(a); if(15==a>>60) a=vlookup(a); }
           else if(timer&&times) kref(a);
           if(zv(b)) { b=zvget(b); if(15==b>>60) b=vlookup(b); }
           else if(timer&&times) kref(b);
-          /* adverb? / \ ' */
-          w=c%32;
-          if(w==30) {
-            s=strchr(P,(char)a); a=s-P;
-            *pA++=s?k(w,a,b):3; /* 3 = type */
+          if(a==4||b==4) *pA++=4;       /* value */
+          else {
+            /* adverb? / \ ' */
+            w=c%32;
+            if(w==30) {
+              s=strchr(P,(char)a); a=s-P;
+              *pA++=s?k(w,a,b):3; /* 3 = type */
+            }
+            else *pA++=k(w,a,b);
           }
-          else *pA++=k(w,a,b);
         }
         }
       }
       //todo: suspend console, invoke repl
       e=0;
-      if(pA[-1]<4) {
+      if(pA[-1]<5) {
         if(pA[-1]==0) { e="nyi"; }
         else if(pA[-1]==1) { e="rank"; }
         else if(pA[-1]==2) { e="len"; }
         else if(pA[-1]==3) { e="type"; }
+        else if(pA[-1]==4) { e="value"; }
       }
-      if(e) pA[-1]=zvset((U)sp(e),0xe);
+      if(e) { pA[-1]=zvset((U)sp(e),0xe); break; }
     }
     if(timer&&times)kfree(pA[-1]);
     }
     times=1;
-    v=*--pA;
+    v=pA>A?*--pA:0;
     if(zv(v)) { v0=zvget(v); if(15==v0>>60) v=vlookup(v0); }
+    if(v==4) { e="value"; v=zvset((U)sp(e),0xe); }
     if(timer) { kfree(v); timer=0; printf("%f\n",timer_stop()); }
     else if(p) {
       if(quiet) { kfree(v); quiet=0; }

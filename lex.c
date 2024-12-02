@@ -8,7 +8,7 @@
 #include "zv.h"
 #include "fn.h"
 
-static char *P=":+-*%&|<>=~.!@?#_^,$LMSA..ERZ'/\\";
+static char *P=":+-*%&|<>=~.!@?#_^,$.........'/\\";
 
 static void help(void) {
   printf(""
@@ -106,17 +106,17 @@ static int gn_(void) {
 }
 
 static int gn(pgs *pgs) {
-  int r,*iv=0,i;
+  int r0,r,*iv=0,i;
   int ic=0,fc=0,imm=1,fm=1;
   float *fv=0;
   char *q;
-  r=gn_();
+  r0=gn_();
   if(isblank(*p)) {
     q=p;
     while(isblank(*p))++p;
     if(isdigit(*p)||((*p=='.'||*p=='-')&&isdigit(p[1]))) { /* convert to vector */
-      if(r==1) { imm<<=1; iv=xrealloc(iv,imm*sizeof(int)); iv[ic++]=iii; }
-      else if(r==2) { fm<<=1; fv=xrealloc(fv,fm*sizeof(float)); fv[fc++]=fff; }
+      if(r0==1) { imm<<=1; iv=xrealloc(iv,imm*sizeof(int)); iv[ic++]=iii; }
+      else if(r0==2) { fm<<=1; fv=xrealloc(fv,fm*sizeof(float)); fv[fc++]=fff; }
     }
     p=q;
     if(iv) {
@@ -170,11 +170,11 @@ static int gn(pgs *pgs) {
     i(fc,pf[i]=fv[i])
     push(pgs,T012,x);
   }
-  else if(r==1) push(pgs,T012,(iii&0xffffffff)|(U)3<<60);
-  else if(r==2) push(pgs,T012,(*((int*)&fff)&0xffffffff)|(U)4<<60);
+  else if(r0==1) push(pgs,T012,(iii&0xffffffff)|(U)3<<60);
+  else if(r0==2) push(pgs,T012,(*((int*)&fff)&0xffffffff)|(U)4<<60);
   if(iv) xfree(iv);
   if(fv) xfree(fv);
-  return r;
+  return r0;
 }
 
 static int gname(pgs *pgs) {
@@ -257,7 +257,8 @@ static int gf(pgs *pgs) {
     if(*p=='"') p=xeqs(p);
     switch(s) {
     case 0:
-      if(*p=='}'&&fc==1) s=1;
+      if(!*p) s=2;
+      else if(*p=='}'&&fc==1) s=1;
       else if(*p=='}') fc--;
       else if(*p=='{') fc++;
       break;
@@ -267,6 +268,7 @@ static int gf(pgs *pgs) {
       push(pgs,T013,(U)f|(U)0xe<<60);
       *p=c;
       return 1;
+    case 2: return 0; /* error */
     default: return 0; /* error */
     }
     ++p;
@@ -337,11 +339,11 @@ int lex(pgs *pgs, int load) {
     if((s||f)&&*p=='/') { while(*++p!='\n'){}; }
     else if(*p=='-') {
       if(!(s|f)&&(pgs->lt==T012||pgs->lt==T015)) { ++p; push(pgs,T013,'-'); }
-      else if(isdigit(p[1])||(p[1]=='.'&&isdigit(p[2]))) gn(pgs);
+      else if(isdigit(p[1])||(p[1]=='.'&&isdigit(p[2]))) { if(!gn(pgs)) { printf("lex\n"); return 0; } }
       else { ++p; push(pgs,T013,'-'); }
     }
     else if(f&&*p=='\\') { if(!gback(pgs,load)) return 0; }
-    else if(isdigit(*p)||(*p=='.'&&isdigit(p[1]))) gn(pgs);
+    else if(isdigit(*p)||(*p=='.'&&isdigit(p[1]))) { if(!gn(pgs)) { printf("lex\n"); return 0; } }
     else if(*p&&strchr(P,*p)) {
       if(p[1]&&p[1]=='/') { push(pgs,T012,*p); ++p; push(pgs,T013,*p); ++p; }
       else { push(pgs,T013,*p); ++p; }
@@ -350,7 +352,7 @@ int lex(pgs *pgs, int load) {
     else if(*p==')') { ++p; push(pgs,T015,0); }
     else if(*p=='[') { ++p; push(pgs,T016,0); }
     else if(*p==']') { ++p; push(pgs,T017,0); }
-    else if(*p=='{') gf(pgs);
+    else if(*p=='{') { if(!gf(pgs)) { printf("lex\n"); return 0; } }
     else if(*p==';') { ++p; push(pgs,T010,0); }
     else if(*p=='\n') { ++p; push(pgs,T011,0); while(*p=='\n')++p; f=1; continue; }
     else if(isalpha(*p)) gname(pgs);
