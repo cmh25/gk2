@@ -446,7 +446,7 @@ U floor_(U x) {
   float *pxf;
   switch(tx) {
   case 3: r=x; break;
-  case 4: r=t(3,(uint)floor(fu(x))); break;
+  case 4: r=t(3,(uint)(int)floor(fu(x))); break;
   case 0xb: r=kcp(x); break;
   case 0xc: r=tn(3,nx); PRI; PXF; i(nx,*pri++=floor(fu(*pxf));++pxf) break;
   default: r=3;
