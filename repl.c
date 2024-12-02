@@ -32,8 +32,10 @@ void load(char *fn, int load) {
   fclose(fp);
   r=pgparse(p,load);
   xfree(p);
-  (void)pgreduce(r,1);
-  prfree(r);
+  if(r) {
+    (void)pgreduce(r,1);
+    prfree(r);
+  }
 }
 
 void repl(void) {

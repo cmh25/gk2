@@ -3,8 +3,10 @@
 
 #include "k.h"
 
-extern U (*FD[])(U,U);
-extern U (*FM[])(U);
+#define FDSIZE 20
+#define FMSIZE 20
+extern U (*FD[FDSIZE])(U,U);
+extern U (*FM[FMSIZE])(U);
 
 U plus(U a,U x);
 U minus(U a,U x);

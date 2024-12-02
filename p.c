@@ -73,7 +73,7 @@ U pgreduce(pr *r, int p) {
   int i,j,quiet,w,timer=0,times=1;
   char c,q,n;
   char *e,*s,*bc,*s2;
-  U A[256],*pA=A,a,b,v=0,a0;
+  U A[256],*pA=A,a,b,v=0,v0,a0;
   if(!r->n) return v;
   for(i=0;i<r->n;i++) {
     if(!(n=r->bcn[i])) continue;
@@ -107,12 +107,15 @@ U pgreduce(pr *r, int p) {
       q=c>>5;
       if(!q) *pA++=values[(int)c];
       else if(q==1) { /* 32 33 34 ... */
+        if(pA>A) {
         a=*--pA;
         if(zv(a)) { a=zvget(a); if(15==a>>60) a=vlookup(a); }
         else if(timer&&times) kref(a);
         *pA++=k(c%32,0,a);
+        }
       }
       else if(q==2) { /* 64 65 66 ... */
+        if(pA>A+1) {
         b=*--pA;
         a=*--pA;
         if(c==64&&zv(a)) { /* a:1 */
@@ -132,8 +135,12 @@ U pgreduce(pr *r, int p) {
           else if(timer&&times) kref(b);
           /* adverb? / \ ' */
           w=c%32;
-          if(w==30) { s=strchr(P,(char)a); a=s-P; }
-          *pA++=k(w,a,b);
+          if(w==30) {
+            s=strchr(P,(char)a); a=s-P;
+            *pA++=s?k(w,a,b):3; /* 3 = type */
+          }
+          else *pA++=k(w,a,b);
+        }
         }
       }
       //todo: suspend console, invoke repl
@@ -150,7 +157,7 @@ U pgreduce(pr *r, int p) {
     }
     times=1;
     v=*--pA;
-    if(zv(v)) { v=zvget(v); if(15==v>>60) v=vlookup(v); }
+    if(zv(v)) { v0=zvget(v); if(15==v0>>60) v=vlookup(v0); }
     if(timer) { kfree(v); timer=0; printf("%f\n",timer_stop()); }
     else if(p) {
       if(quiet) { kfree(v); quiet=0; }
@@ -270,10 +277,10 @@ pr* pgparse(char *q, int load) {
         --s->si;
       }
       else {
-        if(s->S[s->si]>=LI) { fprintf(stderr,"parse\n"); break; }
-        if(s->t[s->ti]>=LJ) { fprintf(stderr,"parse\n"); break; }
+        if(s->S[s->si]>=LI) { fprintf(stderr,"parse\n"); ++z->n; prfree(z); pgfree(s); return 0; }
+        if(s->t[s->ti]>=LJ) { fprintf(stderr,"parse\n"); ++z->n; prfree(z); pgfree(s); return 0; }
         r=LL[s->S[s->si--]][s->t[s->ti]];
-        if(r==-1) { fprintf(stderr,"parse\n"); break; }
+        if(r==-1) { fprintf(stderr,"parse\n"); ++z->n; prfree(z); pgfree(s); return 0; }
         s->R[++s->ri]=r;
         s->S[++s->si]=-2; /* reduction marker */
         for(j=RC[r]-1;j>=0;j--) s->S[++s->si]=RT[r][j];

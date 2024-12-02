@@ -1,10 +1,10 @@
 #include "v.h"
 #include <stdlib.h>
 
-U (*FD[])(U,U)={0,plus,minus,times,divide,minand,maxor,less,more,equal,
-                match,dot,mod,at,find,take,drop,cut,join,parse};
-U (*FM[])(U)={0,pos,negate,square,sqrt_,flip,reverse,asc,desc,group,
-              not_,value,bang,first,unique,0,floor_,rule,enlist,str};
+U (*FD[FDSIZE])(U,U)={0,plus,minus,times,divide,minand,maxor,less,more,equal,
+                      match,dot,mod,at,find,take,drop,cut,join,parse};
+U (*FM[FMSIZE])(U)={0,pos,negate,square,sqrt_,flip,reverse,asc,desc,group,
+                    not_,value,bang,first,unique,0,floor_,rule,enlist,str};
 
 /* nyi rank len type */
 

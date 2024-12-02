@@ -5,6 +5,7 @@
 #include <string.h>
 #include "x.h"
 #include "scope.h"
+#include "zv.h"
 
 void* px(U x){return(void*)k(0,x,0);}
 void kfree(U x){if(ax)return; k(15,0,x);}
@@ -73,7 +74,7 @@ static void pfa(U x, char *c) {
 }
 
 void kprint(U x, char *c) {
-  U *pxu;
+  U *pxu,v;
   switch(tx) {
   case 3: pi(x,c); break;
   case 4: pf(x,c); break;
@@ -85,7 +86,12 @@ void kprint(U x, char *c) {
     i(nx,kprint(pxu[i],i<nx-1?";":""))
     printf(")%s",c);
     break;
-  case 0xe: printf("%s%s",(char*)(((U)0xe<<60)^x),c); break;
+  default:
+    if(zv(x)) {
+      v=zvget(x);
+      if(0xe==v>>60)  printf("%s%s",(char*)(((U)0xe<<60)^v),c);
+    }
+    break;
   }
   kfree(x);
 }

@@ -23,7 +23,7 @@ U k(int i,U a,U x) {
     switch(i) {
     case  0: if(!x&&!aa) r=(U)O[oa]; break; /* deref */
     case 30: r=over(a,x); break;
-    default: r=FD[i](a,x); break;
+    default: if(i>=FDSIZE) return 0; r=FD[i](a,x); break;
     }
     if(i) {k(15,0,a); k(15,0,x); }
   }
@@ -40,7 +40,7 @@ U k(int i,U a,U x) {
       }
       else r=t(3,1); break;
       break;
-    default: r=FM[i](x); k(15,0,x); break;
+    default: if(i>=FMSIZE) return 0; r=FM[i](x); k(15,0,x); break;
     }
   }
   return r;
