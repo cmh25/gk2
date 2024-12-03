@@ -115,7 +115,7 @@ U pgreduce(pr *r, int p) {
           if(a==4) *pA++=4; /* value */
           else *pA++=k(c%32,0,a);
         }
-        else *pA++=zvset((U)P[(int)c%32],0xd);
+        else { *pA++=zvset((U)P[(int)c%32],0xd); break; }
       }
       else if(q==2) { /* 64 65 66 ... */
         if(pA>A+1) {
