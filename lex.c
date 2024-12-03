@@ -8,7 +8,7 @@
 #include "zv.h"
 #include "fn.h"
 
-static char *P=":+-*%&|<>=~.!@?#_^,$.........'/\\";
+static char *P=":+-*%&|<>=~.!@?#_^,$LMSA..ERZ'/\\";
 
 static void help(void) {
   printf(""

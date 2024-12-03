@@ -90,6 +90,7 @@ void kprint(U x, char *c) {
     if(zv(x)) {
       v=zvget(x);
       if(0xe==v>>60)  printf("%s%s",(char*)(((U)0xe<<60)^v),c);
+      else if(0xd==v>>60)  printf("%c%s",(char)v,c);
     }
     break;
   }
