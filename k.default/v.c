@@ -92,7 +92,7 @@ U divide(U a,U x) {
 
 #define MAMO(F,O) \
 U F(U a,U x) { \
-  U r; \
+  U r=0; \
   int *pri,*pai,*pxi; \
   float *prf,*paf,*pxf; \
   float f; \
@@ -311,7 +311,7 @@ U pos(U x) {
 }
 
 U negate(U x) {
-  U r;
+  U r=0;
   int *pri,*pxi;
   float *prf,*pxf;
   float f;
@@ -325,7 +325,7 @@ U negate(U x) {
 }
 
 U square(U x) {
-  U r;
+  U r=0;
   int *pri,*pxi;
   float *prf,*pxf;
   float f;
@@ -396,7 +396,7 @@ U value(U x) {
 }
 
 U bang(U x) {
-  U r;
+  U r=0;
   int *pri,*pxi,m,n,p;
   float *prf;
   if(!ax&&nx!=2) return 2; /* len */
@@ -417,7 +417,7 @@ U bang(U x) {
 }
 
 U first(U x) {
-  U r;
+  U r=0;
   int *pri,*pxi,m;
   float *prf,*pxf;
   switch(tx) {
