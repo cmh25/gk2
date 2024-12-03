@@ -227,12 +227,14 @@ U take(U a,U x) {
     case 3: r=tn(3,c); PRI; i(c,*pri++=(int)x) break;
     case 4: r=tn(4,c); PRF; i(c,*prf++=fu(x)) break;
     case 0xb: r=tn(3,c); PRI; PXI;
-      if((int)a<0) { d=c%nx; i(c,*pri++=pxi[(nx-d+i)%nx]) }
-      else i(c,*pri++=pxi[i%nx])
+      if(nx&&(int)a<0) { d=c%nx; i(c,*pri++=pxi[(nx-d+i)%nx]) }
+      else if(nx) i(c,*pri++=pxi[i%nx])
+      else i(c,*pri++=0)
       break;
     case 0xc: r=tn(4,c); PRF; PXF;
-      if((int)a<0) { d=c%nx; i(c,*prf++=pxf[(nx-d+i)%nx]) }
-      else i(c,*prf++=pxf[i%nx])
+      if(nx&&(int)a<0) { d=c%nx; i(c,*prf++=pxf[(nx-d+i)%nx]) }
+      else if(nx) i(c,*prf++=pxf[i%nx])
+      else i(c,*prf++=0.0)
       break;
     } break;
   }
