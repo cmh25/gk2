@@ -257,7 +257,7 @@ static int gf(pgs *pgs) {
     if(*p=='"') p=xeqs(p);
     switch(s) {
     case 0:
-      if(!*p) s=2;
+      if(!*p) return 0;
       else if(*p=='}'&&fc==1) s=1;
       else if(*p=='}') fc--;
       else if(*p=='{') fc++;
@@ -268,8 +268,6 @@ static int gf(pgs *pgs) {
       push(pgs,T013,(U)f|(U)0xe<<60);
       *p=c;
       return 1;
-    case 2: return 0; /* error */
-    default: return 0; /* error */
     }
     ++p;
   }

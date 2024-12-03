@@ -148,10 +148,11 @@ char* xunesc(char *p) {
 }
 
 char* xeqs(char *p) {
-  ++p;
-  while(1) {
-    if(*p=='\\') p+=2;
-    if(*p++=='"') break;
+  if(!*p++) return 0;
+  while(*p) {
+    if(*p=='\\') { ++p; if(*p) ++p; }
+    else if(*p=='"') { ++p; break; }
+    else ++p;
   }
   return p;
 }
