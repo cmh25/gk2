@@ -57,13 +57,16 @@ static void pf(U x, char *c) {
 static void pfa(U x, char *c) {
   int i,a0=1,m=mx?nx/mx:nx;
   char ds[256];
-  float *pxf=(float*)px(x);
+  float f,*pxf=(float*)px(x);
   if(!nx) printf("0#0.0%s",c);
   else if(1==nx) { printf(","); pf_(pxf[0],c); }
   else {
     for(i=0;i<nx;i++) {
-      sprintf(ds,"%0.*g",7,pxf[i]);
-      a0=ffix(ds,a0);
+      f=pxf[i];
+      if(isinf(f)&&f>0.0) { sprintf(ds,"0i"); a0=0; }
+      else if(isnan(f)) { sprintf(ds,"0n"); a0=0; }
+      else if(isinf(f)&&f<0.0) { sprintf(ds,"-0i"); a0=0; }
+      else { sprintf(ds,"%0.*g",7,f); a0=ffix(ds,a0); }
       if(m&&!((i+1)%m)) {
         if(a0) strcat(ds,".0");
         printf("%s%s",ds,i<nx-1?"\n":c);

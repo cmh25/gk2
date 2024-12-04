@@ -61,6 +61,7 @@ static int RT[16][3]={
 };
 
 static int RC[16]={1,2,2,1,1,1,1,1,0,2,1,3,3,2,0,3};
+static char *E[5]={"nyi","rank","len","type","value"};
 
 #define Vvi s->V[s->vi]
 
@@ -72,33 +73,17 @@ static U vlookup(U v) {
 
 U pgreduce(pr *r, int p) {
   int i,j,quiet,w,timer=0,times=1;
-  char c,q,n;
-  char *e,*s,*bc,*s2;
+  char c,q,n,*e,*s,*bc;
   U A[256],*pA=A,a,b,v=0,v0,a0;
   if(!r->n) return v;
   for(i=0;i<r->n;i++) {
     if(!(n=r->bcn[i])) continue;
     bc=r->bc[i];
     U *values=r->values[i];
-    if(bc[1]==96) { prfree(r); exit_(0); }
-    else if(bc[1]==97) {
-      timer=1;
-      a=values[(int)bc[0]];
-      if(zv(a)) { a=zvget(a); if(15==a>>60) a=vlookup(a); }
-      times=(int)a;
-      timer_start();
-      continue;
-    }
-    else if(bc[1]==98) {
-      a=values[(int)bc[0]];
-      s=(char*)k(0,a,0);
-      s2=xmalloc(1+(int)a);
-      *s2=0;
-      strncat(s2,s,(int)a);
-      load(s2,2);
-      kfree(a);
-      xfree(s2);
-      continue;
+    if(1<n) {
+      if(bc[1]==96) { prfree(r); exit_(0); }
+      else if(bc[1]==97) { timer=1; a=values[(int)bc[0]]; if(zv(a)) { a=zvget(a); if(15==a>>60) a=vlookup(a); } times=(int)a; timer_start(); continue; }
+      else if(bc[1]==98) { a=values[(int)bc[0]]; s=xstrndup((char*)k(0,a,0),(int)a); load(s,2); kfree(a); xfree(s); continue; }
     }
     while(times--) {
     pA=A;
@@ -106,12 +91,11 @@ U pgreduce(pr *r, int p) {
       quiet=0;
       c=bc[j];
       q=c>>5;
-      if(!q) *pA++=values[(int)c];
+      if(!q) { *pA++=values[(int)c]; if(timer&&times) kref(pA[-1]); }
       else if(q==1) { /* 32 33 34 ... */
         if(pA>A) {
           a=*--pA;
           if(zv(a)) { a=zvget(a); if(15==a>>60) a=vlookup(a); }
-          else if(timer&&times) kref(a);
           if(a==4) *pA++=4; /* value */
           else *pA++=k(c%32,0,a);
         }
@@ -125,7 +109,6 @@ U pgreduce(pr *r, int p) {
             a0=a;
             a=zvget(a);
             if(zv(b)) { b=zvget(b); if(15==b>>60) b=vlookup(b); }
-            else if(timer&&times) kref(b);
             if(b==4) *pA++=4;  /* value */
             else {
               scope_set(gs,(char*)(a^(U)15<<60),b);
@@ -136,14 +119,10 @@ U pgreduce(pr *r, int p) {
           }
           else {
             if(zv(a)) { a=zvget(a); if(15==a>>60) a=vlookup(a); }
-            else if(timer&&times) kref(a);
             if(zv(b)) { b=zvget(b); if(15==b>>60) b=vlookup(b); }
-            else if(timer&&times) kref(b);
-            if(a==4||b==4) *pA++=4;       /* value */
+            if(a==4||b==4) *pA++=4; /* value */
             else {
-              /* adverb? / \ ' */
-              w=c%32;
-              if(w==30) {
+              if((w=c%32)==30) { /* adverb? / \ ' */
                 s=strchr(P,(char)a); a=s-P;
                 *pA++=s?k(w,a,b):3; /* 3 = type */
               }
@@ -154,13 +133,7 @@ U pgreduce(pr *r, int p) {
       }
       //todo: suspend console, invoke repl
       e=0;
-      if(pA[-1]<5) {
-        if(pA[-1]==0) { e="nyi"; }
-        else if(pA[-1]==1) { e="rank"; }
-        else if(pA[-1]==2) { e="len"; }
-        else if(pA[-1]==3) { e="type"; }
-        else if(pA[-1]==4) { e="value"; }
-      }
+      if(pA>A&&pA[-1]<5)e=E[pA[-1]];
       if(e) { pA[-1]=zvset((U)sp(e),0xe); break; }
     }
     if(timer&&times)kfree(pA[-1]);

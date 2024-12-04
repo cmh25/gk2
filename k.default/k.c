@@ -25,7 +25,7 @@ U k(int i,U a,U x) {
     case 30: r=over(a,x); break;
     default: if(i>=FDSIZE) return 0; r=FD[i](a,x); break;
     }
-    if(i) {k(15,0,a); k(15,0,x); }
+    if(i) { k(15,0,a); k(15,0,x); }
   }
   else { /* monad */
     switch(i) {
