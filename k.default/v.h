@@ -28,7 +28,7 @@ U cut(U a,U x);
 U join(U a,U x);
 U parse(U a,U x);
 
-U pos(U x);
+U abs_(U x);
 U negate(U x);
 U square(U x);
 U sqrt_(U x);

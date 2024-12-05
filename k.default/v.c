@@ -3,7 +3,7 @@
 
 U (*FD[FDSIZE])(U,U)={0,plus,minus,times,divide,minand,maxor,less,more,equal,
                       match,dot,mod,at,find,take,drop,cut,join,parse};
-U (*FM[FMSIZE])(U)={0,pos,negate,square,sqrt_,flip,reverse,asc,desc,group,
+U (*FM[FMSIZE])(U)={0,abs_,negate,square,sqrt_,flip,reverse,asc,desc,group,
                     not_,value,bang,first,unique,count,floor_,rule,enlist,str};
 
 /* nyi rank len type */
@@ -11,9 +11,8 @@ U (*FM[FMSIZE])(U)={0,pos,negate,square,sqrt_,flip,reverse,asc,desc,group,
 #define PMT(F,O) \
 U F(U a,U x) { \
   U r=0; \
-  float f; \
   int *pri,*pai,*pxi; \
-  float *prf,*paf,*pxf; \
+  float f,*prf,*paf,*pxf; \
   if(!(aa||ax)&&na!=nx) return 2; \
   switch(ta) { \
   case 3: \
@@ -53,9 +52,8 @@ PMT(times,*)
 
 U divide(U a,U x) {
   U r=0;
-  float f;
   int *pai,*pxi;
-  float *prf,*paf,*pxf;
+  float f,*prf,*paf,*pxf;
   if(!(aa||ax)&&na!=nx) return 2;
   switch(ta) {
   case 3:
@@ -94,8 +92,7 @@ U divide(U a,U x) {
 U F(U a,U x) { \
   U r=0; \
   int *pri,*pai,*pxi; \
-  float *prf,*paf,*pxf; \
-  float f; \
+  float f,*prf,*paf,*pxf; \
   if(!(aa||ax)&&na!=nx) return 2; \
   switch(ta) { \
   case 3: \
@@ -136,8 +133,7 @@ MAMO(maxor,>)
 U F(U a,U x) { \
   U r=0; \
   int *pri,*pai,*pxi; \
-  float *paf,*pxf; \
-  float f; \
+  float f,*paf,*pxf; \
   if(!(aa||ax)&&na!=nx) return 2; \
   switch(ta) { \
   case 3: \
@@ -176,7 +172,6 @@ LME(more,>)
 LME(equal,==)
 
 U match(U a,U x) {
-  (void)a; (void)x;
   return t(3,!kcmpr(a,x));
 }
 
@@ -192,8 +187,8 @@ U mod(U a,U x) {
 
 U at(U a,U x) {
   U r=0;
-  float f=0,*paf,*pxf;
   int s=0,*pai,*pxi;
+  float f=0,*paf,*pxf;
   if(!aa&&!ax&&na!=nx) return 2; /* len */
   switch(ta) {
   case 0xb:
@@ -217,9 +212,8 @@ U find(U a,U x) {
 
 U take(U a,U x) {
   U r=0;
-  int *pri,*pxi;
+  int c,d,*pri,*pxi;
   float *prf,*pxf;
-  int c,d;
   switch(ta) {
   case 3:
     c=(int)a<0?-a:a;
@@ -274,10 +268,9 @@ U cut(U a,U x) {
 }
 
 U join(U a,U x) {
-  U r=0;
+  U r=0,*pru;
   int *pri,*pai,*pxi;
   float *prf,*paf,*pxf;
-  U *pru;
   switch(ta) {
   case 3:
     switch(tx) {
@@ -307,16 +300,23 @@ U parse(U a,U x) {
   return 0;
 }
 
-U pos(U x) {
-  (void)x;
-  return 0;
+U abs_(U x) {
+  U r=0;
+  int i,j,*pri,*pxi;
+  float f,g,*prf,*pxf;
+  switch(tx) {
+  case 3: i=nx; j=i==INT_MIN+1?INT_MAX:i<0?-i:i; r=t(3,(uint)j); break;
+  case 4: f=fu(x); g=isinf(f)&&f<0.0?INFINITY:f<0.0?-f:f; r=t(4,*(uint*)&g); break;
+  case 0xb: r=tn(3,nx); PRI; PXI; i(nx,j=*pxi++; *pri++=j==INT_MIN+1?INT_MAX:j<0?-j:j); break;
+  case 0xc: r=tn(4,nx); PRF; PXF; i(nx,f=*pxf++; *prf++=isinf(f)&&f<0.0?INFINITY:f<0.0?-f:f); break;
+  }
+  return r;
 }
 
 U negate(U x) {
   U r=0;
   int *pri,*pxi;
-  float *prf,*pxf;
-  float f;
+  float f,*prf,*pxf;
   switch(tx) {
   case 3: r=t(3,(uint)(-(int)x)); break;
   case 4: f=-fu(x); r=t(4,*(uint*)&f); break;
@@ -329,8 +329,7 @@ U negate(U x) {
 U square(U x) {
   U r=0;
   int *pri,*pxi;
-  float *prf,*pxf;
-  float f;
+  float f,*prf,*pxf;
   switch(tx) {
   case 3: r=t(3,(uint)((int)x*(int)x)); break;
   case 4: f=-fu(x); f*=f; r=t(4,*(uint*)&f); break;
@@ -343,8 +342,7 @@ U square(U x) {
 U sqrt_(U x) {
   U r=0;
   int *pxi;
-  float *prf,*pxf;
-  float f;
+  float f,*prf,*pxf;
   switch(tx) {
   case 3: f=sqrtf(fi((int)x)); r=t(4,*(uint*)&f); break;
   case 4: f=sqrtf(fu(x)); r=t(4,*(uint*)&f); break;
@@ -399,20 +397,12 @@ U value(U x) {
 
 U bang(U x) {
   U r=0;
-  int *pri,*pxi,m,n,p;
+  int *pri,*pxi,p;
   float *prf;
   if(!ax&&nx!=2) return 2; /* len */
   switch(tx) {
   case 3: r=tn(3,nx); PRI; i(nx,*pri++=i) break;
-  case 0xb:
-    PXI;
-    m=pxi[0]; n=pxi[1];
-    p=m*n;
-    r=tn(4,p);
-    PRF;
-    i(p,*prf++=1.0);
-    r|=(U)m<<32;
-    break;
+  case 0xb: PXI; p=pxi[0]*pxi[1]; r=tn(4,p); PRF; i(p,*prf++=1.0); r|=(U)pxi[0]<<32; break;
   default: r=3; /* type */
   }
   return r;
@@ -456,7 +446,7 @@ U floor_(U x) {
   case 4: r=t(3,(uint)(int)floor(fu(x))); break;
   case 0xb: r=kcp(x); break;
   case 0xc: r=tn(3,nx); PRI; PXF; i(nx,*pri++=floor(fu(*pxf));++pxf) break;
-  default: r=3;
+  default: r=3; /* type */
   }
   return r;
 }
