@@ -11,12 +11,12 @@ U over(U a,U x) {
     case 3: r=1; break;
     case 4: r=1; break;
     case 0xb: /* +/iv */
-      pxi=(int*)k(0,x,0);
+      pxi=(int*)k_(2,x);
       si=0; i(nx,si+=*pxi++);
       r=t(3,(uint)si);
       break;
     case 0xc: /* +/fv */
-      pxf=(float*)k(0,x,0);
+      pxf=(float*)k_(2,x);
       sf=0; i(nx,sf+=*pxf++);
       r=t(4,*(uint*)&sf);
       break;

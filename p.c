@@ -61,7 +61,7 @@ static int RT[16][3]={
 };
 
 static int RC[16]={1,2,2,1,1,1,1,1,0,2,1,3,3,2,0,3};
-static char *E[5]={"nyi","rank","len","type","value"};
+static char *E[6]={"nyi","rank","len","type","value","range"};
 
 #define Vvi s->V[s->vi]
 
@@ -83,7 +83,7 @@ U pgreduce(pr *r, int p) {
     if(1<n) {
       if(bc[1]==96) { prfree(r); exit_(0); }
       else if(bc[1]==97) { timer=1; a=values[(int)bc[0]]; if(zv(a)) { a=zvget(a); if(15==a>>60) a=vlookup(a); } times=(int)a; timer_start(); continue; }
-      else if(bc[1]==98) { a=values[(int)bc[0]]; s=xstrndup((char*)k(0,a,0),(int)a); load(s,2); kfree(a); xfree(s); continue; }
+      else if(bc[1]==98) { a=values[(int)bc[0]]; s=xstrndup((char*)k_(2,a),(int)a); load(s,2); kfree(a); xfree(s); continue; }
     }
     while(times--) {
     pA=A;
@@ -133,7 +133,7 @@ U pgreduce(pr *r, int p) {
       }
       //todo: suspend console, invoke repl
       e=0;
-      if(pA>A&&pA[-1]<5)e=E[pA[-1]];
+      if(pA>A&&pA[-1]<6)e=E[pA[-1]];
       if(e) { pA[-1]=zvset((U)sp(e),0xe); break; }
     }
     if(timer&&times)kfree(pA[-1]);

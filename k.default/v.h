@@ -42,6 +42,7 @@ U value(U x);
 U bang(U x);
 U first(U x);
 U unique(U x);
+U count(U x);
 U floor_(U x);
 U rule(U x);
 U enlist(U x);

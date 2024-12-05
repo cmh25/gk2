@@ -8,7 +8,7 @@ gk2 has a clean separation between the repl (read eval print loop) and the core 
 1. k.default: portable, compiles and runs on lin/win/mac
 2. k.shakti: extreme high performance on linux+avx512
 
-To use the shakti core, change these line in the toplevel makefile:
+To use the shakti core, change these lines in the toplevel makefile:
 ```
 CORE=k.default
 #CORE=k.shakti

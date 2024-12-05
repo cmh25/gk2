@@ -10,37 +10,43 @@ static int F[512];
 static int oi,om=512,fm=511,fi=-1;
 
 /*
-k(0,x,0)  // raw pointer
-k(0,0,x)  // ref +
-k(15,0,x) // ref -
-k(0,0,0)  // workspace
+k_(0,0)  // init
+k_(0,x)  // ref -
+k_(1,x)  // ref +
+k_(2,x)  // raw pointer
 */
+U k_(int i,U x) {
+  U r=0;
+  int j;
+  switch(i) {
+  case 0:
+    if(!x) break; /* init */
+    if(!ax) { /* ref - */
+      j=b(12)&x>>48;
+      if(R[j])R[j]--;
+      else { free(O[j]); O[j]=0; F[++fi]=j; }
+      if(fi==fm) { fprintf(stderr,"error: fm\n"); exit(1); }
+    }
+    break;
+  case 1: if(!ax) { R[ox]++; r=x; } break; /* ref + */
+  case 2: if(!ax) r=(U)O[ox]; break; /* deref */
+  }
+  return r;
+}
+
 // P=":+-*%&|<>=~.!@?#_^,$LMSA..ERZ'/\\"
 U k(int i,U a,U x) {
   U r=0;
-  int j;
   if(a) { /* dyad */
     switch(i) {
-    case  0: if(!x&&!aa) r=(U)O[oa]; break; /* deref */
     case 30: r=over(a,x); break;
-    default: if(i>=FDSIZE) return 0; r=FD[i](a,x); break;
+    default: if(i>=FDSIZE||!FD[i]) return 0; r=FD[i](a,x); break;
     }
-    if(i) { k(15,0,a); k(15,0,x); }
+    if(i) { k_(0,a); k_(0,x); }
   }
   else { /* monad */
     switch(i) {
-    case  0: if(x) { R[ox]++; r=x; } break; /* ref + */
-    case 15: /* ref - */
-      if(x&&!ax) {
-        j=b(12)&x>>48;
-        if(R[j])R[j]--;
-        else { free(O[j]); O[j]=0; F[++fi]=j; }
-        if(fi==fm) { fprintf(stderr,"error: fm\n"); exit(1); }
-        r=t(3,nx); /* #v */
-      }
-      else r=t(3,1); break;
-      break;
-    default: if(i>=FMSIZE) return 0; r=FM[i](x); k(15,0,x); break;
+    default: if(i>=FMSIZE||!FM[i]) return 0; r=FM[i](x); k_(0,x); break;
     }
   }
   return r;

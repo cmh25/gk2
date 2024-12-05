@@ -7,11 +7,12 @@
 #include "scope.h"
 #include "zv.h"
 
-void* px(U x){return(void*)k(0,x,0);}
-void kfree(U x){if(ax)return; k(15,0,x);}
-U kref(U x){if(ax)return x; return k(0,0,x);}
+void kfree(U x){if(ax)return; k_(0,x);}
+U kref(U x){if(ax)return x; return k_(1,x);}
+void* px(U x){return(void*)k_(2,x);}
 
 void kinit(void) {
+  k_(0,0);
   scope_init();
 }
 

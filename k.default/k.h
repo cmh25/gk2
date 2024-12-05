@@ -34,12 +34,12 @@ ax     tx     ox     mx    nx
 : (((x)==INT_MIN+1) ? -INFINITY \
 : (float)(x)))))
 
-#define PRI pri=(int*)k(0,r,0)
-#define PAI pai=(int*)k(0,a,0)
-#define PXI pxi=(int*)k(0,x,0)
-#define PRF prf=(float*)k(0,r,0)
-#define PAF paf=(float*)k(0,a,0)
-#define PXF pxf=(float*)k(0,x,0)
+#define PRI pri=(int*)k_(2,r)
+#define PAI pai=(int*)k_(2,a)
+#define PXI pxi=(int*)k_(2,x)
+#define PRF prf=(float*)k_(2,r)
+#define PAF paf=(float*)k_(2,a)
+#define PXF pxf=(float*)k_(2,x)
 
 #ifdef _WIN32
   typedef unsigned long long U;
@@ -47,6 +47,7 @@ ax     tx     ox     mx    nx
   typedef unsigned long U;
 #endif
 typedef unsigned int uint;
+U k_(int i, U x);
 U k(int i, U a, U x);
 U tn(int t, int n);
 int kcmpr(U a, U x);

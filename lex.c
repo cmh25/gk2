@@ -235,7 +235,7 @@ static int gname(pgs *pgs) {
 //      else if(j==1) push(pgs,T012,ss[0]|(U)2<<60);
 //      else {
 //        u=tn(2,j);
-//        puc=(char*)k(0,u,0);
+//        puc=(char*)k_(2,u);
 //        i((int)u,*puc++=ss[i])
 //        push(pgs,T012,u);
 //      }
@@ -318,7 +318,7 @@ static int gback(pgs *pgs, int load) {
     c=*p; *p=0;
     if(strlen(q)) {
       u=tn(2,strlen(q));
-      puc=(char*)k(0,u,0);
+      puc=(char*)k_(2,u);
       i((int)u,*puc++=q[i])
       push(pgs,T012,u);
     }

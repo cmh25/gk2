@@ -8,6 +8,7 @@
 #else
   typedef unsigned long U;
 #endif
+extern U k_(int,U);
 extern U k(int,U,U);
 extern U tn(int,int);
 #define b(i) ((1L<<(i))-1)

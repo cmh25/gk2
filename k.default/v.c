@@ -4,7 +4,7 @@
 U (*FD[FDSIZE])(U,U)={0,plus,minus,times,divide,minand,maxor,less,more,equal,
                       match,dot,mod,at,find,take,drop,cut,join,parse};
 U (*FM[FMSIZE])(U)={0,pos,negate,square,sqrt_,flip,reverse,asc,desc,group,
-                    not_,value,bang,first,unique,0,floor_,rule,enlist,str};
+                    not_,value,bang,first,unique,count,floor_,rule,enlist,str};
 
 /* nyi rank len type */
 
@@ -282,7 +282,7 @@ U join(U a,U x) {
   case 3:
     switch(tx) {
     case 3: r=tn(3,2); PRI; pri[0]=(int)a; pri[1]=(int)x; break;
-    case 4: r=tn(0,2); pru=(U*)k(0,r,0); pru[0]=kcp(a); pru[1]=kcp(x); break;
+    case 4: r=tn(0,2); pru=(U*)k_(2,r); pru[0]=kcp(a); pru[1]=kcp(x); break;
     case 0xb: r=tn(3,1+nx); PRI; PXI; *pri++=(int)a; i(nx,*pri++=*pxi++) break;
     } break;
   case 4:
@@ -442,6 +442,11 @@ U unique(U x) {
   return 0;
 }
 
+U count(U x) {
+  U r=ax?t(3,1):t(3,nx);
+  return r;
+}
+
 U floor_(U x) {
   U r=0;
   int *pri;
@@ -458,9 +463,9 @@ U floor_(U x) {
 
 U rule(U x) {
   U r=0;
-  float f=0,g,*prf;
+  float *prf;
   switch(tx) {
-  case 3: r=tn(4,(int)x); PRF; g=1.0/(int)x; i((int)x,*prf++=f;f+=g) break;
+  case 3: r=tn(4,(int)x); PRF; i((int)x,*prf++=(float)i/(int)x) break;
   default: r=3; /* type */
   }
   return r;
