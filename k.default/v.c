@@ -14,6 +14,7 @@ U F(U a,U x) { \
   int *pri,*pai,*pxi; \
   float f,*prf,*paf,*pxf; \
   if(!(aa||ax)&&na!=nx) return 2; \
+  if(ma||mx) return 0; \
   switch(ta) { \
   case 3: \
     switch(tx) { \
@@ -55,6 +56,7 @@ U divide(U a,U x) {
   int *pai,*pxi;
   float f,*prf,*paf,*pxf;
   if(!(aa||ax)&&na!=nx) return 2;
+  if(ma||mx) return 0;
   switch(ta) {
   case 3:
     switch(tx) {
@@ -94,6 +96,7 @@ U F(U a,U x) { \
   int *pri,*pai,*pxi; \
   float f,*prf,*paf,*pxf; \
   if(!(aa||ax)&&na!=nx) return 2; \
+  if(ma||mx) return 0; \
   switch(ta) { \
   case 3: \
     switch(tx) { \
@@ -135,6 +138,7 @@ U F(U a,U x) { \
   int *pri,*pai,*pxi; \
   float f,*paf,*pxf; \
   if(!(aa||ax)&&na!=nx) return 2; \
+  if(ma||mx) return 0; \
   switch(ta) { \
   case 3: \
     switch(tx) { \
@@ -190,6 +194,7 @@ U at(U a,U x) {
   int s=0,*pai,*pxi;
   float f=0,*paf,*pxf;
   if(!aa&&!ax&&na!=nx) return 2; /* len */
+  if(ma||mx) return 0;
   switch(ta) {
   case 0xb:
     switch(tx) {
@@ -214,6 +219,7 @@ U take(U a,U x) {
   U r=0;
   int c,d,*pri,*pxi;
   float *prf,*pxf;
+  if(ma||mx) return 0;
   switch(ta) {
   case 3:
     c=(int)a<0?-a:a;
@@ -239,6 +245,7 @@ U drop(U a,U x) {
   U r=0;
   int *pri,*pxi;
   float *prf,*pxf;
+  if(ma||mx) return 0;
   switch(ta) {
   case 3:
     switch(tx) {
@@ -271,6 +278,7 @@ U join(U a,U x) {
   U r=0,*pru;
   int *pri,*pai,*pxi;
   float *prf,*paf,*pxf;
+  if(ma||mx) return 0;
   switch(ta) {
   case 3:
     switch(tx) {
@@ -304,6 +312,7 @@ U abs_(U x) {
   U r=0;
   int i,j,*pri,*pxi;
   float f,g,*prf,*pxf;
+  if(mx) return 0;
   switch(tx) {
   case 3: i=nx; j=i==INT_MIN+1?INT_MAX:i<0?-i:i; r=t(3,(uint)j); break;
   case 4: f=fu(x); g=isinf(f)&&f<0.0?INFINITY:f<0.0?-f:f; r=t(4,*(uint*)&g); break;
@@ -317,6 +326,7 @@ U negate(U x) {
   U r=0;
   int *pri,*pxi;
   float f,*prf,*pxf;
+  if(mx) return 0;
   switch(tx) {
   case 3: r=t(3,(uint)(-(int)x)); break;
   case 4: f=-fu(x); r=t(4,*(uint*)&f); break;
@@ -330,6 +340,7 @@ U square(U x) {
   U r=0;
   int *pri,*pxi;
   float f,*prf,*pxf;
+  if(mx) return 0;
   switch(tx) {
   case 3: r=t(3,(uint)((int)x*(int)x)); break;
   case 4: f=-fu(x); f*=f; r=t(4,*(uint*)&f); break;
@@ -343,6 +354,7 @@ U sqrt_(U x) {
   U r=0;
   int *pxi;
   float f,*prf,*pxf;
+  if(mx) return 0;
   switch(tx) {
   case 3: f=sqrtf(fi((int)x)); r=t(4,*(uint*)&f); break;
   case 4: f=sqrtf(fu(x)); r=t(4,*(uint*)&f); break;
@@ -361,6 +373,7 @@ U reverse(U x) {
   U r=0;
   int *pri,*pxi;
   float *prf,*pxf;
+  if(mx) return 0;
   switch(tx) {
   case 3: r=x; break;
   case 4: r=x; break;
@@ -400,9 +413,11 @@ U bang(U x) {
   int *pri,*pxi,p;
   float *prf;
   if(!ax&&nx!=2) return 2; /* len */
+  if(mx) return 3;
   switch(tx) {
-  case 3: r=tn(3,nx); PRI; i(nx,*pri++=i) break;
-  case 0xb: PXI; p=pxi[0]*pxi[1]; r=tn(4,p); PRF; i(p,*prf++=1.0); r|=(U)pxi[0]<<32; break;
+  case 3: if(nx<0) return 6; r=tn(3,nx); PRI; i(nx,*pri++=i) break;
+  case 0xb: PXI; if(pxi[0]<0||pxi[1]<0) return 6;
+            p=pxi[0]*pxi[1]; r=tn(4,p); PRF; i(p,*prf++=1.0); r|=(U)pxi[0]<<32; break;
   default: r=3; /* type */
   }
   return r;
@@ -441,6 +456,7 @@ U floor_(U x) {
   U r=0;
   int *pri;
   float *pxf;
+  if(mx) return 0;
   switch(tx) {
   case 3: r=x; break;
   case 4: r=t(3,(uint)(int)floor(fu(x))); break;

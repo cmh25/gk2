@@ -61,7 +61,7 @@ static int RT[16][3]={
 };
 
 static int RC[16]={1,2,2,1,1,1,1,1,0,2,1,3,3,2,0,3};
-static char *E[6]={"nyi","rank","len","type","value","range"};
+static char *E[7]={"nyi","rank","len","type","value","range","domain"};
 
 #define Vvi s->V[s->vi]
 
@@ -133,7 +133,7 @@ U pgreduce(pr *r, int p) {
       }
       //todo: suspend console, invoke repl
       e=0;
-      if(pA>A&&pA[-1]<6)e=E[pA[-1]];
+      if(pA>A&&pA[-1]<7)e=E[pA[-1]];
       if(e) { pA[-1]=zvset((U)sp(e),0xe); break; }
     }
     if(timer&&times)kfree(pA[-1]);
