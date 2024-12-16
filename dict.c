@@ -31,10 +31,20 @@ void dset(dict *d, char *key, U v) {
   v=kref(v);
   i(d->c,if(kk == d->k[i]) { r=d->v[i]; kfree(r); d->v[i]=v; break; })
   if(!r) {
-    d->k = xrealloc(d->k, sizeof(char*)*(d->c+1));
-    d->v = xrealloc(d->v, sizeof(U)*(d->c+1));
+    d->k=xrealloc(d->k, sizeof(char*)*(d->c+1));
+    d->v=xrealloc(d->v, sizeof(U)*(d->c+1));
     d->k[d->c]=kk;
     d->v[d->c]=v;
     d->c++;
   }
+}
+
+dict* dcp(dict *d) {
+  dict *d2 = xmalloc(sizeof(dict));
+  d2->c=d->c;
+  d2->k=xmalloc(sizeof(char*)*d2->c);
+  d2->v=xmalloc(sizeof(U)*d2->c);
+  d2->r=0;
+  i(d->c, d2->k[i]=d->k[i]; d2->v[i]=kref(d->v[i]))
+  return d2;
 }

@@ -6,9 +6,19 @@
 #include "x.h"
 #include "scope.h"
 #include "zv.h"
+#include "fn.h"
+#include "sym.h"
 
-void kfree(U x){if(ax)return; k_(0,x);}
-U kref(U x){if(ax)return x; return k_(1,x);}
+void kfree(U x){
+  if(zv(x))zvfree(x);
+  else if(ax) return;
+  k_(0,x);
+}
+U kref(U x){
+  if(zv(x)) return zvref(x);
+  else if(ax) return x;
+  return k_(1,x);
+}
 void* px(U x){return(void*)k_(2,x);}
 
 void kinit(void) {
@@ -77,26 +87,48 @@ static void pfa(U x, char *c) {
   }
 }
 
-void kprint(U x, char *c) {
+void kprint(U x, char *s, char *e) {
   U *pxu,v;
+  fn *f;
   switch(tx) {
-  case 3: pi(x,c); break;
-  case 4: pf(x,c); break;
-  case 0xb: pia(x,c); break;
-  case 0xc: pfa(x,c); break;
+  case 3: pi(x,e); break;
+  case 4: pf(x,e); break;
+  case 0xb: pia(x,e); break;
+  case 0xc: pfa(x,e); break;
   case 8:
     pxu=(U*)px(x);
     printf("(");
-    i(nx,kprint(pxu[i],i<nx-1?";":""))
-    printf(")%s",c);
+    i(nx,kprint(pxu[i],s,i<nx-1?";":""))
+    printf(")%s",e);
     break;
   default:
     if(zv(x)) {
       v=zvget(x);
-      if(0xe==v>>60)  fprintf(stderr,"%s%s",(char*)(((U)0xe<<60)^v),c);
-      else if(0xd==v>>60)  printf("%c%s",(char)v,c);
+      if(0xe==v>>56)  fprintf(stderr,"%s%s",(char*)(((U)0xe<<56)^v),e);
+      else if(0xd==v>>56)  printf("%c%s",(char)v,e);
+      else if(0xc==v>>56) { f=(fn*)(((U)0xc<<56)^v); printf("%s\n",f->d); }
     }
     break;
   }
   kfree(x);
+}
+
+U kerror(char *e) {
+  return zvset((U)sp(e),0xe);
+}
+
+U knorm(U x) {
+  U r=x,*pxu;
+  int t,*pri;
+  float *prf;
+  if(tx==8&&nx) {
+    pxu=(U*)px(x);
+    t=pxu[0]>>60;
+    i(nx,if(t!=pxu[i]>>60) return r)
+    switch(t) {
+    case 3: r=tn(3,nx); pri=(int*)px(r); i(nx,pri[i]=(int)pxu[i]); kfree(x); break;
+    case 4: r=tn(4,nx); prf=(float*)px(r); i(nx,prf[i]=fu(pxu[i])) ; kfree(x);break;
+    }
+  }
+  return r;
 }

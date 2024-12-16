@@ -12,7 +12,7 @@ scope *ks,*gs,*cs;
 //dict *ktree,*C,*Z;
 
 void scope_init(void) {
-  gs=scope_new(0);
+  gs=cs=scope_new(0);
 }
 
 static scope* scope_new_(scope *p, char *k) {
@@ -55,4 +55,20 @@ U scope_get(scope *s, char *n) {
 U scope_set(scope *s, char *n, U v) {
   dset(s->d,n,v);
   return 0;
+}
+
+scope* scope_cp(scope *s) {
+  int i;
+  if(!s) return 0;
+  scope *s2 = xmalloc(sizeof(scope));
+  s2->p = s->p;
+  s2->d = dcp(s->d);
+  s2->k = s->k;
+  for(i=0;i<SM;i++) if(!scopea[i]) break;
+  if(i==SM) {
+    printf("error: scope_new() i==SM\n");
+    exit(1);
+  }
+  scopea[i]=s2;
+  return s2;
 }

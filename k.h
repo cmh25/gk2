@@ -19,6 +19,7 @@ extern U tn(int,int);
 #define i(b,z) {int n=b;int i=0;while(i<n){z;++i;}}
 #define j(b,z) {int n=b;int j=0;while(j<n){z;++j;}}
 #define t(t,z) ((U)(t)<<60|(z))
+#define fu(x) (*(float*)&x)
 
 #define FI(a) \
   ((a)==INT_MAX ? INFINITY \
@@ -30,6 +31,8 @@ void* px(U x);
 void kfree(U x);
 U kref(U x);
 void kinit(void);
-void kprint(U x, char *c);
+void kprint(U x, char *s, char *e);
+U kerror(char *e);
+U knorm(U x);
 
 #endif /* K_H */

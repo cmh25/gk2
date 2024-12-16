@@ -35,7 +35,7 @@ static void help(void) {
 
 static void push(pgs *s, int tt, U tv) {
   s->t[s->tc]=tt;
-  s->v[s->tc++]=tv;
+  s->v[s->tc++]=pnnew(0,0,tv,2);
   s->lt=tt;
 }
 
@@ -235,7 +235,7 @@ static int gname(pgs *pgs) {
 //      else if(j==1) push(pgs,T012,ss[0]|(U)2<<60);
 //      else {
 //        u=tn(2,j);
-//        puc=(char*)k_(2,u);
+//        puc=(char*)px(u);
 //        i((int)u,*puc++=ss[i])
 //        push(pgs,T012,u);
 //      }
@@ -265,7 +265,7 @@ static int gf(pgs *pgs) {
     case 1: /* accept */
       c=*p; *p=0;
       f=fnnew(q);
-      push(pgs,T013,(U)f|(U)0xe<<60);
+      push(pgs,T013,zvset((U)f,0xc));
       *p=c;
       return 1;
     }
@@ -318,7 +318,7 @@ static int gback(pgs *pgs, int load) {
     c=*p; *p=0;
     if(strlen(q)) {
       u=tn(2,strlen(q));
-      puc=(char*)k_(2,u);
+      puc=(char*)px(u);
       i((int)u,*puc++=q[i])
       push(pgs,T012,u);
     }

@@ -19,5 +19,6 @@ scope* scope_newk(scope *p, char *k);
 void scope_free(scope *s);
 U scope_get(scope *s, char *n);
 U scope_set(scope *s, char *n, U v);
+scope* scope_cp(scope *s);
 
 #endif /* SCOPE_H */

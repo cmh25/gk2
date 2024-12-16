@@ -2,6 +2,7 @@
 #define P_H
 
 #include "k.h"
+#include "pn.h"
 
 #define T000   0 /* $a */
 #define T001   1 /* s */
@@ -23,19 +24,18 @@
 #define T017  17 /* ']' */
 #define T018  18 /* $e */
 
-//typedef struct { char bc[256]; int n; U values[256]; } pr;
 typedef struct { char **bc; int *bcn; int n; U **values; } pr;
-typedef struct { char v; U n; } pn;
 typedef struct {
   char *p;       /* buffer */
-  int S[1024];   /* state */
-  int R[1024];   /* rules */
-  pn V[1024];    /* values */
+  int *S;        /* state */
+  int *R;        /* rules */
+  pn **V;        /* values */
   int si,ri,vi;  /* index */
-  int t[1024];   /* tokens */
-  int ti,tc;     /* tokens index,count */
-  U v[1024];     /* token values */
+  int *t,ti,tc;  /* tokens, index,count */
+  pn **v;        /* token values */
   int lt;        /* last token */
+  int Sm,Rm,Vm;  /* max for S R V */
+  int tm,vm;     /* max for t v */
   U *values;
   int valuei;
   char *pbc;
