@@ -12,7 +12,7 @@
 void kfree(U x){
   if(zv(x))zvfree(x);
   else if(ax) return;
-  k_(0,x);
+  else k_(0,x);
 }
 U kref(U x){
   if(zv(x)) return zvref(x);
