@@ -9,10 +9,6 @@ static U zva[1024];
 static int zvr[1024];
 static int zvi,zvm=1024;
 
-static int svi(U x) { return mx-1; }
-
-int zv(U x) { return tx==0&&mx!=0; }
-
 U zvset(U x,int t) {
   int zi;
   U zval=(U)x|(U)t<<56;
@@ -33,21 +29,16 @@ U zvref(U x) {
 }
 
 void zvfree(U x) {
-  fn *f;
-  pr *p;
-  plist *q;
-  U a=x;
+  fn *f; pr *p; plist *q; U a=x;
   if(zvr[svi(x)]) { zvr[svi(x)]--; return; }
   x=zvget(x);
-  if(0xc==x>>56) { f=(fn*)(((U)0xc<<56)^x); fnfree(f); }
-  else if(0xa==x>>56) { p=(pr*)(((U)0xa<<56)^x); prfree(p); }
-  else if(0xb==x>>56) { p=(pr*)(((U)0xb<<56)^x); prfree(p); }
-  else if(0x9==x>>56) { q=(plist*)(((U)0x9<<56)^x); kfree(q->x); xfree(q); }
+  if(0xc==zx(x)) { f=(fn*)(b(56)&x); fnfree(f); }
+  else if(0xa==zx(x)) { p=(pr*)(b(56)&x); prfree(p); }
+  else if(0xb==zx(x)) { p=(pr*)(b(56)&x); prfree(p); }
+  else if(0x9==zx(x)) { q=(plist*)(b(56)&x); kfree(q->x); xfree(q); }
   zva[svi(a)]=0;
 }
 
 int zvplist(U x) {
-  if(!zv(x)) return 0;
-  if(zva[svi(x)]>>56==0x9) return 1;
-  return 0;
+  return zv(x)&&zx(zva[svi(x)])==0x9;
 }

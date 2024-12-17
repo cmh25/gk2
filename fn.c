@@ -161,7 +161,7 @@ U fnd(fn *ff) {
 }
 
 static U vlookup(U v) {
-  char *s=(char*)(v^(U)15<<56);
+  char *s=(char*)(b(56)&v);
   U r=scope_get(cs,s);
   return r?r:4;
 }
@@ -172,7 +172,7 @@ U fne(fn *f, U *x, int n) {
   if(n!=f->v) return 7; /* valence */
   for(i=0;i<f->v;i++) {
     a=x[i];
-    if(zv(a)) { a=zvget(a); if(15==a>>56) a=vlookup(a); else return 4; /* value */ }
+    if(zv(a)) { a=zvget(a); if(0xf==zx(a)) a=vlookup(a); else return 4; /* value */ }
     scope_set(f->s,f->s->d->k[i],a);
   }
   os=cs;cs=f->s;

@@ -37,9 +37,12 @@ tagged with one of these types in the high 8 bits.
 63..56 55..48 47..0
 */
 
+#define zv(x) ((b(16)&x>>32)&&!(x>>60))
+#define svi(x) ((b(16)&x>>32)-1)
+#define zx(x) (x>>56)
+
 typedef struct plist { U x; int n; } plist;
 
-int zv(U x);
 U zvset(U x,int t);
 U zvget(U x);
 U zvref(U x);

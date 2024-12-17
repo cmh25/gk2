@@ -69,8 +69,7 @@ static char *E[8]={"nyi","rank","len","type","value","range","domain","valence"}
 #define Vvi s->V[s->vi]
 
 static U vlookup(U v) {
-  char *s=(char*)(v^(U)15<<56);
-  U r=scope_get(cs,s);
+  U r=scope_get(cs,(char*)(b(56)&v));
   return r?r:4;
 }
 
@@ -89,15 +88,15 @@ U pgreduce_(char *bc, int n, U *values, int *quiet, int times) {
       *pA++=v=values[(int)c];
       if(zv(v)) {
         v0=v; v=zvget(v);
-        if(0xf==v>>56) { v1=vlookup(v); if(zv(v1)) v=zvget(v1); else kfree(v1); }
-        if(0xc==v>>56) {
-          f=(fn*)(((U)0xc<<56)^v);
+        if(0xf==zx(v)) { v1=vlookup(v); if(zv(v1)) v=zvget(v1); else kfree(v1); }
+        if(0xc==zx(v)) {
+          f=(fn*)(b(56)&v);
           if(!f->s) fnd(f);
           if(j+1<n && 64==bc[j+1]) assign=1;
           if(pA>A+1 && !assign) {
             if(zvplist(pA[-2])) {
-              U zzz=zvget(pA[-2]);
-              plist *pl=(plist*)(((U)0x9<<56)^zzz);
+              U z=zvget(pA[-2]);
+              plist *pl=(plist*)(b(56)&z);
               *pA++=fne(f,px(pl->x),pl->n);
               zvfree(pA[-3]);
             }
@@ -110,16 +109,16 @@ U pgreduce_(char *bc, int n, U *values, int *quiet, int times) {
           }
           if(v1 && !assign) zvfree(v1);
         }
-        else if(0xa==v>>56) { /* klist */
-          z=(pr*)(((U)0xa<<56)^v);
+        else if(0xa==zx(v)) { /* klist */
+          z=(pr*)(b(56)&v);
           a=tn(0,z->n);
           pa=(U*)px(a);
           i(z->n,pa[z->n-i-1]=pgreduce_(z->bc[i],z->bcn[i],z->values[i],quiet,times))
           pA[-1]=knorm(a);
           if(!times) prfree(z);
         }
-        else if(0xb==v>>56) { /* plist */
-          z=(pr*)(((U)0xb<<56)^v);
+        else if(0xb==zx(v)) { /* plist */
+          z=(pr*)(b(56)&v);
           a=tn(0,z->n);
           pa=(U*)px(a);
           i(z->n,pa[z->n-i-1]=pgreduce_(z->bc[i],z->bcn[i],z->values[i],quiet,times))
@@ -136,7 +135,7 @@ U pgreduce_(char *bc, int n, U *values, int *quiet, int times) {
     else if(q==1) { /* 32 33 34 ... */
       if(pA>A) {
         a=*--pA;
-        if(zv(a)) { a=zvget(a); if(15==a>>56) a=vlookup(a); else a=3; /* type */ }
+        if(zv(a)) { a=zvget(a); if(0xf==zx(a)) a=vlookup(a); else a=3; /* type */ }
         if(a==4) *pA++=4; /* value */
         else if(a==3) *pA++=3; /* type */
         else *pA++=k(c%32,0,a);
@@ -150,18 +149,18 @@ U pgreduce_(char *bc, int n, U *values, int *quiet, int times) {
         if(c==64&&zv(a)) { /* a:1 */
           a0=a;
           a=zvget(a);
-          if(zv(b)) { b0=zvget(b); if(15==b0>>56) b=vlookup(b0); }
+          if(zv(b)) { b0=zvget(b); if(0xf==zx(b0)) b=vlookup(b0); }
           if(b==4) *pA++=4;  /* value */
           else {
-            scope_set(gs,(char*)(a^(U)15<<56),b);
+            scope_set(gs,(char*)(b(56)&a),b);
             *pA++=a0;
             *quiet=1;
             kfree(b);
           }
         }
         else {
-          if(zv(a)) { a=zvget(a); if(15==a>>56) a=vlookup(a); else a=3; /* type */ }
-          if(zv(b)) { b=zvget(b); if(15==b>>56) b=vlookup(b); else a=3; /* type */ }
+          if(zv(a)) { a=zvget(a); if(0xf==zx(a)) a=vlookup(a); else a=3; /* type */ }
+          if(zv(b)) { b=zvget(b); if(0xf==zx(b)) b=vlookup(b); else a=3; /* type */ }
           if(a==4||b==4) *pA++=4; /* value */
           else if(a==3) *pA++=3; /* type */
           else if(b==3) *pA++=3; /* type */
@@ -181,7 +180,7 @@ U pgreduce_(char *bc, int n, U *values, int *quiet, int times) {
     if(e) { pA[-1]=kerror(e); break; }
   }
   v=pA>A?*--pA:0;
-  if(zv(v)) { v0=zvget(v); if(15==v0>>56) v=vlookup(v0); }
+  if(zv(v)) { v0=zvget(v); if(0xf==zx(v0)) v=vlookup(v0); }
   if(v==4) { e="value"; v=zvset((U)sp(e),0xe); }
   return v;
 }
@@ -196,7 +195,7 @@ U pgreduce(pr *r, int p) {
     U *values=r->values[i];
     if(1<n) {
       if(bc[1]==96) { prfree(r); exit_(0); }
-      else if(bc[1]==97) { timer=1; a=values[(int)bc[0]]; if(zv(a)) { a=zvget(a); if(15==a>>56) a=vlookup(a); } times=(int)a; timer_start(); continue; }
+      else if(bc[1]==97) { timer=1; a=values[(int)bc[0]]; if(zv(a)) { a=zvget(a); if(0xf==zx(a)) a=vlookup(a); } times=(int)a; timer_start(); continue; }
       else if(bc[1]==98) { a=values[(int)bc[0]]; s=xstrndup((char*)px(a),(int)a); load(s,2); kfree(a); xfree(s); continue; }
     }
     while(times--) {

@@ -11,7 +11,7 @@
 extern U k_(int,U);
 extern U k(int,U,U);
 extern U tn(int,int);
-#define b(i) ((1L<<(i))-1)
+#define b(i) (((U)1<<(i))-1)
 #define ax !(x>>63)
 #define tx (x>>60)
 #define mx (b(16)&x>>32)

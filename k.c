@@ -104,9 +104,9 @@ void kprint(U x, char *s, char *e) {
   default:
     if(zv(x)) {
       v=zvget(x);
-      if(0xe==v>>56)  fprintf(stderr,"%s%s",(char*)(((U)0xe<<56)^v),e);
-      else if(0xd==v>>56)  printf("%c%s",(char)v,e);
-      else if(0xc==v>>56) { f=(fn*)(((U)0xc<<56)^v); printf("%s\n",f->d); }
+      if(0xe==zx(v))  fprintf(stderr,"%s%s",(char*)(b(56)&v),e);
+      else if(0xd==zx(v))  printf("%c%s",(char)v,e);
+      else if(0xc==zx(v)) { f=(fn*)(b(56)&v); printf("%s\n",f->d); }
     }
     break;
   }
