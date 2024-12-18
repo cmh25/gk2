@@ -34,43 +34,43 @@ static int ffix(char *ds, int a0) {
   return a0;
 }
 
-static void pi_(int i, char *c) {
-  if(i==INT_MAX) printf("0I%s",c);
-  else if(i==INT_MIN) printf("0N%s",c);
-  else if(i==INT_MIN+1) printf("-0I%s",c);
-  else printf("%d%s",i,c);
+static void pi_(int i, char *s, char *e) {
+  if(i==INT_MAX) printf("%s0I%s",s,e);
+  else if(i==INT_MIN) printf("%s0N%s",s,e);
+  else if(i==INT_MIN+1) printf("%s-0I%s",s,e);
+  else printf("%s%d%s",s,i,e);
 }
-static void pi(U x, char *c) {
-  pi_((int)x,c);
+static void pi(U x, char *s, char *e) {
+  pi_((int)x,s,e);
 }
-static void pia(U x, char *c) {
+static void pia(U x, char *s, char *e) {
   int *pxi=(int*)px(x);
-  if(!nx) printf("!0\n");
-  else if(1==nx) { printf(","); pi_(pxi[0],c); }
-  else i(nx,pi_(pxi[i],i<nx-1?" ":c))
+  if(!nx) printf("%s!0%s",s,e);
+  else if(1==nx) { printf("%s,",s); pi_(pxi[0],"",e); }
+  else i(nx,pi_(pxi[i],i?"":s,i<nx-1?" ":e))
 }
 
-static void pf_(float f, char *c) {
+static void pf_(float f, char *s, char *e) {
   char ds[256];
-  if(isinf(f)&&f>0.0) printf("0i%s",c);
-  else if(isnan(f)) printf("0n%s",c);
-  else if(isinf(f)&&f<0.0) printf("-0i%s",c);
+  if(isinf(f)&&f>0.0) printf("%s0i%s",s,e);
+  else if(isnan(f)) printf("%s0n%s",s,e);
+  else if(isinf(f)&&f<0.0) printf("%s-0i%s",s,e);
   else {
     sprintf(ds,"%0.*g",7,f);
     if(!strchr(ds,'.')&&!strchr(ds,'e')) strcat(ds, ".0");
-    printf("%s%s",ds,c);
+    printf("%s%s%s",s,ds,e);
   }
 }
-static void pf(U x, char *c) {
+static void pf(U x, char *s, char *e) {
   int i=(int)x;
-  pf_(*(float*)&i,c);
+  pf_(*(float*)&i,s,e);
 }
-static void pfa(U x, char *c) {
+static void pfa(U x, char *s, char *e) {
   int i,a0=1,m=mx?nx/mx:nx;
   char ds[256];
   float f,*pxf=(float*)px(x);
-  if(!nx) printf("0#0.0%s",c);
-  else if(1==nx) { printf(","); pf_(pxf[0],c); }
+  if(!nx) printf("%s0#0.0%s",s,e);
+  else if(1==nx) { printf("%s,",s); pf_(pxf[0],"",e); }
   else {
     for(i=0;i<nx;i++) {
       f=pxf[i];
@@ -80,9 +80,9 @@ static void pfa(U x, char *c) {
       else { sprintf(ds,"%0.*g",7,f); a0=ffix(ds,a0); }
       if(m&&!((i+1)%m)) {
         if(a0) strcat(ds,".0");
-        printf("%s%s",ds,i<nx-1?"\n":c);
+        printf("%s%s%s",ds,i?"":s,i<nx-1?"\n":e);
       }
-      else printf("%s ",ds);
+      else printf("%s%s ",i?"":s,ds);
     }
   }
 }
@@ -90,15 +90,20 @@ static void pfa(U x, char *c) {
 void kprint(U x, char *s, char *e) {
   U *pxu,v;
   fn *f;
+  char s2[256];
+  int aa=1;
   switch(tx) {
-  case 3: pi(x,e); break;
-  case 4: pf(x,e); break;
-  case 0xb: pia(x,e); break;
-  case 0xc: pfa(x,e); break;
+  case 3: pi(x,s,e); break;
+  case 4: pf(x,s,e); break;
+  case 0xb: pia(x,s,e); break;
+  case 0xc: pfa(x,s,e); break;
   case 8:
     pxu=(U*)px(x);
-    printf("(");
-    i(nx,kprint(pxu[i],s,i<nx-1?";":""))
+    printf("%s(",s);
+    sprintf(s2,"%s ",s);
+    i(nx,if(pxu[i]>>63){aa=0;break;})
+    if(aa) i(nx,kprint(pxu[i],"",i<nx-1?";":""))
+    else i(nx,kprint(pxu[i],i?s2:"",i<nx-1?"\n":""))
     printf(")%s",e);
     break;
   default:
