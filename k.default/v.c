@@ -283,7 +283,7 @@ U join(U a,U x) {
   case 3:
     switch(tx) {
     case 3: r=tn(3,2); PRI; pri[0]=(int)a; pri[1]=(int)x; break;
-    case 4: r=tn(0,2); pru=(U*)k_(2,r); pru[0]=kcp(a); pru[1]=kcp(x); break;
+    case 4: r=tn(0,2); PRU; pru[0]=kcp(a); pru[1]=kcp(x); break;
     case 0xb: r=tn(3,1+nx); PRI; PXI; *pri++=(int)a; i(nx,*pri++=*pxi++) break;
     } break;
   case 4:
@@ -479,11 +479,15 @@ U rule(U x) {
 
 U enlist(U x) {
   U r=0;
+  char *prc;
   int *pri;
   float *prf;
+  U *pru;
   switch(tx) {
+  case 2: r=tn(2,1); PRC; *prc=(char)x; break;
   case 3: r=tn(3,1); PRI; *pri=(int)x; break;
   case 4: r=tn(4,1); PRF; *prf=fu(x); break;
+  case 0xa: r=tn(0,1); PRU; *pru=kcp(x); break;
   }
   return r;
 }

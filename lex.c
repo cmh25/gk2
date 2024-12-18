@@ -190,63 +190,62 @@ static int gname(pgs *pgs) {
   return 1;
 }
 
-//static char *ss;
-//static int gc(pgs *pgs) {
-//  char s=0;
-//  int j=0,n;
-//  unsigned char o;
-//  U u;
-//  char *puc;
-//  n=32;
-//  ss=xmalloc(n);
-//  ++p;
-//  while(1) {
-//    if(j>=n-1) { n<<=1; ss=xrealloc(ss,n); }
-//    switch(s) {
-//    case 0:
-//      if(*p=='"') s=10;
-//      else if(*p=='\\') s=1;
-//      else ss[j++]=*p;
-//      break;
-//    case 1: /* escape */
-//      if(*p=='b') { ss[j++]='\b'; s=0; }
-//      else if(*p=='t') { ss[j++]='\t'; s=0; }
-//      else if(*p=='n') { ss[j++]='\n'; s=0; }
-//      else if(*p=='r') { ss[j++]='\r'; s=0; }
-//      else if(*p=='"') { ss[j++]='\"'; s=0; }
-//      else if(*p=='\\') { ss[j++]='\\'; s=0; }
-//      else if(isdigit(*p)&&*p<='7') { o=*p-48; s=2; } /* octal */
-//      else { ss[j++]=*p; s=0; }
-//      break;
-//    case 2: /* octal */
-//      if(isdigit(*p)&&*p<='7') { o*=8; o+=*p-48; s=3; }
-//      else if(*p=='\\') { ss[j++]=o; s=1; }
-//      else if(*p=='"') { ss[j++]=o; s=10; }
-//      else { ss[j++]=o; ss[j++]=*p; s=0; }
-//      break;
-//    case 3: /* octal */
-//      if(isdigit(*p)&&*p<='7') { o*=8; o+=*p-48; ss[j++]=o; s=0; }
-//      else if(*p=='\\') { ss[j++]=o; s=1; }
-//      else if(*p=='"') { ss[j++]=o; s=10; }
-//      else { ss[j++]=o; ss[j++]=*p; s=0; }
-//      break;
-//    case 10: /* accept */
-//      if(j==0) push(pgs,T012,(U)0xa<<60);
-//      else if(j==1) push(pgs,T012,ss[0]|(U)2<<60);
-//      else {
-//        u=tn(2,j);
-//        puc=(char*)px(u);
-//        i((int)u,*puc++=ss[i])
-//        push(pgs,T012,u);
-//      }
-//      xfree(ss);
-//      return 1;
-//    default: return 0; /* error */
-//    }
-//    if(!*++p) return 0;
-//  }
-//  return 1;
-//}
+static char *ss;
+static int gc(pgs *pgs) {
+  char s=0;
+  int j=0,n;
+  unsigned char o;
+  U u;
+  char *puc;
+  n=32;
+  ss=xmalloc(n);
+  ++p;
+  while(1) {
+    if(j>=n-1) { n<<=1; ss=xrealloc(ss,n); }
+    switch(s) {
+    case 0:
+      if(*p=='"') s=10;
+      else if(*p=='\\') s=1;
+      else ss[j++]=*p;
+      break;
+    case 1: /* escape */
+      if(*p=='b') { ss[j++]='\b'; s=0; }
+      else if(*p=='t') { ss[j++]='\t'; s=0; }
+      else if(*p=='n') { ss[j++]='\n'; s=0; }
+      else if(*p=='r') { ss[j++]='\r'; s=0; }
+      else if(*p=='"') { ss[j++]='\"'; s=0; }
+      else if(*p=='\\') { ss[j++]='\\'; s=0; }
+      else if(isdigit(*p)&&*p<='7') { o=*p-48; s=2; } /* octal */
+      else { ss[j++]=*p; s=0; }
+      break;
+    case 2: /* octal */
+      if(isdigit(*p)&&*p<='7') { o*=8; o+=*p-48; s=3; }
+      else if(*p=='\\') { ss[j++]=o; s=1; }
+      else if(*p=='"') { ss[j++]=o; s=10; }
+      else { ss[j++]=o; ss[j++]=*p; s=0; }
+      break;
+    case 3: /* octal */
+      if(isdigit(*p)&&*p<='7') { o*=8; o+=*p-48; ss[j++]=o; s=0; }
+      else if(*p=='\\') { ss[j++]=o; s=1; }
+      else if(*p=='"') { ss[j++]=o; s=10; }
+      else { ss[j++]=o; ss[j++]=*p; s=0; }
+      break;
+    case 10: /* accept */
+      if(j==1) push(pgs,T012,ss[0]|(U)2<<60);
+      else {
+        u=tn(2,j);
+        puc=(char*)px(u);
+        i((int)u,*puc++=ss[i])
+        push(pgs,T012,u);
+      }
+      xfree(ss);
+      return 1;
+    default: return 0; /* error */
+    }
+    if(!*++p) return 0;
+  }
+  return 1;
+}
 
 static int gf(pgs *pgs) {
   char *q,c,s=0;
@@ -353,6 +352,7 @@ int lex(pgs *pgs, int load) {
     else if(*p=='{') { if(!gf(pgs)) { fprintf(stderr,"lex\n"); return 0; } }
     else if(*p==';') { ++p; push(pgs,T010,0); }
     else if(*p=='\n') { ++p; push(pgs,T011,0); while(*p=='\n')++p; f=1; continue; }
+    else if(*p=='"') gc(pgs);
     else if(isalpha(*p)) gname(pgs);
     else if(!*p) { push(pgs,T018,0); break; }
     else { fprintf(stderr,"lex\n"); return 0; }

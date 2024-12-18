@@ -103,11 +103,14 @@ int kcmpr(U a, U x) {
 
 U kcp(U x) {
   U r=0;
+  char *prc,*pxc;
   int *pri,*pxi;
   float *prf,*pxf;
   switch(tx) {
+  case 2: r=x; break;
   case 3: r=x; break;
   case 4: r=x; break;
+  case 0xa: r=tn(2,nx); PRC; PXC; i(nx,*prc++=*pxc++) break;
   case 0xb: r=tn(3,nx); PRI; PXI; i(nx,*pri++=*pxi++) break;
   case 0xc: r=tn(4,nx); PRF; PXF; i(nx,*prf++=*pxf++) break;
   }

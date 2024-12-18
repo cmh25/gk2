@@ -34,43 +34,67 @@ static int ffix(char *ds, int a0) {
   return a0;
 }
 
-static void pi_(int i, char *s, char *e) {
-  if(i==INT_MAX) printf("%s0I%s",s,e);
-  else if(i==INT_MIN) printf("%s0N%s",s,e);
-  else if(i==INT_MIN+1) printf("%s-0I%s",s,e);
-  else printf("%s%d%s",s,i,e);
+static void pc_(char c) {
+  if((c<32||c>126)) {
+    if(c==8) printf("\\b");
+    else if(c==9) printf("\\t");
+    else if(c==10) printf("\\n");
+    else if(c==13) printf("\\r");
+    else printf("\\%03o",c);
+  }
+  else {
+    if(c==34) printf("\\\"");
+    else if(c==92) printf("\\\\");
+    else printf("%c",c);
+  }
+}
+static void pc(U x, char *s, char *e) {
+  printf("%s\"",s); pc_((char)x); printf("\"%s",e);
+}
+static void pca(U x, char *s, char *e) {
+  char *pxc=(char*)px(x);
+  if(nx==1) printf("%s,\"",s);
+  else printf("%s\"",s);
+  i(nx,pc_(pxc[i]))
+  printf("\"%s",e);
+}
+static void pi_(int i) {
+  if(i==INT_MAX) printf("0I");
+  else if(i==INT_MIN) printf("0N");
+  else if(i==INT_MIN+1) printf("-0I");
+  else printf("%d",i);
 }
 static void pi(U x, char *s, char *e) {
-  pi_((int)x,s,e);
+  printf("%s",s); pi_((int)x); printf("%s",e);
 }
 static void pia(U x, char *s, char *e) {
   int *pxi=(int*)px(x);
   if(!nx) printf("%s!0%s",s,e);
-  else if(1==nx) { printf("%s,",s); pi_(pxi[0],"",e); }
-  else i(nx,pi_(pxi[i],i?"":s,i<nx-1?" ":e))
+  else if(1==nx) { printf("%s,",s); pi_(pxi[0]); printf("%s",e); }
+  else i(nx,pi(pxi[i],i?"":s,i<nx-1?" ":e))
 }
 
-static void pf_(float f, char *s, char *e) {
+static void pf_(float f) {
   char ds[256];
-  if(isinf(f)&&f>0.0) printf("%s0i%s",s,e);
-  else if(isnan(f)) printf("%s0n%s",s,e);
-  else if(isinf(f)&&f<0.0) printf("%s-0i%s",s,e);
+  if(isinf(f)&&f>0.0) printf("0i");
+  else if(isnan(f)) printf("0n");
+  else if(isinf(f)&&f<0.0) printf("-0i");
   else {
     sprintf(ds,"%0.*g",7,f);
     if(!strchr(ds,'.')&&!strchr(ds,'e')) strcat(ds, ".0");
-    printf("%s%s%s",s,ds,e);
+    printf("%s",ds);
   }
 }
 static void pf(U x, char *s, char *e) {
   int i=(int)x;
-  pf_(*(float*)&i,s,e);
+  printf("%s",s); pf_(*(float*)&i); printf("%s",e);
 }
 static void pfa(U x, char *s, char *e) {
   int i,a0=1,m=mx?nx/mx:nx;
   char ds[256];
   float f,*pxf=(float*)px(x);
   if(!nx) printf("%s0#0.0%s",s,e);
-  else if(1==nx) { printf("%s,",s); pf_(pxf[0],"",e); }
+  else if(1==nx) { printf("%s,",s); pf_(pxf[0]); printf("%s",e); }
   else {
     for(i=0;i<nx;i++) {
       f=pxf[i];
@@ -91,17 +115,21 @@ void kprint(U x, char *s, char *e) {
   U *pxu,v;
   fn *f;
   char s2[256];
-  int aa=1;
+  int aa=1,ncv=0;
   switch(tx) {
+  case 2: pc(x,s,e); break;
   case 3: pi(x,s,e); break;
   case 4: pf(x,s,e); break;
+  case 0xa: pca(x,s,e); break;
   case 0xb: pia(x,s,e); break;
   case 0xc: pfa(x,s,e); break;
   case 8:
     pxu=(U*)px(x);
+    if(nx==1) { printf("%s,",s); kprint(pxu[0],"",e); break; }
     printf("%s(",s);
     sprintf(s2,"%s ",s);
-    i(nx,if(pxu[i]>>63){aa=0;break;})
+    i(nx,if(pxu[i]>>63&&0xa!=pxu[i]>>60){aa=0;break;}) /* (1;2.0;"asdf") */
+    i(nx,if(0xa==pxu[i]>>60)++ncv); if(nx==ncv) aa=0; /* ("asdf";"asdf") */
     if(aa) i(nx,kprint(pxu[i],"",i<nx-1?";":""))
     else i(nx,kprint(pxu[i],i?s2:"",i<nx-1?"\n":""))
     printf(")%s",e);
@@ -109,8 +137,8 @@ void kprint(U x, char *s, char *e) {
   default:
     if(zv(x)) {
       v=zvget(x);
-      if(0xe==zx(v))  fprintf(stderr,"%s%s",(char*)(b(56)&v),e);
-      else if(0xd==zx(v))  printf("%c%s",(char)v,e);
+      if(0xe==zx(v)) fprintf(stderr,"%s%s",(char*)(b(56)&v),e);
+      else if(0xd==zx(v)) printf("%c%s",(char)v,e);
       else if(0xc==zx(v)) { f=(fn*)(b(56)&v); printf("%s\n",f->d); }
     }
     break;

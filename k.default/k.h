@@ -34,12 +34,18 @@ ax     tx     ox     mx    nx
 : (((x)==INT_MIN+1) ? -INFINITY \
 : (float)(x)))))
 
+#define PRC prc=(char*)k_(2,r)
+#define PAC pac=(char*)k_(2,a)
+#define PXC pxc=(char*)k_(2,x)
 #define PRI pri=(int*)k_(2,r)
 #define PAI pai=(int*)k_(2,a)
 #define PXI pxi=(int*)k_(2,x)
 #define PRF prf=(float*)k_(2,r)
 #define PAF paf=(float*)k_(2,a)
 #define PXF pxf=(float*)k_(2,x)
+#define PRU pru=(U*)k_(2,r)
+#define PAU pau=(U*)k_(2,a)
+#define PXU pxu=(U*)k_(2,x)
 
 #ifdef _WIN32
   typedef unsigned long long U;
