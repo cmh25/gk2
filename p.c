@@ -205,7 +205,7 @@ U pgreduce(pr *r, int p) {
     if(timer) { kfree(v); timer=0; printf("%f\n",timer_stop()); }
     else if(p) {
       if(quiet) { kfree(v); quiet=0; }
-      else kprint(v,"","\n");
+      else kprint(v,"","\n","");
     }
     timer=0; times=1;
   }

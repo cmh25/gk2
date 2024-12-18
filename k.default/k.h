@@ -10,7 +10,7 @@
 ax     tx     ox     mx    nx
 63 62..60 59..48 47..32 31..0
 */
-#define b(i) ((1L<<(i))-1)
+#define b(i) (((U)1<<(i))-1)
 #define ax !(x>>63)
 #define tx (x>>60)
 #define ox (b(12)&x>>48)
@@ -43,6 +43,9 @@ ax     tx     ox     mx    nx
 #define PRF prf=(float*)k_(2,r)
 #define PAF paf=(float*)k_(2,a)
 #define PXF pxf=(float*)k_(2,x)
+#define PRS prs=(char**)k_(2,r)
+#define PAS pas=(char**)k_(2,a)
+#define PXS pxs=(char**)k_(2,x)
 #define PRU pru=(U*)k_(2,r)
 #define PAU pau=(U*)k_(2,a)
 #define PXU pxu=(U*)k_(2,x)

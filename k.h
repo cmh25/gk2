@@ -31,8 +31,9 @@ void* px(U x);
 void kfree(U x);
 U kref(U x);
 void kinit(void);
-void kprint(U x, char *s, char *e);
+void kprint(U x, char *s, char *e, char *s0);
 U kerror(char *e);
 U knorm(U x);
+int vname(char *s, int n);
 
 #endif /* K_H */

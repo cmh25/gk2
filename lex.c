@@ -191,6 +191,89 @@ static int gname(pgs *pgs) {
 }
 
 static char *ss;
+static int gsym_(void) {
+  char *q,c,s=0;
+  if(*p!='`') return 0;
+  q=++p;
+  while(1) {
+    switch(s) {
+    case 0:
+      if(*p=='"') { ++q; s=2; }
+      else if(*p=='.') s=4;
+      else if(isalpha(*p)) s=3;
+      else s=1;
+      break;
+    case 1:
+      c=*--p; *p=0;
+      ss=xunesc(q);
+      *p=c;
+      if(*p=='"')++p;
+      return 1;
+    case 2:
+      if(*p=='\\') ++p;
+      else if(*p=='"') {
+        c=*p; *p=0;
+        ss=xunesc(q);
+        *p++=c;
+        return 1;
+      }
+      break;
+    case 3:
+      if(*p=='.') s=4;
+      else if(!isalnum(*p)) s=1;
+      break;
+    case 4:
+      if(isalnum(*p)) s=3;
+      else s=1;
+      break;
+    }
+    ++p;
+  }
+  return 1;
+}
+
+static int gsym(pgs *pgs) {
+  int r;
+  char *q,**sv=0,**pus;
+  size_t sc=0,sm=1;
+  U u;
+  r=gsym_();
+  if(isblank(*p)||*p=='`') {
+    q=p;
+    while(isblank(*p))++p;
+    if(*p=='`') sm<<=1;
+    sv=xrealloc(sv,sm*sizeof(char*));
+    sv[sc++]=sp(ss);
+    xfree(ss);
+    p=q;
+    if(sv) {
+      while(isblank(*p)||*p=='`') {
+        q=p;
+        while(isblank(*p))++p;
+        r=gsym_();
+        if(r==1) {
+          if(sc==sm) { sm<<=1; sv=xrealloc(sv,sm*sizeof(char*)); }
+          sv[sc++]=sp(ss);
+          xfree(ss);
+        }
+        else { p=q; break; }
+      }
+    }
+  }
+  if(sv) {
+    if(sc==1) push(pgs,T012,(U)sv[0]|(U)7<<60);
+    else {
+      u=tn(7,sc);
+      pus=(char**)px(u);
+      i(sc,*pus++=sv[i])
+      push(pgs,T012,u);
+    }
+  }
+  else if(r==1) { push(pgs,T012,(U)sp(ss)|(U)7<<60); xfree(ss); }
+  if(sv) xfree(sv);
+  return r;
+}
+
 static int gc(pgs *pgs) {
   char s=0;
   int j=0,n;
@@ -352,6 +435,7 @@ int lex(pgs *pgs, int load) {
     else if(*p=='{') { if(!gf(pgs)) { fprintf(stderr,"lex\n"); return 0; } }
     else if(*p==';') { ++p; push(pgs,T010,0); }
     else if(*p=='\n') { ++p; push(pgs,T011,0); while(*p=='\n')++p; f=1; continue; }
+    else if(*p=='`') gsym(pgs);
     else if(*p=='"') gc(pgs);
     else if(isalpha(*p)) gname(pgs);
     else if(!*p) { push(pgs,T018,0); break; }

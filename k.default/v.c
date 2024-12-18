@@ -482,11 +482,13 @@ U enlist(U x) {
   char *prc;
   int *pri;
   float *prf;
+  char **prs;
   U *pru;
   switch(tx) {
   case 2: r=tn(2,1); PRC; *prc=(char)x; break;
   case 3: r=tn(3,1); PRI; *pri=(int)x; break;
   case 4: r=tn(4,1); PRF; *prf=fu(x); break;
+  case 7: r=tn(7,1); PRS; *prs=(char*)(b(48)&x); break;
   case 0xa: r=tn(0,1); PRU; *pru=kcp(x); break;
   }
   return r;

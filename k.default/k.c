@@ -59,6 +59,7 @@ U tn(int t,int n) {
   case 2: v=malloc(n); break;
   case 3: v=malloc(sizeof(int)*n); break;
   case 4: v=malloc(sizeof(float)*n); break;
+  case 7: v=malloc(sizeof(char*)*n); break;
   }
   if(v) {
     if(fi>-1) j=F[fi--];
