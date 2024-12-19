@@ -26,6 +26,7 @@ elistz > | se e elistz
 */
 
 static char *P=":+-*%&|<>=~.!@?#_^,$LMSA..ERZ'/\\;()";
+static int R;
 
 #define LI 10
 #define LJ 19
@@ -141,9 +142,10 @@ U pgreduce_(char *bc, int n, U *values, int *quiet, int times) {
     else if(q==1) { /* 32 33 34 ... */
       if(pA>A) {
         a=*--pA;
-        if(zv(a)) { a=zvget(a); if(0xf==zx(a)) a=vlookup(a); else a=3; /* type */ }
+        if(zv(a)) { a0=zvget(a); if(0xf==zx(a0)) a=vlookup(a0); }
         if(a==4) *pA++=4; /* value */
         else if(a==3) *pA++=3; /* type */
+        else if(c==32) { *pA++=a; if(cs!=gs) { R=1; break; } }
         else *pA++=k(c%32,0,a);
       }
       else { *pA++=zvset((U)P[(int)c%32],0xd); break; }
@@ -158,7 +160,7 @@ U pgreduce_(char *bc, int n, U *values, int *quiet, int times) {
           if(zv(b)) { b0=zvget(b); if(0xf==zx(b0)) b=vlookup(b0); }
           if(b==4) *pA++=4;  /* value */
           else {
-            scope_set(gs,(char*)(b(56)&a),b);
+            scope_set(cs,(char*)(b(56)&a),b);
             *pA++=a0;
             *quiet=1;
             kfree(b);
@@ -196,6 +198,7 @@ U pgreduce(pr *r, int p) {
   U a,v=0;
   if(!r||!r->n) return v;
   for(i=0;i<r->n;i++) {
+    if(R) { R=0; break; }
     if(!(n=r->bcn[i])) continue;
     bc=r->bc[i];
     U *values=r->values[i];
@@ -214,6 +217,7 @@ U pgreduce(pr *r, int p) {
       else kprint(v,"","\n","");
     }
     timer=0; times=1;
+    if(R) { R=0; break; }
   }
   return v;
 }
