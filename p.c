@@ -105,6 +105,12 @@ U pgreduce_(char *bc, int n, U *values, int *quiet, int times) {
               i(f->v,aa[i]=*--pA)
               *pA++=fne(f,aa,f->v);
             }
+            else if(2==f->v && pA>A+1 && !assign) {
+              aa[0]=values[++j];
+              aa[1]=pA[-2];
+              pA-=2;
+              *pA++=fne(f,aa,f->v);
+            }
             if(!times) zvfree(v0);
           }
           if(v1 && !assign) zvfree(v1);
@@ -284,6 +290,9 @@ static void r003(pgs *s) { /* e > o ez */
   else if(a->t==2 && b->t==4) {
     a->a[0]=0;
     a->a[1]=b;
+  }
+  else if(a->t==2 && b->t==2) {
+    a->a[0]=b;
   }
 }
 static void r004(pgs *s) { /* se > ';' */
