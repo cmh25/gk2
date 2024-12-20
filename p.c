@@ -105,12 +105,14 @@ U pgreduce_(char *bc, int n, U *values, int *quiet, int times) {
               --pA;
               i(f->v,aa[i]=*--pA)
               *pA++=fne(f,aa,f->v);
+              i(f->v,kfree(aa[i]))
             }
             else if(2==f->v && pA>A+1 && !assign) {
               aa[0]=values[++j];
               aa[1]=pA[-2];
               pA-=2;
               *pA++=fne(f,aa,f->v);
+              i(2,kfree(aa[i]))
             }
             if(!times) zvfree(v0);
           }
@@ -167,15 +169,21 @@ U pgreduce_(char *bc, int n, U *values, int *quiet, int times) {
           }
         }
         else {
-          if(zv(a)) { a=zvget(a); if(0xf==zx(a)) a=vlookup(a); else a=3; /* type */ }
-          if(zv(b)) { b=zvget(b); if(0xf==zx(b)) b=vlookup(b); else a=3; /* type */ }
+          if(zv(a)) { a0=zvget(a); if(0xf==zx(a0)) a=vlookup(a0); }
+          if(zv(b)) { b0=zvget(b); if(0xf==zx(b0)) b=vlookup(b0); }
           if(a==4||b==4) *pA++=4; /* value */
-          else if(a==3) *pA++=3; /* type */
-          else if(b==3) *pA++=3; /* type */
           else {
             if((w=c%32)==30) { /* adverb? / \ ' */
               s=strchr(P,(char)a); a=s-P;
               *pA++=s?k(w,a,b):3; /* 3 = type */
+            }
+            else if(zv(a) && 13==c%32) { /* f@x */
+              a0=zvget(a);
+              f=(fn*)(b(56)&a0);
+              if(!f->s) fnd(f);
+              if(0xc==zx(a0)) { aa[0]=b; *pA++=fne(f,aa,1); }
+              kfree(a);
+              kfree(b);
             }
             else *pA++=k(w,a,b);
           }
