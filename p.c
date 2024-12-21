@@ -65,7 +65,7 @@ static int RT[18][3]={
 };
 
 static int RC[18]={1,2,1,2,1,1,1,1,1,0,1,1,3,3,0,2,0,3};
-static char *E[8]={"nyi","rank","len","type","value","range","domain","valence"};
+static char *E[9]={"nyi","rank","len","type","value","range","domain","valence","index"};
 
 #define Vvi s->V[s->vi]
 
@@ -77,7 +77,7 @@ static U vlookup(U v) {
 U pgreduce_(char *bc, int n, U *values, int *quiet, int times) {
   int j,w,assign=0;
   char c,q,*e,*s;
-  U A[256],*pA=A,a,b,v=0,v0,v1=0,a0,b0,aa[256],*pa;
+  U A[256],*pA=A,a,b,v=0,v0,v1=0,a0,b0,aa[256],*pa,r;
   fn *f;
   pr *z;
   pA=A;
@@ -98,8 +98,11 @@ U pgreduce_(char *bc, int n, U *values, int *quiet, int times) {
             if(zvplist(pA[-2])) {
               U z=zvget(pA[-2]);
               plist *pl=(plist*)(b(56)&z);
-              *pA++=fne(f,px(pl->x),pl->n);
-              zvfree(pA[-3]);
+              r=fne(f,px(pl->x),pl->n);
+              kfree(pA[-2]); /* always free plist */
+              if(!times) kfree(pA[-1]);
+              --pA;
+              pA[-1]=r;
             }
             else if(pA>A+(f->v?f->v:1) && !assign) {
               --pA;
@@ -192,7 +195,7 @@ U pgreduce_(char *bc, int n, U *values, int *quiet, int times) {
     }
     //todo: suspend console, invoke repl
     e=0;
-    if(pA>A&&pA[-1]<8)e=E[pA[-1]];
+    if(pA>A&&pA[-1]<9)e=E[pA[-1]];
     if(e) { pA[-1]=kerror(e); break; }
   }
   v=pA>A?*--pA:0;
@@ -222,7 +225,7 @@ U pgreduce(pr *r, int p) {
     if(timer) { kfree(v); timer=0; printf("%f\n",timer_stop()); }
     else if(p) {
       if(quiet) { kfree(v); quiet=0; }
-      else kprint(v,"","\n","");
+      else { kprint(v,"","\n",""); kfree(v); }
     }
     timer=0; times=1;
     if(R) { R=0; break; }

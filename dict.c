@@ -28,9 +28,10 @@ U dget(dict *d, char *key) {
 void dset(dict *d, char *key, U v) {
   U r=0;
   char *kk=sp(key);
+  int i;
   v=kref(v);
-  i(d->c,if(kk == d->k[i]) { r=d->v[i]; kfree(r); d->v[i]=v; break; })
-  if(!r) {
+  for(i=0;i<d->c;i++) if(kk==d->k[i]) { r=d->v[i]; kfree(r); d->v[i]=v; break; }
+  if(i==d->c) {
     d->k=xrealloc(d->k, sizeof(char*)*(d->c+1));
     d->v=xrealloc(d->v, sizeof(U)*(d->c+1));
     d->k[d->c]=kk;

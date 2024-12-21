@@ -191,7 +191,6 @@ void kprint(U x, char *s, char *e, char *s0) {
     }
     break;
   }
-  kfree(x);
 }
 
 U kerror(char *e) {
@@ -202,12 +201,13 @@ U knorm(U x) {
   U r=x,*pxu;
   int t,*pri;
   float *prf;
-  char **prs;
+  char *prc,**prs;
   if(tx==8&&nx) {
     pxu=(U*)px(x);
     t=pxu[0]>>60;
     i(nx,if(t!=pxu[i]>>60) return r)
     switch(t) {
+    case 2: r=tn(2,nx); prc=(char*)px(r); i(nx,prc[i]=(char)pxu[i]); kfree(x); break;
     case 3: r=tn(3,nx); pri=(int*)px(r); i(nx,pri[i]=(int)pxu[i]); kfree(x); break;
     case 4: r=tn(4,nx); prf=(float*)px(r); i(nx,prf[i]=fu(pxu[i])) ; kfree(x);break;
     case 7: r=tn(7,nx); prs=(char**)px(r); i(nx,prs[i]=(char*)(b(48)&pxu[i])) ; kfree(x);break;

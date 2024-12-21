@@ -18,13 +18,17 @@ k_(2,x)  // raw pointer
 U k_(int i,U x) {
   U r=0;
   int j;
+  U *pxu;
   switch(i) {
   case 0:
     if(!x) break; /* init */
     if(!ax) { /* ref - */
       j=b(12)&x>>48;
       if(R[j])R[j]--;
-      else { free(O[j]); O[j]=0; F[++fi]=j; }
+      else {
+        if(tx==8) { PXU; i(nx,k_(0,pxu[i])) }
+        free(O[j]); O[j]=0; F[++fi]=j;
+      }
       if(fi==fm) { fprintf(stderr,"error: fm\n"); exit(1); }
     }
     break;
